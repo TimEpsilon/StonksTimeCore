@@ -1,5 +1,6 @@
 package com.github.timepsilon;
 
+import com.github.timepsilon.server.commands.CommandManager;
 import com.github.timepsilon.server.items.ModItems;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
@@ -46,6 +47,9 @@ public class Core {
         ModItems.register(modEventBus);
         BLOCKS.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
+
+        // Register commands
+        NeoForge.EVENT_BUS.register(new CommandManager());
 
 
     }

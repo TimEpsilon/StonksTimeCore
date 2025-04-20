@@ -2,7 +2,7 @@
 
 Liste non exhaustive des features :
 
-- [ ] Items MCoins
+- [x] Items MCoins
 	> 1 -> M-Chip
 	> 10 -> M-Cent
 	> 50 -> M-Dime

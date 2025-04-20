@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Mods/StonksTimeCore.md",
+                "file": "ModLogs/2025-04-20.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "StonksTimeCore"
+              "title": "2025-04-20"
             }
           }
         ],
@@ -185,11 +185,13 @@
   },
   "active": "6f74fc788a9ae4fd",
   "lastOpenFiles": [
-    "Mods/Mods.md",
-    "ModLogs/2025-04-06.md",
-    "ModLogs/2025-04-05.md",
     "Mods/StonksTimeCore.md",
     "Mods/Liste de Mods.md",
+    "ModLogs/2025-04-20.md",
+    "ModLogs/2025-04-06.md",
+    "Mods/Mods.md",
+    "Untitled.md",
+    "ModLogs/2025-04-05.md",
     "ModLogs",
     "Idées Principales.md",
     "Mods",
