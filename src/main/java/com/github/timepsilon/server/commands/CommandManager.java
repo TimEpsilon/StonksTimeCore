@@ -9,6 +9,6 @@ public class CommandManager {
     @SubscribeEvent
     public void onRegisterCommands(RegisterCommandsEvent event) {
 
-        ItemGetter.register(event.getDispatcher());
+        GenerateEquivalency.register(event.getDispatcher());
     }
 }
