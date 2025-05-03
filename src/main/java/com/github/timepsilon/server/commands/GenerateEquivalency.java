@@ -8,6 +8,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 
@@ -62,7 +63,7 @@ public class GenerateEquivalency {
             HashMap<String,Object> singleRecipeDict = new HashMap<>();
 
             // Extract a map of items <-> amount
-            HashMap<String, Integer> inputMap = getInputs(recipe);
+            HashMap<String, HashMap<String, Integer>> inputMap = getInputs(recipe);
 
             // Extract a map of items <-> amount
             HashMap<String, Integer> outputMap = new HashMap<>();
@@ -72,9 +73,9 @@ public class GenerateEquivalency {
             }
 
             // Constructing the dict for a single recipe
-            singleRecipeDict.put("type", recipe.getType().toString());
-            singleRecipeDict.put("input", inputMap);
             singleRecipeDict.put("output", outputMap);
+            singleRecipeDict.put("input", inputMap);
+            singleRecipeDict.put("type", recipe.getType().toString());
 
             // Adding the dict to the main dict under the key id
             recipeMap.put(holder.id().toString(), singleRecipeDict);
@@ -91,16 +92,35 @@ public class GenerateEquivalency {
 
     }
 
-    private static HashMap<String, Integer> getInputs(Recipe<?> recipe) {
+    private static HashMap<String, HashMap<String, Integer>> getInputs(Recipe<?> recipe) {
         List<Ingredient> ingredients = recipe.getIngredients();
-        HashMap<String, Integer> inputMap = new HashMap<>();
+        HashMap<String, HashMap<String, Integer>> inputIngredientMap = new HashMap<>();
+
+        // Since multiple objects can be within a single ingredient, we need to pass this info to the final JSON
+        // The goal is to prevent naive propagation of the SCT values within the same ingredient
         for (Ingredient ingredient : ingredients) {
-            System.out.println(ingredient.getItems());
-            if (ingredient.getItems().length > 0) {
-                inputMap.put(ingredient.getItems()[0].getItem().toString(), ingredient.getItems().length);
+            HashMap<String, Integer> inputMap = new HashMap<>();
+
+            // Case where an ingredient is used multiple time (shaped crafting)
+            if (inputIngredientMap.containsKey(ingredient.toString())) {
+                // Appends item count values if item already exists
+                inputMap = inputIngredientMap.get(ingredient.toString());
+                for (ItemStack itemStack : ingredient.getItems()) {
+                    if (inputMap.containsKey(itemStack.getItem().toString())) {
+                        inputMap.put(itemStack.getItem().toString(), inputMap.get(itemStack.getItem().toString()) + itemStack.getCount());
+                    } else {
+                        inputMap.put(itemStack.getItem().toString(), itemStack.getCount());
+                    }
+                }
+            } else {
+                // Case where the ingredient appears for the first time so we just add every item
+                for (ItemStack itemstack : ingredient.getItems()) {
+                    inputMap.put(itemstack.getItem().toString(), itemstack.getCount());
+                }
             }
+            inputIngredientMap.put(ingredient.toString(), inputMap);
         }
-        return inputMap;
+        return inputIngredientMap;
     }
 
 }
