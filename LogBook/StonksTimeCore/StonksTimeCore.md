@@ -1,4 +1,4 @@
-#mcoin #admin #code #mods
+#mcoin #admin #code #mods #graph 
 
 Liste non exhaustive des features :
 

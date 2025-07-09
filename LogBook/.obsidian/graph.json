@@ -2,21 +2,43 @@
   "collapse-filter": false,
   "search": "",
   "showTags": true,
-  "showAttachments": false,
+  "showAttachments": true,
   "hideUnresolved": false,
   "showOrphans": true,
-  "collapse-color-groups": true,
-  "colorGroups": [],
-  "collapse-display": true,
-  "showArrow": false,
+  "collapse-color-groups": false,
+  "colorGroups": [
+    {
+      "query": "path:ModLogs",
+      "color": {
+        "a": 1,
+        "rgb": 4079936
+      }
+    },
+    {
+      "query": "tag:#graph  ",
+      "color": {
+        "a": 1,
+        "rgb": 15764280
+      }
+    },
+    {
+      "query": "path:\"StonksTimeCore/Node Types\"  ",
+      "color": {
+        "a": 1,
+        "rgb": 2306001
+      }
+    }
+  ],
+  "collapse-display": false,
+  "showArrow": true,
   "textFadeMultiplier": 0,
   "nodeSizeMultiplier": 1,
   "lineSizeMultiplier": 1,
-  "collapse-forces": true,
-  "centerStrength": 0.518713248970312,
-  "repelStrength": 10,
+  "collapse-forces": false,
+  "centerStrength": 0.462577962577963,
+  "repelStrength": 9.91683991683992,
   "linkStrength": 1,
-  "linkDistance": 250,
-  "scale": 1,
+  "linkDistance": 208,
+  "scale": 0.6126649874133083,
   "close": true
 }

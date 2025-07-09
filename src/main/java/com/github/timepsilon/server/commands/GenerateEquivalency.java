@@ -19,6 +19,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
+import static com.github.timepsilon.server.utils.RecipeInputManager.getInputs;
+
 public class GenerateEquivalency {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -92,36 +94,6 @@ public class GenerateEquivalency {
 
     }
 
-    private static HashMap<String, HashMap<String, Integer>> getInputs(Recipe<?> recipe) {
-        List<Ingredient> ingredients = recipe.getIngredients();
-        HashMap<String, HashMap<String, Integer>> inputIngredientMap = new HashMap<>();
-
-        // Since multiple objects can be within a single ingredient, we need to pass this info to the final JSON
-        // The goal is to prevent naive propagation of the SCT values within the same ingredient
-        for (Ingredient ingredient : ingredients) {
-            HashMap<String, Integer> inputMap = new HashMap<>();
-
-            // Case where an ingredient is used multiple time (shaped crafting)
-            if (inputIngredientMap.containsKey(ingredient.toString())) {
-                // Appends item count values if item already exists
-                inputMap = inputIngredientMap.get(ingredient.toString());
-                for (ItemStack itemStack : ingredient.getItems()) {
-                    if (inputMap.containsKey(itemStack.getItem().toString())) {
-                        inputMap.put(itemStack.getItem().toString(), inputMap.get(itemStack.getItem().toString()) + itemStack.getCount());
-                    } else {
-                        inputMap.put(itemStack.getItem().toString(), itemStack.getCount());
-                    }
-                }
-            } else {
-                // Case where the ingredient appears for the first time so we just add every item
-                for (ItemStack itemstack : ingredient.getItems()) {
-                    inputMap.put(itemstack.getItem().toString(), itemstack.getCount());
-                }
-            }
-            inputIngredientMap.put(ingredient.toString(), inputMap);
-        }
-        return inputIngredientMap;
-    }
 
 }
 
