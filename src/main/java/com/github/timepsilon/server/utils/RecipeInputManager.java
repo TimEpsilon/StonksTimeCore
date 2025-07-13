@@ -1,10 +1,7 @@
 package com.github.timepsilon.server.utils;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.SmithingTransformRecipe;
-import net.minecraft.world.item.crafting.SmithingTrimRecipe;
+import net.minecraft.world.item.crafting.*;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -15,7 +12,7 @@ public class RecipeInputManager {
     public static HashMap<String, HashMap<String, Integer>> getInputs(Recipe<?> recipe) {
         switch (recipe) {
             case SmithingTransformRecipe smithing -> {return getInputsSmithing(smithing);}
-            case SmithingTrimRecipe trim -> {return getInputsTrim(trim);}
+            case SmithingTrimRecipe trim -> {return getInputsSmithing(trim);}
             default -> {return getInputsDefault(recipe);}
         }
     }
@@ -41,13 +38,35 @@ public class RecipeInputManager {
         return inputIngredientMap;
     }
 
-    private static HashMap<String, HashMap<String, Integer>> getInputsSmithing(SmithingTransformRecipe recipe) {
+    private static HashMap<String, HashMap<String, Integer>> getInputsSmithing(SmithingRecipe recipe) {
         HashMap<String, HashMap<String, Integer>> inputIngredientMap = new HashMap<>();
 
-        Field f = recipe.getClass().getDeclaredField("template");
-        f.setAccessible(True)
-        recipe.template
+        Ingredient template;
+        Ingredient addition;
+        Ingredient base;
 
+        if (recipe instanceof SmithingTransformRecipe transform) {
+            template = transform.template;
+            addition = transform.addition;
+            base = transform.base;
+        } else if (recipe instanceof SmithingTrimRecipe trim) {
+            template = trim.template;
+            addition = trim.addition;
+            base = trim.base;
+        } else {
+            return inputIngredientMap;
+        }
+
+        HashMap<String, Integer> templateMap = singleItemMap(template);
+        inputIngredientMap.put(template.toString(), templateMap);
+
+        HashMap<String, Integer> additionMap = singleItemMap(addition);
+        inputIngredientMap.put(addition.toString(), additionMap);
+
+        HashMap<String, Integer> baseMap = singleItemMap(base);
+        inputIngredientMap.put(base.toString(), baseMap);
+
+        return inputIngredientMap;
     }
 
 }
