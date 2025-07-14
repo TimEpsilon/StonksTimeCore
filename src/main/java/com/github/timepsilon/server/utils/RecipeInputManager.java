@@ -1,9 +1,12 @@
 package com.github.timepsilon.server.utils;
 
+import com.simibubi.create.content.kinetics.crusher.CrushingRecipe;
+import com.simibubi.create.content.kinetics.mixer.CompactingRecipe;
+import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
+import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 
@@ -67,6 +70,22 @@ public class RecipeInputManager {
         inputIngredientMap.put(base.toString(), baseMap);
 
         return inputIngredientMap;
+    }
+
+    private static HashMap<String, HashMap<String, Integer>> getInputsCrushing(CrushingRecipe recipe) {
+        return null;
+    }
+
+    private static HashMap<String, HashMap<String, Integer>> getInputsCompacting(CompactingRecipe recipe) {
+        return null;
+    }
+
+    private static HashMap<String, HashMap<String, Integer>> getInputsMixing(MixingRecipe recipe) {
+        return null;
+    }
+
+    private static HashMap<String, HashMap<String, Integer>> getInputsAssembly(SequencedAssemblyRecipe recipe) {
+        return null;
     }
 
 }
