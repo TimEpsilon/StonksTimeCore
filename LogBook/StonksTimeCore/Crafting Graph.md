@@ -112,3 +112,28 @@ Once the cycle is solved, the outside nodes can call upon the cycle to continue 
 
 For a simple cycle, the behavior is stable.
 ![[cycle_propagating|800]]
+
+## Forced Equivalency
+Some items (mostly dyed items), are functionally equivalent. They thus need to have the same value.
+
+To do this, we keep a taglist of those items, and every time an item node value is set (as a subnode or a main node), we check if the node is within a taglist and if so, we copy the found values to the other nodes and set them as solved.
+
+May have problems with parallelization
+
+We may also need to tag some recipes as blacklisted (smithing trim recipes for instance) in order to not add in complexity and to reduce divergence within cycles.
+
+### Taglists :
+- Logs
+- Wools
+- Shulker boxes
+- Supplementaries sacks
+- Supplementaries presents
+- Supplementaries trapped presents
+- Create toolboxes
+- Stained Glass
+- Concrete (powdered and solid)
+- Terracotta
+- Glazed terracotta
+- Candles
+- Beds
+- Banners

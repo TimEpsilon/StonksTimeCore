@@ -1,6 +1,7 @@
 package com.github.timepsilon.server.commands;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -8,8 +9,6 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 
 import java.io.BufferedWriter;
@@ -20,6 +19,7 @@ import java.nio.file.Path;
 import java.util.*;
 
 import static com.github.timepsilon.server.utils.RecipeInputManager.getInputs;
+import static com.github.timepsilon.server.utils.RecipeOutputManager.getOutputs;
 
 public class GenerateEquivalency {
 
@@ -47,7 +47,7 @@ public class GenerateEquivalency {
         for (ResourceLocation itemId : BuiltInRegistries.ITEM.keySet()) {
             items.add(itemId.toString());
         }
-        Files.write(Path.of("C:/Users/timde/Documents/items.txt"), items);
+        Files.write(Path.of("../items.txt"), items);
     }
 
     private static void iterateRecipes(CommandSourceStack source) throws IOException {
@@ -68,29 +68,25 @@ public class GenerateEquivalency {
             HashMap<String, HashMap<String, Integer>> inputMap = getInputs(recipe);
 
             // Extract a map of items <-> amount
-            HashMap<String, Integer> outputMap = new HashMap<>();
-            ItemStack output = recipe.getResultItem(source.getServer().registryAccess());
-            if (!output.isEmpty()) {
-                outputMap.put(output.getItem().toString(), output.getCount());
-            }
+            HashMap<String, Integer> outputMap = getOutputs(recipe, source.getServer().registryAccess());
 
             // Constructing the dict for a single recipe
-            singleRecipeDict.put("output", outputMap);
-            singleRecipeDict.put("input", inputMap);
             singleRecipeDict.put("type", recipe.getType().toString());
+            singleRecipeDict.put("input", inputMap);
+            singleRecipeDict.put("output", outputMap);
 
             // Adding the dict to the main dict under the key id
             recipeMap.put(holder.id().toString(), singleRecipeDict);
         }
 
         // Serialization
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(recipeMap);
 
         // Saving
-        BufferedWriter writer = new BufferedWriter(new FileWriter("C:/Users/timde/Documents/recipes.json"));
-        writer.write(json);
-        writer.close();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("../recipes.json"))) {
+            writer.write(json);
+        }
 
     }
 

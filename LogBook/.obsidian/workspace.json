@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "StonksTimeCore/Inputs.md",
+                "file": "StonksTimeCore/Crafting Graph.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Inputs"
+              "title": "Crafting Graph"
             }
           }
         ]
@@ -142,13 +142,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "StonksTimeCore/Inputs.md",
+                "file": "StonksTimeCore/Crafting Graph.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Inputs"
+              "title": "Outline of Crafting Graph"
             }
           }
         ],
@@ -169,11 +169,11 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "759408f222ab4844",
+  "active": "f7bfa27342a793b6",
   "lastOpenFiles": [
-    "StonksTimeCore/Crafting Graph.md",
-    "StonksTimeCore/SCT.md",
     "StonksTimeCore/Inputs.md",
+    "StonksTimeCore/SCT.md",
+    "StonksTimeCore/Crafting Graph.md",
     "StonksTimeCore/StonksTimeCore.md",
     "Imgs/cycle_propagating.png",
     "Imgs/cycle_propagating.png",
