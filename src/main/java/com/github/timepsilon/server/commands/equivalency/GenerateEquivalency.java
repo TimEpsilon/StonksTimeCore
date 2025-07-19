@@ -1,5 +1,7 @@
-package com.github.timepsilon.server.commands;
+package com.github.timepsilon.server.commands.equivalency;
 
+import com.github.timepsilon.server.commands.equivalency.io.create.*;
+import com.github.timepsilon.server.commands.equivalency.io.minecraft.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.brigadier.CommandDispatcher;
@@ -17,9 +19,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-
-import static com.github.timepsilon.server.utils.RecipeInputManager.getInputs;
-import static com.github.timepsilon.server.utils.RecipeOutputManager.getOutputs;
 
 public class GenerateEquivalency {
 
@@ -61,14 +60,25 @@ public class GenerateEquivalency {
         for (RecipeHolder<?> holder : recipes) {
             // Getting the real recipe object out of the holder
             Recipe<?> recipe = holder.value();
+            String mod = holder.id().getNamespace();
 
             HashMap<String,Object> singleRecipeDict = new HashMap<>();
 
             // Extract a map of items <-> amount
-            HashMap<String, HashMap<String, Integer>> inputMap = getInputs(recipe);
+            HashMap<String, HashMap<String, Integer>> inputMap;
+            if (mod.equals("create")) {
+                inputMap = RecipeInputCreate.getInputs(recipe);
+            } else {
+                inputMap = RecipeInputDefault.getInputs(recipe);
+            }
 
             // Extract a map of items <-> amount
-            HashMap<String, Integer> outputMap = getOutputs(recipe, source.getServer().registryAccess());
+            HashMap<String, Integer> outputMap;
+            if (mod.equals("create")) {
+                outputMap = RecipeOutputCreate.getOutputs(recipe, source.getServer().registryAccess());
+            } else {
+                outputMap = RecipeOutputDefault.getOutputs(recipe, source.getServer().registryAccess());
+            }
 
             // Constructing the dict for a single recipe
             singleRecipeDict.put("type", recipe.getType().toString());

@@ -1,4 +1,4 @@
-package com.github.timepsilon.server.utils;
+package com.github.timepsilon.server.commands.equivalency.io.create;
 
 import com.simibubi.create.content.kinetics.mixer.CompactingRecipe;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
@@ -10,13 +10,13 @@ import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.HashMap;
 
-public class RecipeOutputManager {
+public class RecipeOutputCreate {
 
     public static HashMap<String, Integer> getOutputs(Recipe<?> recipe, HolderLookup.Provider provider) {
         switch (recipe) {
             case MixingRecipe mixing -> {return getOutputsBasin(mixing, provider);}
             case CompactingRecipe compacting -> {return getOutputsBasin(compacting, provider);}
-            default -> {return getOutputDefault(recipe, provider);}
+            default -> {return null;}
         }
     }
 
