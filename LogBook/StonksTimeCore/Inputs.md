@@ -11,7 +11,7 @@ The rule of thumb is that the value of an item is based on it's scarcity and not
 
 Remember that the min value is 1.
 
-![[SCT#Currencies]]
+![[SCT#Currencies#Summary]]
 # Comments
 
 ## Missing Recipe Types 

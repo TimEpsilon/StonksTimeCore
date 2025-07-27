@@ -2,22 +2,17 @@ package com.github.timepsilon.server.commands.equivalency;
 
 import com.github.timepsilon.server.commands.equivalency.io.create.*;
 import com.github.timepsilon.server.commands.equivalency.io.minecraft.*;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.github.timepsilon.utils.FileManager;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.*;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
 public class GenerateEquivalency {
@@ -32,24 +27,23 @@ public class GenerateEquivalency {
         );
     }
 
-    private static int generateFiles(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+    private static int generateFiles(CommandContext<CommandSourceStack> ctx) {
         CommandSourceStack source = ctx.getSource();
-        try {
-            iterateItems();
-            iterateRecipes(source);
-        } catch (IOException e) {e.printStackTrace();}
+        iterateItems(source);
+        iterateRecipes(source);
+        source.sendSystemMessage(Component.literal("Item list and Recipe dict have been saved in the config folder").withStyle(ChatFormatting.DARK_GRAY));
         return 0;
     }
 
-    private static void iterateItems() throws IOException {
+    private static void iterateItems(CommandSourceStack source) {
         ArrayList<String> items = new ArrayList<>();
         for (ResourceLocation itemId : BuiltInRegistries.ITEM.keySet()) {
             items.add(itemId.toString());
         }
-        Files.write(Path.of("../items.txt"), items);
+        FileManager.writeConfigServerSide("items.txt", items, source.getServer());
     }
 
-    private static void iterateRecipes(CommandSourceStack source) throws IOException {
+    private static void iterateRecipes(CommandSourceStack source) {
         // Getting the recipes
         RecipeManager recipeManager = source.getServer().getRecipeManager();
         Collection<RecipeHolder<?>> recipes = recipeManager.getRecipes();
@@ -89,14 +83,7 @@ public class GenerateEquivalency {
             recipeMap.put(holder.id().toString(), singleRecipeDict);
         }
 
-        // Serialization
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson(recipeMap);
-
-        // Saving
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("../recipes.json"))) {
-            writer.write(json);
-        }
+        FileManager.writeConfigServerSide("recipes.json", recipeMap, source.getServer());
 
     }
 
