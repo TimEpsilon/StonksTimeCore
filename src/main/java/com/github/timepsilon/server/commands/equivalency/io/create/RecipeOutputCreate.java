@@ -16,7 +16,7 @@ public class RecipeOutputCreate {
         switch (recipe) {
             case MixingRecipe mixing -> {return getOutputsBasin(mixing, provider);}
             case CompactingRecipe compacting -> {return getOutputsBasin(compacting, provider);}
-            default -> {return null;}
+            default -> {return getOutputDefault(recipe, provider);}
         }
     }
 
