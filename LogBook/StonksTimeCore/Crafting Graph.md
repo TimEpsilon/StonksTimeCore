@@ -116,9 +116,13 @@ For a simple cycle, the behavior is stable.
 ## Forced Equivalency
 Some items (mostly dyed items), are functionally equivalent. They thus need to have the same value.
 
-To do this, we keep a taglist of those items, and every time an item node value is set (as a subnode or a main node), we check if the node is within a taglist and if so, we copy the found values to the other nodes and set them as solved.
+To do this, we combine all items in a tag into a single item node, by copying the nodes non sub-edges. We then need to remove any redundant cycles that may have formed.
 
-May have problems with parallelization
+To do this, we proceed as follows :
+- Get every predecessor node that is also a recipe node.
+- For each of those nodes, if any of the ancestors 2 levels up is the same tag item node, remove the recipe node
+- Now get every successor node that is also an ingredient node.
+- For each of those nodes, if no successor is found, remove it
 
 We may also need to tag some recipes as blacklisted (smithing trim recipes for instance) in order to not add in complexity and to reduce divergence within cycles.
 

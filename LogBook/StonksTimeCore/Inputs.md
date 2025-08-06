@@ -83,17 +83,18 @@ Remember that the min value is 1.
 ****
 ## Errors
 - [x] Netherite / Smithing table recipes not taken into account
-	- [ ] Also do output
+	- [x] Also do output
 - [x] Liquids not taken into account
-- [ ] Color switching not taken into account
+- [x] Color switching not taken into account
 - [x] Ignore every cardboard package
 	- Except for rare ones
 - [x] Crushed recipes not taken into account
 - [x] Recipe sequences not taken into account
 - [x] Not every chest is a lootr chest
-- [ ] Add equivalency node
+- [x] Add equivalency node
 - [x] Too many structures
 	- Install mod to know which structure
+- [ ] Protection Pixel armors not taken into account
 ## Logs
 20
 

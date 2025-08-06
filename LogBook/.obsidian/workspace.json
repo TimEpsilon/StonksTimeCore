@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "StonksTimeCore/SCT.md",
+                "file": "StonksTimeCore/Inputs.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "SCT"
+              "title": "Inputs"
             }
           }
         ]
@@ -142,13 +142,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "StonksTimeCore/SCT.md",
+                "file": "StonksTimeCore/Inputs.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of SCT"
+              "title": "Outline of Inputs"
             }
           }
         ],
@@ -171,6 +171,9 @@
   },
   "active": "862d5115dbb950df",
   "lastOpenFiles": [
+    "StonksTimeCore/Crafting Graph.md",
+    "StonksTimeCore/StonksTimeCore.md",
+    "StonksTimeCore/Inputs.md",
     "StonksTimeCore/SCT.md",
     "StonksTimeCore/Coins/M-Coin/server-icon.png",
     "StonksTimeCore/Coins/M-Dime/1946-1964-90-silver-roosevelt-dimes-bu-mixed-dates-bulk5014-461014-59514-73-metal-united-states-mint-great-american-coin-companyr_643.jpg",
@@ -187,10 +190,7 @@
     "StonksTimeCore/Coins/M-Doubloon/300px-Gold_Pile_Single_Icon.png",
     "StonksTimeCore/Coins/M-Drachm",
     "StonksTimeCore/Coins/M-Dime",
-    "StonksTimeCore/Inputs.md",
     "StonksTimeCore/Coins/M-Cent",
-    "StonksTimeCore/StonksTimeCore.md",
-    "StonksTimeCore/Crafting Graph.md",
     "Idées Principales.md",
     "StonksTimeCore/Coins/M-Chip",
     "ModLogs/2025-04-30.md",

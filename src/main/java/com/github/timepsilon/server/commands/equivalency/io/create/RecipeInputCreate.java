@@ -77,7 +77,7 @@ public class RecipeInputCreate {
             tempOutputs.add(sequenced.getRecipe().getRollableResults().getFirst().getStack().getItem());
         }
 
-        HashMap<String, HashMap<String, Integer>> inputIngredientMap = new HashMap<>();
+        HashMap<String, HashMap<String, Integer>> inputIngredientMap = getInputsDefault(recipe);
         for (SequencedRecipe<?> sequenced : recipe.getSequence()) {
             for (Ingredient ingredient : sequenced.getRecipe().getIngredients()) {
                 HashMap<String, Integer> inputMap = new HashMap<>();
