@@ -23,6 +23,9 @@ repositories {
     maven {url "https://maven.k-4u.nl"} // TOP
     maven { url = "https://maven.createmod.net" } // Create, Ponder, Flywheel
     maven { url = "https://maven.ithundxr.dev/snapshots" } // Registrate
+    flatDir {
+        dir 'libs'
+    }
 }
 
 base {
@@ -132,7 +135,8 @@ dependencies {
     runtimeOnly("dev.engine-room.flywheel:flywheel-neoforge-${minecraft_version}:${flywheel_version}")
     implementation("com.tterrag.registrate:Registrate:${registrate_version}")
 
-
+    //implementation 'protection_pixel:protection_pixel:2.0.2'
+    //implementation 'kleider_renderer:kleider_renderer:2.0.2'
 
 
 

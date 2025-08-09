@@ -1,7 +1,5 @@
 package com.github.timepsilon.server.commands.equivalency;
 
-import com.github.timepsilon.server.commands.equivalency.io.create.*;
-import com.github.timepsilon.server.commands.equivalency.io.minecraft.*;
 import com.github.timepsilon.utils.FileManager;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
@@ -60,19 +58,11 @@ public class GenerateEquivalency {
 
             // Extract a map of items <-> amount
             HashMap<String, HashMap<String, Integer>> inputMap;
-            if (mod.equals("create")) {
-                inputMap = RecipeInputCreate.getInputs(recipe);
-            } else {
-                inputMap = RecipeInputDefault.getInputs(recipe);
-            }
+            inputMap = RecipeInput.getInputs(recipe);
 
             // Extract a map of items <-> amount
             HashMap<String, Integer> outputMap;
-            if (mod.equals("create")) {
-                outputMap = RecipeOutputCreate.getOutputs(recipe, source.getServer().registryAccess());
-            } else {
-                outputMap = RecipeOutputDefault.getOutputs(recipe, source.getServer().registryAccess());
-            }
+            outputMap = RecipeOutput.getOutputs(recipe, source.getServer().registryAccess());
 
             // Constructing the dict for a single recipe
             singleRecipeDict.put("type", recipe.getType().toString());

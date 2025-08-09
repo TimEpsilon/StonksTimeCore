@@ -1,4 +1,4 @@
-package com.github.timepsilon.server.commands.equivalency.io.create;
+package com.github.timepsilon.server.commands.equivalency;
 
 import com.simibubi.create.content.kinetics.mixer.CompactingRecipe;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
@@ -16,10 +16,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RecipeInputCreate {
+
+public class RecipeInput {
 
     public static HashMap<String, HashMap<String, Integer>> getInputs(Recipe<?> recipe) {
+
         switch (recipe) {
+            // Default
+            case SmithingTransformRecipe smithing -> {return getInputsSmithing(smithing);}
+            case SmithingTrimRecipe trim -> {return getInputsSmithing(trim);}
+            // Create
             case MixingRecipe mixing -> {return getInputsBasin(mixing);}
             case CompactingRecipe compacting -> {return getInputsBasin(compacting);}
             case SequencedAssemblyRecipe assembly -> {return getInputsAssembly(assembly);}
@@ -53,6 +59,37 @@ public class RecipeInputCreate {
             HashMap<String, Integer> inputMap = singleItemMap(ingredient);
             inputIngredientMap.put(ingredient.toString(), inputMap);
         }
+        return inputIngredientMap;
+    }
+
+    private static HashMap<String, HashMap<String, Integer>> getInputsSmithing(SmithingRecipe recipe) {
+        HashMap<String, HashMap<String, Integer>> inputIngredientMap = new HashMap<>();
+
+        Ingredient template;
+        Ingredient addition;
+        Ingredient base;
+
+        if (recipe instanceof SmithingTransformRecipe transform) {
+            template = transform.template;
+            addition = transform.addition;
+            base = transform.base;
+        } else if (recipe instanceof SmithingTrimRecipe trim) {
+            template = trim.template;
+            addition = trim.addition;
+            base = trim.base;
+        } else {
+            return inputIngredientMap;
+        }
+
+        HashMap<String, Integer> templateMap = singleItemMap(template);
+        inputIngredientMap.put(template.toString(), templateMap);
+
+        HashMap<String, Integer> additionMap = singleItemMap(addition);
+        inputIngredientMap.put(addition.toString(), additionMap);
+
+        HashMap<String, Integer> baseMap = singleItemMap(base);
+        inputIngredientMap.put(base.toString(), baseMap);
+
         return inputIngredientMap;
     }
 
@@ -131,5 +168,4 @@ public class RecipeInputCreate {
         }
         return inputIngredientMap;
     }
-
 }
