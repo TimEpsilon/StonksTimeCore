@@ -26,6 +26,16 @@ repositories {
     flatDir {
         dir 'libs'
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                url "https://cursemaven.com"
+            }
+        }
+        filter {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 base {
@@ -135,6 +145,12 @@ dependencies {
     runtimeOnly("dev.engine-room.flywheel:flywheel-neoforge-${minecraft_version}:${flywheel_version}")
     implementation("com.tterrag.registrate:Registrate:${registrate_version}")
 
+    // Randomium
+    implementation 'curse.maven:randomium-523013:6659375'
+
+    // Moonlight
+    implementation 'curse.maven:moonlight-499980:6818413'
+
     //implementation 'protection_pixel:protection_pixel:2.0.2'
     //implementation 'kleider_renderer:kleider_renderer:2.0.2'
 
@@ -162,7 +178,9 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_version            : mod_version,
             mod_authors            : mod_authors,
             mod_description        : mod_description,
-            create_version_range   : create_version_range
+            create_version_range   : create_version_range,
+            randomium_version_range: randomium_version_range,
+            moonlight_version_range: moonlight_version_range
     ]
     inputs.properties replaceProperties
     expand replaceProperties
