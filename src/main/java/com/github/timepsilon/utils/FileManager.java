@@ -3,11 +3,8 @@ package com.github.timepsilon.utils;
 import com.github.timepsilon.Core;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mojang.brigadier.context.CommandContext;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.LevelResource;
-import net.neoforged.fml.loading.FMLPaths;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -20,12 +17,7 @@ public class FileManager {
 
     public static void writeConfigServerSide(String name, Object content, MinecraftServer server) {
         // Config directory
-        Path dir = server.getWorldPath(LevelResource.ROOT).resolve("serverconfig").resolve(Core.MODID);
-        try {
-            Files.createDirectories(dir);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not create config folder", e);
-        }
+        Path dir = makeServerSideDirectory(server);
 
         // Serialization
         Path file = dir.resolve(name);
@@ -43,5 +35,15 @@ public class FileManager {
         } catch (IOException e) {
             throw new RuntimeException("Failed to write " + name, e);
         }
+    }
+
+    private static Path makeServerSideDirectory(MinecraftServer server) {
+        Path dir = server.getWorldPath(LevelResource.ROOT).resolve("serverconfig").resolve(Core.MODID);
+        try {
+            Files.createDirectories(dir);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not create config folder", e);
+        }
+        return dir;
     }
 }

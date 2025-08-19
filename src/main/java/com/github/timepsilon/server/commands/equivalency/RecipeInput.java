@@ -1,5 +1,7 @@
 package com.github.timepsilon.server.commands.equivalency;
 
+import com.simibubi.create.content.fluids.spout.FillingBySpout;
+import com.simibubi.create.content.fluids.transfer.FillingRecipe;
 import com.simibubi.create.content.kinetics.mixer.CompactingRecipe;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
@@ -24,11 +26,12 @@ public class RecipeInput {
         switch (recipe) {
             // Default
             case SmithingTransformRecipe smithing -> {return getInputsSmithing(smithing);}
-            case SmithingTrimRecipe trim -> {return getInputsSmithing(trim);}
+            case SmithingTrimRecipe ignored -> {return new HashMap<>();} // Ignore triming recipes (simplifies graph)
             // Create
             case MixingRecipe mixing -> {return getInputsBasin(mixing);}
             case CompactingRecipe compacting -> {return getInputsBasin(compacting);}
             case SequencedAssemblyRecipe assembly -> {return getInputsAssembly(assembly);}
+            case FillingRecipe filling -> {return getInputsFilling(filling);}
             default -> {return getInputsDefault(recipe);}
         }
     }
@@ -57,7 +60,12 @@ public class RecipeInput {
         // The goal is to prevent naive propagation of the SCT values within the same ingredient
         for (Ingredient ingredient : ingredients) {
             HashMap<String, Integer> inputMap = singleItemMap(ingredient);
-            inputIngredientMap.put(ingredient.toString(), inputMap);
+            inputIngredientMap.merge(ingredient.toString(), inputMap,
+                    (oldMap, newMap) -> {
+                newMap.forEach((key, value) ->
+                        oldMap.merge(key, value, Integer::sum));
+                return oldMap;
+            });
         }
         return inputIngredientMap;
     }
@@ -94,6 +102,17 @@ public class RecipeInput {
     }
 
     private static HashMap<String, HashMap<String, Integer>> getInputsBasin(BasinRecipe recipe) {
+        HashMap<String, HashMap<String, Integer>> inputIngredientMap = getInputsDefault(recipe);
+
+        for (FluidIngredient ingredient : recipe.getFluidIngredients()) {
+            HashMap<String, Integer> inputMap = singleFluidMap(ingredient);
+            inputIngredientMap.put(ingredient.toString(), inputMap);
+        }
+
+        return inputIngredientMap;
+    }
+
+    private static HashMap<String, HashMap<String, Integer>> getInputsFilling(FillingRecipe recipe) {
         HashMap<String, HashMap<String, Integer>> inputIngredientMap = getInputsDefault(recipe);
 
         for (FluidIngredient ingredient : recipe.getFluidIngredients()) {

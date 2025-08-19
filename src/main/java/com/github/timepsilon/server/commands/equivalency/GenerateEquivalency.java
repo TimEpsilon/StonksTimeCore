@@ -1,7 +1,11 @@
 package com.github.timepsilon.server.commands.equivalency;
 
+import com.github.timepsilon.server.datamaps.DataMaps;
+import com.github.timepsilon.server.datamaps.SCTMap;
 import com.github.timepsilon.utils.FileManager;
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -15,28 +19,36 @@ import java.util.*;
 
 public class GenerateEquivalency {
 
+
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(
-                Commands.literal("equivalency")
-                .requires(p -> p.hasPermission(2))
-                .executes(
-                        GenerateEquivalency::generateFiles
-                )
-        );
+
+        LiteralArgumentBuilder<CommandSourceStack> literalargumentbuilder = Commands.literal("equivalency").requires(p -> p.hasPermission(2));
+
+        literalargumentbuilder
+                .executes(context -> {
+                            GenerateEquivalency.generateFiles(context);
+                            return Command.SINGLE_SUCCESS;
+                        }
+                );
+        dispatcher.register(literalargumentbuilder);
     }
 
-    private static int generateFiles(CommandContext<CommandSourceStack> ctx) {
+    private static void generateFiles(CommandContext<CommandSourceStack> ctx) {
         CommandSourceStack source = ctx.getSource();
         iterateItems(source);
         iterateRecipes(source);
         source.sendSystemMessage(Component.literal("Item list and Recipe dict have been saved in the config folder").withStyle(ChatFormatting.DARK_GRAY));
-        return 0;
     }
 
     private static void iterateItems(CommandSourceStack source) {
         ArrayList<String> items = new ArrayList<>();
         for (ResourceLocation itemId : BuiltInRegistries.ITEM.keySet()) {
             items.add(itemId.toString());
+
+            SCTMap sct = BuiltInRegistries.ITEM.get(itemId).builtInRegistryHolder().getData(DataMaps.SCT_MAP);
+            if (sct != null) {
+                System.out.println(sct + " " + sct.SCT());
+            }
         }
         FileManager.writeConfigServerSide("items.txt", items, source.getServer());
     }
