@@ -1,0 +1,27 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.StonksTemporalChronoscop_Gecko.new": {
+			"loop": true,
+			"animation_length": 35,
+			"bones": {
+				"ring": {
+					"rotation": {
+						"vector": [0, "query.anim_time /7 * 360", 0]
+					}
+				},
+				"inner_gear": {
+					"rotation": {
+						"vector": ["query.anim_time /35 * 360", 0, 0]
+					}
+				},
+				"time_gear": {
+					"rotation": {
+						"vector": [0, "-query.anim_time /5  * 360", 0]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

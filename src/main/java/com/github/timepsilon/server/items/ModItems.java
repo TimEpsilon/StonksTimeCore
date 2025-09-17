@@ -12,12 +12,12 @@ public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Core.MODID);
 
     // The items
-    public static final DeferredItem<Item> MCOIN_1 = ITEMS.register("mcoin_1", () -> new Item(new Item.Properties()));
-    public static final DeferredItem<Item> MCOIN_10 = ITEMS.register("mcoin_10", () -> new Item(new Item.Properties()));
-    public static final DeferredItem<Item> MCOIN_50 = ITEMS.register("mcoin_50", () -> new Item(new Item.Properties()));
-    public static final DeferredItem<Item> MCOIN_100 = ITEMS.register("mcoin_100", () -> new Item(new Item.Properties()));
-    public static final DeferredItem<Item> MCOIN_500 = ITEMS.register("mcoin_500", () -> new Item(new Item.Properties()));
-    public static final DeferredItem<Item> MCOIN_10000 = ITEMS.register("mcoin_10000", () -> new Item(new Item.Properties()));
+    public static final DeferredItem<Item> MCOIN_1 = createItem("mcoin_1");
+    public static final DeferredItem<Item> MCOIN_10 = createItem("mcoin_10");
+    public static final DeferredItem<Item> MCOIN_50 = createItem("mcoin_50");
+    public static final DeferredItem<Item> MCOIN_100 = createItem("mcoin_100");
+    public static final DeferredItem<Item> MCOIN_500 = createItem("mcoin_500");
+    public static final DeferredItem<Item> MCOIN_10000 = createItem("mcoin_10000");
 
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);

@@ -1,12 +1,21 @@
 package com.github.timepsilon;
 
+import com.github.timepsilon.server.block.ModBlocks;
+import com.github.timepsilon.server.block.entity.ModBlockEntities;
+import com.github.timepsilon.server.block.entity.client.StonksTemporalChronoscopeRenderer;
 import com.github.timepsilon.server.events.ModEventsManager;
 import com.github.timepsilon.server.events.NeoForgeEventsManager;
 import com.github.timepsilon.server.items.ModItems;
 import com.mojang.logging.LogUtils;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import org.slf4j.Logger;
@@ -18,7 +27,6 @@ public class Core {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     // Registry
-    //public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     //public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
     public Core(IEventBus modEventBus, ModContainer modContainer) {
@@ -31,7 +39,8 @@ public class Core {
 
         // Register
         ModItems.register(modEventBus);
-        //BLOCKS.register(modEventBus);
+        ModBlocks.register(modEventBus);
+        ModBlockEntities.register(modEventBus);
         //CREATIVE_MODE_TABS.register(modEventBus);
 
         // Register Neoforge Events
@@ -45,6 +54,14 @@ public class Core {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         LOGGER.info("Started loading StonksTimeCore...");
+    }
+
+    @EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
+    public static class ClientModEvents {
+        @SubscribeEvent
+        public static void onClientSetup(final FMLClientSetupEvent event) {
+            BlockEntityRenderers.register(ModBlockEntities.STONKS_TEMPORAL_CHRONOSCOPE_ENTITY.get(), StonksTemporalChronoscopeRenderer::new);
+        }
     }
 
 

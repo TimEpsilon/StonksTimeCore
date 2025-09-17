@@ -35,6 +35,15 @@ repositories {
         filter {
             includeGroup "curse.maven"
         }
+        forRepository {
+            maven {
+                name = 'GeckoLib'
+                url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+            }
+        }
+        filter {
+            includeGroup('software.bernie.geckolib')
+        }
     }
 }
 
@@ -153,6 +162,9 @@ dependencies {
 
     //implementation 'protection_pixel:protection_pixel:2.0.2'
     //implementation 'kleider_renderer:kleider_renderer:2.0.2'
+
+    // Geckolib
+    implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
 
 
 
