@@ -2,7 +2,9 @@ package com.github.timepsilon.block.entity.client;
 
 import com.github.timepsilon.Core;
 import com.github.timepsilon.block.entity.server.StonksTemporalChronoscopeEntity;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.model.GeoModel;
 
 public class StonksTemporalChronoscopeModel extends GeoModel<StonksTemporalChronoscopeEntity> {
@@ -24,5 +26,10 @@ public class StonksTemporalChronoscopeModel extends GeoModel<StonksTemporalChron
     @Override
     public ResourceLocation getAnimationResource(StonksTemporalChronoscopeEntity animatable) {
         return animations;
+    }
+
+    @Override
+    public @Nullable RenderType getRenderType(StonksTemporalChronoscopeEntity animatable, ResourceLocation texture) {
+        return RenderType.entityTranslucentCull(texture);
     }
 }
