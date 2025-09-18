@@ -1,7 +1,7 @@
-package com.github.timepsilon.server.block.entity.client;
+package com.github.timepsilon.block.entity.client;
 
 import com.github.timepsilon.Core;
-import com.github.timepsilon.server.block.entity.server.StonksTemporalChronoscopeEntity;
+import com.github.timepsilon.block.entity.server.StonksTemporalChronoscopeEntity;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 

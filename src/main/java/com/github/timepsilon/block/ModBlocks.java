@@ -1,15 +1,14 @@
-package com.github.timepsilon.server.block;
+package com.github.timepsilon.block;
 
 import com.github.timepsilon.Core;
-import com.github.timepsilon.server.block.custom.StonksTemporalChronoscope;
-import com.github.timepsilon.server.items.ModItems;
+import com.github.timepsilon.block.custom.StonksTemporalChronoscope;
+import com.github.timepsilon.items.ModItems;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ModBlocks {

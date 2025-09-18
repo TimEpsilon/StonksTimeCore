@@ -1,8 +1,8 @@
-package com.github.timepsilon.server.events;
+package com.github.timepsilon.events;
 
-import com.github.timepsilon.server.commands.equivalency.GenerateEquivalency;
-import com.github.timepsilon.server.datamaps.DataMaps;
-import com.github.timepsilon.server.datamaps.SCTMap;
+import com.github.timepsilon.commands.equivalency.GenerateEquivalency;
+import com.github.timepsilon.datamaps.DataMaps;
+import com.github.timepsilon.datamaps.SCTMap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;

@@ -1,8 +1,8 @@
-package com.github.timepsilon.server.block.entity;
+package com.github.timepsilon.block.entity;
 
 import com.github.timepsilon.Core;
-import com.github.timepsilon.server.block.ModBlocks;
-import com.github.timepsilon.server.block.entity.server.StonksTemporalChronoscopeEntity;
+import com.github.timepsilon.block.ModBlocks;
+import com.github.timepsilon.block.entity.server.StonksTemporalChronoscopeEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;

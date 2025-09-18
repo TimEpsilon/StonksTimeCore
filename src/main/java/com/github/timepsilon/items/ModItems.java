@@ -1,4 +1,4 @@
-package com.github.timepsilon.server.items;
+package com.github.timepsilon.items;
 
 import com.github.timepsilon.Core;
 import net.minecraft.world.item.Item;

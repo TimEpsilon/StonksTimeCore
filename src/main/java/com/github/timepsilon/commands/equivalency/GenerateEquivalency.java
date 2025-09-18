@@ -1,7 +1,7 @@
-package com.github.timepsilon.server.commands.equivalency;
+package com.github.timepsilon.commands.equivalency;
 
-import com.github.timepsilon.server.datamaps.DataMaps;
-import com.github.timepsilon.server.datamaps.SCTMap;
+import com.github.timepsilon.datamaps.DataMaps;
+import com.github.timepsilon.datamaps.SCTMap;
 import com.github.timepsilon.utils.FileManager;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;

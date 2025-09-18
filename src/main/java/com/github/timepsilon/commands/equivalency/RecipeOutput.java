@@ -1,4 +1,4 @@
-package com.github.timepsilon.server.commands.equivalency;
+package com.github.timepsilon.commands.equivalency;
 
 import com.simibubi.create.content.kinetics.mixer.CompactingRecipe;
 import com.simibubi.create.content.kinetics.mixer.MixingRecipe;

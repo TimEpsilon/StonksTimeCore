@@ -1,14 +1,13 @@
 package com.github.timepsilon;
 
-import com.github.timepsilon.server.block.ModBlocks;
-import com.github.timepsilon.server.block.entity.ModBlockEntities;
-import com.github.timepsilon.server.block.entity.client.StonksTemporalChronoscopeRenderer;
-import com.github.timepsilon.server.events.ModEventsManager;
-import com.github.timepsilon.server.events.NeoForgeEventsManager;
-import com.github.timepsilon.server.items.ModItems;
+import com.github.timepsilon.block.ModBlocks;
+import com.github.timepsilon.block.entity.ModBlockEntities;
+import com.github.timepsilon.block.entity.client.StonksTemporalChronoscopeRenderer;
+import com.github.timepsilon.events.ModEventsManager;
+import com.github.timepsilon.events.NeoForgeEventsManager;
+import com.github.timepsilon.items.ModItems;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
-import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;

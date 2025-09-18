@@ -1,7 +1,7 @@
-package com.github.timepsilon.server.events;
+package com.github.timepsilon.events;
 
 import com.github.timepsilon.Core;
-import com.github.timepsilon.server.datamaps.DataMaps;
+import com.github.timepsilon.datamaps.DataMaps;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 

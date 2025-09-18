@@ -1,4 +1,4 @@
-package com.github.timepsilon.server.datamaps;
+package com.github.timepsilon.datamaps;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

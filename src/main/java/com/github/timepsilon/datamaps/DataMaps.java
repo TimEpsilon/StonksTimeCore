@@ -1,4 +1,4 @@
-package com.github.timepsilon.server.datamaps;
+package com.github.timepsilon.datamaps;
 
 import com.github.timepsilon.Core;
 import net.minecraft.core.registries.Registries;

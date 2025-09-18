@@ -1,6 +1,6 @@
-package com.github.timepsilon.server.block.entity.server;
+package com.github.timepsilon.block.entity.server;
 
-import com.github.timepsilon.server.block.entity.ModBlockEntities;
+import com.github.timepsilon.block.entity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;

@@ -1,6 +1,6 @@
-package com.github.timepsilon.server.block.custom;
+package com.github.timepsilon.block.custom;
 
-import com.github.timepsilon.server.block.entity.server.StonksTemporalChronoscopeEntity;
+import com.github.timepsilon.block.entity.server.StonksTemporalChronoscopeEntity;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.BaseEntityBlock;
