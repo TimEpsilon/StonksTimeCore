@@ -3,6 +3,7 @@ package com.github.timepsilon.block;
 import com.github.timepsilon.Core;
 import com.github.timepsilon.block.custom.StonksTemporalChronoscope;
 import com.github.timepsilon.items.ModItems;
+import com.simibubi.create.AllBlocks;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -23,7 +24,10 @@ public class ModBlocks {
 
     // The blocks
     public static final DeferredBlock<Block> STONKS_TEMPORAL_CHRONOSCOPE = BLOCKS.register("stonks_temporal_chronoscope",
-            () -> new StonksTemporalChronoscope(BlockBehaviour.Properties.of().noOcclusion()));
+            () -> new StonksTemporalChronoscope(
+                    BlockBehaviour
+                            .Properties
+                            .ofFullCopy(AllBlocks.MECHANICAL_ARM.get())));
 
 
     // The block items
