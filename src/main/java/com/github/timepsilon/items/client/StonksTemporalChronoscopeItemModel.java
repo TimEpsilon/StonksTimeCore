@@ -1,7 +1,6 @@
 package com.github.timepsilon.items.client;
 
 import com.github.timepsilon.Core;
-import com.github.timepsilon.block.entity.server.StonksTemporalChronoscopeEntity;
 import com.github.timepsilon.items.custom.StonksTemporalChronoscopeItem;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;

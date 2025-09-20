@@ -2,10 +2,7 @@ package com.github.timepsilon.block;
 
 import com.github.timepsilon.Core;
 import com.github.timepsilon.block.custom.StonksTemporalChronoscope;
-import com.github.timepsilon.items.ModItems;
 import com.simibubi.create.AllBlocks;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.bus.api.IEventBus;
@@ -27,12 +24,7 @@ public class ModBlocks {
             () -> new StonksTemporalChronoscope(
                     BlockBehaviour
                             .Properties
-                            .ofFullCopy(AllBlocks.MECHANICAL_ARM.get())));
-
-
-    // The block items
-    private static <T extends Block> void registerBlockItem(String name, DeferredBlock<T> block) {
-        ModItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
-    }
+                            .ofFullCopy(AllBlocks.MECHANICAL_ARM.get())
+            ));
 
 }

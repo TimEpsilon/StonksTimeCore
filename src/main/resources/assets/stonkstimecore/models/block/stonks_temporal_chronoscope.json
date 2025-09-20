@@ -4,14 +4,14 @@
   "display": {
     "thirdperson_righthand": {
       "rotation": [
-        75,
+        69,
         45,
         0
       ],
       "translation": [
         0,
-        2.5,
-        0
+        1,
+        -1.75
       ],
       "scale": [
         0.375,
@@ -21,14 +21,14 @@
     },
     "thirdperson_lefthand": {
       "rotation": [
-        75,
+        69,
         45,
         0
       ],
       "translation": [
         0,
-        2.5,
-        0
+        1,
+        -1.75
       ],
       "scale": [
         0.375,
@@ -110,6 +110,6 @@
     }
   },
   "textures": {
-    "particle": "item/stonks_temporal_chronoscope"
+    "particle": "create:block/brass_block"
   }
 }

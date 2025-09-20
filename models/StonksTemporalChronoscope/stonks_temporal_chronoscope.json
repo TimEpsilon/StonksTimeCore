@@ -1,17 +1,16 @@
 {
   "credit": "Made with Blockbench",
-  "parent": "builtin/entity",
   "display": {
     "thirdperson_righthand": {
       "rotation": [
-        75,
+        69,
         45,
         0
       ],
       "translation": [
         0,
-        2.5,
-        0
+        1,
+        -1.75
       ],
       "scale": [
         0.375,
@@ -21,14 +20,14 @@
     },
     "thirdperson_lefthand": {
       "rotation": [
-        75,
+        69,
         45,
         0
       ],
       "translation": [
         0,
-        2.5,
-        0
+        1,
+        -1.75
       ],
       "scale": [
         0.375,

@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "StonksTimeCore/StonksTimeCore.md",
+                "file": "StonksTimeCore/SCT.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "StonksTimeCore"
+              "title": "SCT"
             }
           }
         ]
@@ -142,13 +142,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "StonksTimeCore/StonksTimeCore.md",
+                "file": "StonksTimeCore/SCT.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of StonksTimeCore"
+              "title": "Outline of SCT"
             }
           }
         ],
@@ -160,6 +160,7 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "bases:Create new base": false,
       "obsidian-excalidraw-plugin:New drawing": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
@@ -171,11 +172,12 @@
   },
   "active": "862d5115dbb950df",
   "lastOpenFiles": [
-    "Idées Principales.md",
-    "StonksTimeCore/StonksTimeCore.md",
-    "StonksTimeCore/SCT.md",
     "StonksTimeCore/Inputs.md",
     "StonksTimeCore/Crafting Graph.md",
+    "StonksTimeCore/Coins/M-Cent/2010_cent_obverse.png",
+    "StonksTimeCore/StonksTimeCore.md",
+    "Idées Principales.md",
+    "StonksTimeCore/SCT.md",
     "Mods/Mods.md",
     "Mods/Liste de Mods.md",
     "ModLogs/2025-04-05.md",
@@ -197,7 +199,6 @@
     "StonksTimeCore/Coins/M-Doubloon/Brass_Ingot.webp",
     "Brass_Ingot 1.webp",
     "StonksTimeCore/Coins/M-Doubloon",
-    "StonksTimeCore/Coins/M-Doubloon/300px-Gold_Pile_Single_Icon.png",
     "StonksTimeCore/Coins/M-Drachm",
     "StonksTimeCore/Coins/M-Dime",
     "StonksTimeCore/Coins/M-Cent",
