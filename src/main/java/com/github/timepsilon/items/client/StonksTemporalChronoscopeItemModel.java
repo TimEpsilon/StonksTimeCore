@@ -30,7 +30,7 @@ public class StonksTemporalChronoscopeItemModel extends GeoModel<StonksTemporalC
 
     @Override
     public @Nullable RenderType getRenderType(StonksTemporalChronoscopeItem animatable, ResourceLocation texture) {
-        return RenderType.entityTranslucentCull(texture);
+        return RenderType.entityTranslucent(texture);
     }
 
 }

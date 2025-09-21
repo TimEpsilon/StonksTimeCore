@@ -3,21 +3,26 @@
 	"animations": {
 		"spinning": {
 			"loop": true,
-			"animation_length": 35,
+			"animation_length": 60,
 			"bones": {
 				"ring": {
 					"rotation": {
-						"vector": [0, "query.anim_time /7 * 360", 0]
+						"vector": [0, "-query.anim_time /6 * 360 * query.stonkstimecore_input_speed/64", 0]
 					}
 				},
 				"inner_gear": {
 					"rotation": {
-						"vector": ["query.anim_time /35 * 360", 0, 0]
+						"vector": ["query.anim_time /30 * 360 * query.stonkstimecore_input_speed/64", 0, 0]
 					}
 				},
 				"time_gear": {
 					"rotation": {
-						"vector": [0, "-query.anim_time /5  * 360", 0]
+						"vector": [0, "query.anim_time /4  * 360 * query.stonkstimecore_input_speed/64", 0]
+					}
+				},
+				"input": {
+					"rotation": {
+						"vector": [0, "-query.anim_time/60 * 360 * query.stonkstimecore_input_speed", 0]
 					}
 				}
 			}

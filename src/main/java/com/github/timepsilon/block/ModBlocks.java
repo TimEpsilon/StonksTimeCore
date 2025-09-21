@@ -9,6 +9,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+
 public class ModBlocks {
 
     // The Registry
@@ -26,5 +27,4 @@ public class ModBlocks {
                             .Properties
                             .ofFullCopy(AllBlocks.MECHANICAL_ARM.get())
             ));
-
 }

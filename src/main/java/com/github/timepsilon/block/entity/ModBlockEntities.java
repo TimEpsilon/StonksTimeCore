@@ -10,6 +10,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
+
 public class ModBlockEntities {
 
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
@@ -21,9 +22,7 @@ public class ModBlockEntities {
 
     public static final Supplier<BlockEntityType<StonksTemporalChronoscopeEntity>> STONKS_TEMPORAL_CHRONOSCOPE_ENTITY =
             BLOCK_ENTITIES.register("stonks_temporal_chronoscope",
-                    () -> BlockEntityType
-                            .Builder
-                            .of(
+                    () -> BlockEntityType.Builder.of(
                                 StonksTemporalChronoscopeEntity::new,
                                 ModBlocks.STONKS_TEMPORAL_CHRONOSCOPE.get())
                             .build(null));

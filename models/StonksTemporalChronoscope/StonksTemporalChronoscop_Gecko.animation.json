@@ -1,13 +1,13 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"animation.StonksTemporalChronoscop_Gecko.new": {
+		"animation.StonksTemporalChronoscope.spinning": {
 			"loop": true,
 			"animation_length": 35,
 			"bones": {
 				"ring": {
 					"rotation": {
-						"vector": [0, "query.anim_time /7 * 360", 0]
+						"vector": [0, "-query.anim_time /7 * 360", 0]
 					}
 				},
 				"inner_gear": {
@@ -17,7 +17,12 @@
 				},
 				"time_gear": {
 					"rotation": {
-						"vector": [0, "-query.anim_time /5  * 360", 0]
+						"vector": [0, "query.anim_time /5  * 360", 0]
+					}
+				},
+				"input": {
+					"rotation": {
+						"vector": [0, "query.anim_time * 6", 0]
 					}
 				}
 			}
