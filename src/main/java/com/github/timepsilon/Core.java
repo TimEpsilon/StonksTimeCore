@@ -53,6 +53,9 @@ public class Core {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         LOGGER.info("Started loading StonksTimeCore...");
+        event.enqueueWork(() -> {
+            ModBlocks.registerStress();
+        });
     }
 
     @EventBusSubscriber(modid = MODID, value = Dist.CLIENT)

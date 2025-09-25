@@ -73,5 +73,4 @@ public class StonksTemporalChronoscope extends KineticBlock implements IBE<Stonk
         return Direction.Axis.Y;
     }
 
-
 }

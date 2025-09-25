@@ -3,6 +3,7 @@ package com.github.timepsilon.block;
 import com.github.timepsilon.Core;
 import com.github.timepsilon.block.custom.StonksTemporalChronoscope;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.api.stress.BlockStressValues;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.bus.api.IEventBus;
@@ -27,4 +28,9 @@ public class ModBlocks {
                             .Properties
                             .ofFullCopy(AllBlocks.MECHANICAL_ARM.get())
             ));
+
+    // Stress impact
+    public static void registerStress() {
+        BlockStressValues.IMPACTS.register(STONKS_TEMPORAL_CHRONOSCOPE.get(), () -> 4608d);
+    }
 }
