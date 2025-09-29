@@ -7,6 +7,7 @@ import com.github.timepsilon.events.ModEventsManager;
 import com.github.timepsilon.events.NeoForgeEventsManager;
 import com.github.timepsilon.items.ModItems;
 import com.mojang.logging.LogUtils;
+import com.simibubi.create.foundation.data.CreateRegistrate;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -24,6 +25,7 @@ public class Core {
 
     public static final String MODID = "stonkstimecore";
     public static final Logger LOGGER = LogUtils.getLogger();
+    public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(Core.MODID);
 
     // Registry
     //public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
@@ -48,6 +50,7 @@ public class Core {
         // Register Events
         modEventBus.register(new ModEventsManager());
 
+        REGISTRATE.registerEventListeners(modEventBus);
 
     }
 

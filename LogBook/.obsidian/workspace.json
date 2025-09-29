@@ -20,8 +20,23 @@
               "icon": "lucide-file",
               "title": "SCT"
             }
+          },
+          {
+            "id": "eee6184cd08585a1",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Untitled.md",
+                "mode": "source",
+                "source": true
+              },
+              "icon": "lucide-file",
+              "title": "Untitled"
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -142,13 +157,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "StonksTimeCore/SCT.md",
+                "file": "Untitled.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of SCT"
+              "title": "Outline of Untitled"
             }
           }
         ],
@@ -170,14 +185,15 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "862d5115dbb950df",
+  "active": "eee6184cd08585a1",
   "lastOpenFiles": [
+    "StonksTimeCore/SCT.md",
+    "Untitled.md",
     "StonksTimeCore/Inputs.md",
     "StonksTimeCore/Crafting Graph.md",
     "StonksTimeCore/Coins/M-Cent/2010_cent_obverse.png",
     "StonksTimeCore/StonksTimeCore.md",
     "Idées Principales.md",
-    "StonksTimeCore/SCT.md",
     "Mods/Mods.md",
     "Mods/Liste de Mods.md",
     "ModLogs/2025-04-05.md",
@@ -216,7 +232,6 @@
     "Imgs",
     "StonksTimeCore/Node Types.md",
     "StonksTimeCore/Node Types",
-    "Untitled.md",
     "Untitled.canvas"
   ]
 }

@@ -1,0 +1,7 @@
+// 1.21.1	2025-09-30T00:50:38.7625647	Registrate Provider for stonkstimecore [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+df80b22af648b64a87f63b266844c22aec1ce7bb assets/stonkstimecore/blockstates/bank.json
+9122a946897034fb3018657e3aa1219a759b1463 assets/stonkstimecore/lang/en_ud.json
+efa82f2eed545591e72a6df004166e0dc80e66a0 assets/stonkstimecore/lang/en_us.json
+364905921d37a888913247f2fb44f5176735fbbc assets/stonkstimecore/models/item/bank.json
+d4eb1286f6de1352e46012c82cb8c6272f9c03db data/minecraft/tags/block/mineable/pickaxe.json
+cb0702d4e447758c485bda96fc2f95535a56a7a7 data/stonkstimecore/loot_table/blocks/bank.json
