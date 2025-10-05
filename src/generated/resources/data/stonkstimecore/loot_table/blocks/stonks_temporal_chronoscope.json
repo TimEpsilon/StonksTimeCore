@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "stonkstimecore:bank"
+          "name": "stonkstimecore:stonks_temporal_chronoscope"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "stonkstimecore:blocks/bank"
+  "random_sequence": "stonkstimecore:blocks/stonks_temporal_chronoscope"
 }

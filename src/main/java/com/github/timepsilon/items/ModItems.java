@@ -1,8 +1,6 @@
 package com.github.timepsilon.items;
 
 import com.github.timepsilon.Core;
-import com.github.timepsilon.block.ModBlocks;
-import com.github.timepsilon.items.custom.StonksTemporalChronoscopeItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -20,10 +18,6 @@ public class ModItems {
     public static final DeferredItem<Item> MCOIN_100 = createItem("mcoin_100");
     public static final DeferredItem<Item> MCOIN_500 = createItem("mcoin_500");
     public static final DeferredItem<Item> MCOIN_10000 = createItem("mcoin_10000");
-
-    // Block Items
-    public static final DeferredItem<Item> STONKS_TEMPORAL_CHRONOSCOPE = ITEMS.register("stonks_temporal_chronoscope",
-            () -> new StonksTemporalChronoscopeItem(ModBlocks.STONKS_TEMPORAL_CHRONOSCOPE.get(), new Item.Properties()));
 
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);

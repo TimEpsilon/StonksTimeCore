@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "stonkstimecore:block/stonks_temporal_chronoscope/block"
+    }
+  }
+}

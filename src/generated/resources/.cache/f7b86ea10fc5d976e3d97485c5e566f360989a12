@@ -1,7 +1,7 @@
-// 1.21.1	2025-09-30T00:50:38.7625647	Registrate Provider for stonkstimecore [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
-df80b22af648b64a87f63b266844c22aec1ce7bb assets/stonkstimecore/blockstates/bank.json
-9122a946897034fb3018657e3aa1219a759b1463 assets/stonkstimecore/lang/en_ud.json
-efa82f2eed545591e72a6df004166e0dc80e66a0 assets/stonkstimecore/lang/en_us.json
-364905921d37a888913247f2fb44f5176735fbbc assets/stonkstimecore/models/item/bank.json
-d4eb1286f6de1352e46012c82cb8c6272f9c03db data/minecraft/tags/block/mineable/pickaxe.json
-cb0702d4e447758c485bda96fc2f95535a56a7a7 data/stonkstimecore/loot_table/blocks/bank.json
+// 1.21.1	2025-10-05T21:54:58.6396015	Registrate Provider for stonkstimecore [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (enchantments), Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+814ac2d5029b2e98c381f4e09ad11e1a0cf4763f assets/stonkstimecore/blockstates/stonks_temporal_chronoscope.json
+f3b890aed51e2be92d7ff3135f5e65f9426ceb45 assets/stonkstimecore/lang/en_ud.json
+bbe4c064238518a103f53c4808b5e65501ef4ef7 assets/stonkstimecore/lang/en_us.json
+bf76dee5635f167eaf9969c064b9007bda3d2042 assets/stonkstimecore/models/item/stonks_temporal_chronoscope.json
+0b7f5b4cc89c07bca56317b314f99c45f83b02ca data/minecraft/tags/block/mineable/pickaxe.json
+d4f93ab6340ab539cfd186559e24a68290ddc890 data/stonkstimecore/loot_table/blocks/stonks_temporal_chronoscope.json

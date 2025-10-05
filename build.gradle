@@ -158,7 +158,7 @@ dependencies {
     implementation 'curse.maven:randomium-523013:6659375'
 
     // Moonlight
-    implementation 'curse.maven:moonlight-499980:6818413'
+    implementation 'curse.maven:moonlight-499980:7017282'
 
     //implementation 'protection_pixel:protection_pixel:2.0.2'
     //implementation 'kleider_renderer:kleider_renderer:2.0.2'
