@@ -1,14 +1,19 @@
 package com.github.timepsilon.block.entity.server;
 
+import com.github.timepsilon.Core;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.sound.SoundScapes;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+
+import java.util.List;
 
 public class StonksTemporalChronoscopeEntity extends KineticBlockEntity {
 
@@ -27,6 +32,4 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity {
         float pitch = Mth.clamp((Math.abs(getSpeed()) / 256f) + .45f, .85f, 1f);
         SoundScapes.play(SoundScapes.AmbienceGroup.KINETIC, worldPosition, pitch);
     }
-
-
 }

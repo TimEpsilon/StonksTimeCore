@@ -3,7 +3,8 @@
   "parent": "block/block",
   "credit": "Made with Blockbench",
   "textures": {
-    "7": "stonkstimecore:block/stonks_temporal_chronoscope"
+    "7": "stonkstimecore:block/stonks_temporal_chronoscope",
+    "particle": "create:block/brass_block"
   },
   "elements": [
     {
