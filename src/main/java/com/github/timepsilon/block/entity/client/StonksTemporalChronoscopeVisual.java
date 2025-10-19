@@ -3,81 +3,135 @@ package com.github.timepsilon.block.entity.client;
 import com.github.timepsilon.block.ModBlocks;
 import com.github.timepsilon.block.entity.server.StonksTemporalChronoscopeEntity;
 import com.github.timepsilon.create.STCPartialModels;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityVisual;
 import com.simibubi.create.content.kinetics.base.RotatingInstance;
 import com.simibubi.create.foundation.render.AllInstanceTypes;
 import dev.engine_room.flywheel.api.instance.Instance;
+import dev.engine_room.flywheel.api.task.Plan;
+import dev.engine_room.flywheel.api.visual.TickableVisual;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import dev.engine_room.flywheel.lib.instance.InstanceTypes;
+import dev.engine_room.flywheel.lib.instance.TransformedInstance;
 import dev.engine_room.flywheel.lib.model.Models;
+import dev.engine_room.flywheel.lib.task.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.Math;
 import java.util.function.Consumer;
 
-public class StonksTemporalChronoscopeVisual extends KineticBlockEntityVisual<StonksTemporalChronoscopeEntity> {
+public class StonksTemporalChronoscopeVisual extends KineticBlockEntityVisual<StonksTemporalChronoscopeEntity> implements TickableVisual {
 
     protected final RotatingInstance shaft;
-    protected final RotatingInstance ring;
+    protected final TransformedInstance ring;
+    protected final TransformedInstance innerRing;
+    protected final RotatingInstance timeGear;
+
+    // Speed in rad / s
+    protected final float ringIncrementAngle = (float) (2*Math.PI / 7 / 20);
+    protected final float innerRingIncrementAngle = (float) (2*Math.PI / 13 / 20);
+    protected final float timeGearSpeed = -360 / 5f; // degree per second
+
+    protected float innerRingCurrentAngle;
 
     public StonksTemporalChronoscopeVisual(VisualizationContext context, StonksTemporalChronoscopeEntity blockEntity, float partialTick) {
         super(context, blockEntity, partialTick);
 
         BlockPos visualPos = getVisualPosition();
+        innerRingCurrentAngle = 0;
 
         shaft = instancerProvider().instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF, Direction.DOWN))
                 .createInstance()
                 .setup(blockEntity)
                 .setPosition(visualPos);
 
-        ring = instancerProvider().instancer(AllInstanceTypes.ROTATING, Models.partial(STCPartialModels.GYROSCOPE_OUTER_RING, Direction.EAST))
+        ring = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(STCPartialModels.GYROSCOPE_OUTER_RING))
+                .createInstance()
+                .setTransform(new PoseStack(){{ translate(visualPos.getX(), visualPos.getY() + 3/16f, visualPos.getZ()); }});
+
+        innerRing = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(STCPartialModels.GYROSCOPE_INNER_RING))
+                .createInstance()
+                .setTransform(new PoseStack(){{ translate(visualPos.getX(), visualPos.getY() + 3/16f, visualPos.getZ()); }});
+
+        timeGear = instancerProvider().instancer(AllInstanceTypes.ROTATING, Models.partial(STCPartialModels.GYROSCOPE_TIME_GEAR))
                 .createInstance()
                 .setup(blockEntity)
                 .setPosition(visualPos.getX(), visualPos.getY() + 3/16f, visualPos.getZ());
 
         updateGyroscope();
 
-
         shaft.setChanged();
         ring.setChanged();
+        innerRing.setChanged();
+        timeGear.setChanged();
     }
-
-
-
 
     @Override
     public void collectCrumblingInstances(Consumer<@Nullable Instance> consumer) {
         consumer.accept(shaft);
         consumer.accept(ring);
+        consumer.accept(innerRing);
+        consumer.accept(timeGear);
     }
 
     @Override
     public void updateLight(float partialTick) {
         relight(ring);
         relight(shaft);
+        relight(innerRing);
+        relight(timeGear);
     }
 
     @Override
     protected void _delete() {
         ring.delete();
         shaft.delete();
+        innerRing.delete();
+        timeGear.delete();
     }
 
     @Override
     public void update(float partialTick) {
         shaft.setup(blockEntity).setChanged();
-        ring.setup(blockEntity).setChanged();
         updateGyroscope();
     }
 
     private void updateGyroscope() {
         float sign = Math.signum(blockEntity.getSpeed());
         if (Math.abs(blockEntity.getSpeed()) >= ModBlocks.STONKS_TEMPORAL_CHRONOSCOPE.get().getMinimumRequiredSpeedLevel().getSpeedValue()) {
-            ring.setRotationalSpeed(7 * 6 * sign); // Speed works in increment of 6 apparently
+            timeGear.setRotationalSpeed(timeGearSpeed * sign);
         } else {
-            ring.setRotationalSpeed(0);
+            timeGear.setRotationalSpeed(0);
+        }
+        timeGear.setChanged();
+    }
+
+    @Override
+    public Plan<Context> planTick() {
+        return SimplePlan.of(this::tickGyroscope);
+    }
+
+    private void tickGyroscope() {
+        float sign = Math.signum(blockEntity.getSpeed());
+
+        if (Math.abs(blockEntity.getSpeed()) >= ModBlocks.STONKS_TEMPORAL_CHRONOSCOPE.get().getMinimumRequiredSpeedLevel().getSpeedValue()) {
+            // Center origin, rotate, undo translation
+            ring.translate(0.5,0,0.5);
+            ring.rotate(ringIncrementAngle * sign, Axis.YP);
+            ring.translateBack(0.5,0,0.5);
+            ring.setChanged();
+
+            innerRingCurrentAngle += innerRingIncrementAngle * sign;
+
+            innerRing.setTransform(ring.pose);
+            innerRing.translate(0.5,22f/16,0.5);
+            innerRing.pose.rotateX(innerRingCurrentAngle);
+            innerRing.translateBack(0.5,22f/16,0.5);
+            innerRing.setChanged();
         }
     }
 }
