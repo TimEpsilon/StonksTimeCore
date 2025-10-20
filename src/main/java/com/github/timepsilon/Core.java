@@ -4,12 +4,12 @@ import com.github.timepsilon.block.ModBlocks;
 import com.github.timepsilon.block.entity.ModBlockEntities;
 import com.github.timepsilon.events.ModEventsManager;
 import com.github.timepsilon.events.NeoForgeEventsManager;
+import com.github.timepsilon.gui.ModMenu;
 import com.github.timepsilon.items.ModItems;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
-import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.item.TooltipModifier;
 import net.createmod.catnip.lang.FontHelper;
 import net.neoforged.bus.api.IEventBus;
@@ -41,6 +41,7 @@ public class Core {
         ModBlocks.register();
         ModBlockEntities.register();
         ModItems.register(modEventBus);
+        ModMenu.register();
 
         // Register Neoforge Events
         NeoForge.EVENT_BUS.register(new NeoForgeEventsManager());

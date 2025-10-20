@@ -2,19 +2,30 @@ package com.github.timepsilon.block.custom;
 
 import com.github.timepsilon.block.entity.ModBlockEntities;
 import com.github.timepsilon.block.entity.server.StonksTemporalChronoscopeEntity;
+import com.github.timepsilon.gui.StonksTemporalChronoscopeScreen;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlock;
+import com.simibubi.create.content.kinetics.transmission.sequencer.SequencedGearshiftBlockEntity;
+import com.simibubi.create.content.kinetics.transmission.sequencer.SequencedGearshiftScreen;
 import com.simibubi.create.foundation.block.IBE;
+import net.createmod.catnip.gui.ScreenOpener;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 public class StonksTemporalChronoscope extends KineticBlock implements IBE<StonksTemporalChronoscopeEntity>, IRotate {
@@ -61,5 +72,12 @@ public class StonksTemporalChronoscope extends KineticBlock implements IBE<Stonk
         return SpeedLevel.MEDIUM;
     }
 
-
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (level.isClientSide)
+            return InteractionResult.SUCCESS;
+        withBlockEntityDo(level, pos,
+                be -> player.openMenu(be, be::sendToMenu));
+        return InteractionResult.SUCCESS;
+    }
 }
