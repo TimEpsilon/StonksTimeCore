@@ -35,20 +35,15 @@ public class StonksTemporalChronoscopeScreen extends AbstractSimiContainerScreen
     @Override
     protected void init() {
         setWindowSize(background.width, background.height + 2 + AllGuiTextures.PLAYER_INVENTORY.getHeight());
-        setWindowOffset(-20, 0);
+        setWindowOffset(0, 0);
         super.init();
 
         int x = leftPos;
         int y = topPos;
 
-        //labelBox = new EditBox(new NoShadowFontWrapper(font), x+23, y+4, background.width - 20, 10, Component.literal("Stonks Temporal Chronoscope"));
-        //labelBox.setEditable(false);
-        //labelBox.setBordered(false);
-        //labelBox.setTextColor(0x592424);
-        //addRenderableWidget(labelBox);
-
         confirmButton = new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
         addRenderableWidget(confirmButton);
+
         extraAreas = ImmutableList.of(new Rect2i(x + background.width, y + background.height - 64, 84, 74));
     }
 
@@ -67,6 +62,8 @@ public class StonksTemporalChronoscopeScreen extends AbstractSimiContainerScreen
                         .GuiRenderBuilder>at(x + background.width + 6, y + background.height - 70, -200)
                 .scale(5)
                 .render(guiGraphics);
+
+        guiGraphics.drawString(font, title, leftPos + (background.width - 8) / 2 - font.width(title) / 2, topPos + 4, 0x592424, false);
     }
 
     @Override

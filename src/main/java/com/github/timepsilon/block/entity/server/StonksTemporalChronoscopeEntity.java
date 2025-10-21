@@ -3,6 +3,7 @@ package com.github.timepsilon.block.entity.server;
 import com.github.timepsilon.Core;
 import com.github.timepsilon.gui.ModMenu;
 import com.github.timepsilon.gui.StonksTemporalChronoscopeMenu;
+import com.github.timepsilon.gui.inventory.StonksTemporalChronoscopeInventory;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.sound.SoundScapes;
@@ -24,9 +25,11 @@ import java.util.List;
 
 public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implements MenuProvider {
 
+    public StonksTemporalChronoscopeInventory inventory;
 
     public StonksTemporalChronoscopeEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
+        inventory = new StonksTemporalChronoscopeInventory(this);
     }
 
     @Override

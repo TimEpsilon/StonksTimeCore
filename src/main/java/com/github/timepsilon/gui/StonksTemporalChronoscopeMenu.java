@@ -1,19 +1,21 @@
 package com.github.timepsilon.gui;
 
 import com.github.timepsilon.block.entity.server.StonksTemporalChronoscopeEntity;
+import com.github.timepsilon.gui.inventory.StonksTemporalChronoscopeSlot;
 import com.simibubi.create.foundation.gui.menu.MenuBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 
-public class StonksTemporalChronoscopeMenu  extends MenuBase<StonksTemporalChronoscopeEntity> {
+public class StonksTemporalChronoscopeMenu extends MenuBase<StonksTemporalChronoscopeEntity> {
 
     public static final int BLOCK_INV_START_ID = 0;
     public static final int BLOCK_INV_END_ID = BLOCK_INV_START_ID + 27 - 1; // included
@@ -51,7 +53,18 @@ public class StonksTemporalChronoscopeMenu  extends MenuBase<StonksTemporalChron
     @Override
     protected void addSlots() {
 
-        addPlayerSlots(40, 130);
+        int x = 16;
+        int y = 21;
+        for (int i = BLOCK_INV_START_ID;  i <= BLOCK_INV_END_ID; i++) {
+            if (i % 9 == 0 && i > 0) {
+                x = 16;
+                y += 18;
+            }
+            addSlot(new StonksTemporalChronoscopeSlot(this, contentHolder.inventory, i, x, y));
+            x += 18;
+        }
+
+        addPlayerSlots(20, 130);
     }
 
     @Override
