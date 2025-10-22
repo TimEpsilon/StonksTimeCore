@@ -1,14 +1,17 @@
 package com.github.timepsilon.gui;
 
 import com.github.timepsilon.block.entity.server.StonksTemporalChronoscopeEntity;
-import com.github.timepsilon.gui.inventory.StonksTemporalChronoscopeSlot;
+import com.github.timepsilon.gui.inventory.StonksTemporalChronoscopeTradeSlot;
 import com.simibubi.create.foundation.gui.menu.MenuBase;
+import dev.ithundxr.createnumismatics.content.backend.BankAccount;
+import dev.ithundxr.createnumismatics.content.backend.Coin;
+import dev.ithundxr.createnumismatics.content.coins.MergingCoinBag;
+import dev.ithundxr.createnumismatics.content.coins.SlotOutputMergingCoinBag;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -24,6 +27,7 @@ public class StonksTemporalChronoscopeMenu extends MenuBase<StonksTemporalChrono
     public static final int PLAYER_INV_START_ID = MONEY_END_ID + 1;
     public static final int PLAYER_HOTBAR_END_ID = PLAYER_INV_START_ID + 9 - 1;
     public static final int PLAYER_INV_END_ID = PLAYER_INV_START_ID + 36 - 1;
+
 
     public StonksTemporalChronoscopeMenu(MenuType<?> type, int id, Inventory inv, RegistryFriendlyByteBuf extraData) {
         super(type, id, inv, extraData);
@@ -60,7 +64,14 @@ public class StonksTemporalChronoscopeMenu extends MenuBase<StonksTemporalChrono
                 x = 16;
                 y += 18;
             }
-            addSlot(new StonksTemporalChronoscopeSlot(this, contentHolder.inventory, i, x, y));
+            addSlot(new StonksTemporalChronoscopeTradeSlot(this, contentHolder.inventory, i, x, y));
+            x += 18;
+        }
+
+        x = 34;
+        y = 87;
+        for(Coin coin : Coin.values()) {
+            this.addSlot(new SlotOutputMergingCoinBag(contentHolder.coinBag, coin, x, y));
             x += 18;
         }
 

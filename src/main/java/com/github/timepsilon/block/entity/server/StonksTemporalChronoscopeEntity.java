@@ -7,6 +7,7 @@ import com.github.timepsilon.gui.inventory.StonksTemporalChronoscopeInventory;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.sound.SoundScapes;
+import dev.ithundxr.createnumismatics.content.coins.MergingCoinBag;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -26,10 +27,12 @@ import java.util.List;
 public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implements MenuProvider {
 
     public StonksTemporalChronoscopeInventory inventory;
+    public MergingCoinBag coinBag;
 
     public StonksTemporalChronoscopeEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
         inventory = new StonksTemporalChronoscopeInventory(this);
+        coinBag = new MergingCoinBag(0);
     }
 
     @Override

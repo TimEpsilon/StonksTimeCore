@@ -160,8 +160,8 @@ dependencies {
     // Moonlight
     implementation 'curse.maven:moonlight-499980:7017282'
 
-    //implementation 'protection_pixel:protection_pixel:2.0.2'
-    //implementation 'kleider_renderer:kleider_renderer:2.0.2'
+    // Numismatic
+    implementation 'curse.maven:numismatics-889722:6791069'
 
     // Geckolib
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
@@ -179,20 +179,21 @@ dependencies {
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
     var replaceProperties = [
-            minecraft_version      : minecraft_version,
-            minecraft_version_range: minecraft_version_range,
-            neo_version            : neo_version,
-            neo_version_range      : neo_version_range,
-            loader_version_range   : loader_version_range,
-            mod_id                 : mod_id,
-            mod_name               : mod_name,
-            mod_license            : mod_license,
-            mod_version            : mod_version,
-            mod_authors            : mod_authors,
-            mod_description        : mod_description,
-            create_version_range   : create_version_range,
-            randomium_version_range: randomium_version_range,
-            moonlight_version_range: moonlight_version_range
+            minecraft_version         : minecraft_version,
+            minecraft_version_range   : minecraft_version_range,
+            neo_version               : neo_version,
+            neo_version_range         : neo_version_range,
+            loader_version_range      : loader_version_range,
+            mod_id                    : mod_id,
+            mod_name                  : mod_name,
+            mod_license               : mod_license,
+            mod_version               : mod_version,
+            mod_authors               : mod_authors,
+            mod_description           : mod_description,
+            create_version_range      : create_version_range,
+            randomium_version_range   : randomium_version_range,
+            moonlight_version_range   : moonlight_version_range,
+            numismatics_version_range : numismatics_version_range,
     ]
     inputs.properties replaceProperties
     expand replaceProperties
