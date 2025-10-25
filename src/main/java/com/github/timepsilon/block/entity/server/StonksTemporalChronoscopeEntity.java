@@ -7,9 +7,12 @@ import com.github.timepsilon.gui.inventory.StonksTemporalChronoscopeInventory;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.sound.SoundScapes;
+import dev.ithundxr.createnumismatics.content.backend.Coin;
 import dev.ithundxr.createnumismatics.content.coins.MergingCoinBag;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
@@ -54,5 +57,26 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
     @Override
     public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
         return StonksTemporalChronoscopeMenu.create(i, inventory, this);
+    }
+
+    @Override
+    protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+        super.write(tag, registries, clientPacket);
+
+        if (!clientPacket) {
+            tag.put("Inventory", inventory.serializeNBT(registries));
+            tag.putInt("CoinBag", coinBag.getValue());
+        }
+    }
+
+    @Override
+    protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
+        super.read(tag, registries, clientPacket);
+
+        if (!clientPacket) {
+            inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
+            coinBag.set(Coin.SPUR, tag.getInt("CoinBag"), 0); // TODO : this doesn't seem to save the amount
+            return;
+        }
     }
 }

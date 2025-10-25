@@ -1,7 +1,11 @@
 package com.github.timepsilon.gui;
 
 import com.github.timepsilon.block.entity.server.StonksTemporalChronoscopeEntity;
+import com.github.timepsilon.datamaps.DataMaps;
+import com.github.timepsilon.datamaps.SCTMap;
+import com.github.timepsilon.gui.inventory.StonksTemporalChronoscopeInventory;
 import com.github.timepsilon.gui.inventory.StonksTemporalChronoscopeTradeSlot;
+import com.mojang.serialization.JsonOps;
 import com.simibubi.create.foundation.gui.menu.MenuBase;
 import dev.ithundxr.createnumismatics.content.backend.BankAccount;
 import dev.ithundxr.createnumismatics.content.backend.Coin;
@@ -16,7 +20,10 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class StonksTemporalChronoscopeMenu extends MenuBase<StonksTemporalChronoscopeEntity> {
 
@@ -90,6 +97,28 @@ public class StonksTemporalChronoscopeMenu extends MenuBase<StonksTemporalChrono
         }
 
         ItemStack slotStack = slot.getItem();
-        return slotStack;
+        boolean success;
+
+        if ((BLOCK_INV_START_ID <= i) & (i <= MONEY_END_ID)) {
+            // In block inventory -> To player inventory
+            success = !moveItemStackTo(slotStack, PLAYER_INV_START_ID, PLAYER_HOTBAR_END_ID+1, false);
+        } else {
+            success = !moveItemStackTo(slotStack, BLOCK_INV_START_ID, BLOCK_INV_END_ID+1, false);
+        }
+
+        return success ? ItemStack.EMPTY : slotStack;
+    }
+
+    public float computeSCTAmount() {
+        List<ItemStack> itemStacks = contentHolder.inventory.getItemStacks();
+        float sctAmount = 0.0F;
+        for (ItemStack itemStack : itemStacks) {
+            SCTMap sct = itemStack.getItemHolder().getData(DataMaps.SCT_MAP);
+            if (sct != null) {
+                sctAmount += sct.SCT() * itemStack.getCount();
+            }
+        }
+        contentHolder.coinBag.add(Coin.SPUR, (int) sctAmount);
+        return sctAmount;
     }
 }

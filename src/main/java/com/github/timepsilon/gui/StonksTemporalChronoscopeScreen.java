@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,6 +43,7 @@ public class StonksTemporalChronoscopeScreen extends AbstractSimiContainerScreen
         int y = topPos;
 
         confirmButton = new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
+        confirmButton.withCallback(menu::computeSCTAmount);
         addRenderableWidget(confirmButton);
 
         extraAreas = ImmutableList.of(new Rect2i(x + background.width, y + background.height - 64, 84, 74));
