@@ -12,7 +12,7 @@ public class StonksTemporalChronoscopeInventory extends ItemStackHandler {
     private StonksTemporalChronoscopeEntity entity;
 
     public StonksTemporalChronoscopeInventory(StonksTemporalChronoscopeEntity be) {
-        super(27+6);
+        super(27);
         this.entity = be;
     }
 

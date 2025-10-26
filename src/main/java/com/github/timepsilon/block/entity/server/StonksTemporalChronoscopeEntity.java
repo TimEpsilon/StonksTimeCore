@@ -1,6 +1,8 @@
 package com.github.timepsilon.block.entity.server;
 
 import com.github.timepsilon.Core;
+import com.github.timepsilon.datamaps.DataMaps;
+import com.github.timepsilon.datamaps.SCTMap;
 import com.github.timepsilon.gui.ModMenu;
 import com.github.timepsilon.gui.StonksTemporalChronoscopeMenu;
 import com.github.timepsilon.gui.inventory.StonksTemporalChronoscopeInventory;
@@ -19,6 +21,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
@@ -35,7 +38,7 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
     public StonksTemporalChronoscopeEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
         inventory = new StonksTemporalChronoscopeInventory(this);
-        coinBag = new MergingCoinBag(0);
+        coinBag = new MergingCoinBag();
     }
 
     @Override
@@ -61,22 +64,44 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
 
     @Override
     protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
-        super.write(tag, registries, clientPacket);
+
+        if (!coinBag.isEmpty()) {
+            tag.put("CoinBag", coinBag.save(new CompoundTag()));
+        }
 
         if (!clientPacket) {
             tag.put("Inventory", inventory.serializeNBT(registries));
-            tag.putInt("CoinBag", coinBag.getValue());
         }
+
+        super.write(tag, registries, clientPacket);
     }
 
     @Override
     protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
         super.read(tag, registries, clientPacket);
 
+        coinBag.clear();
+        if (tag.contains("CoinBag")) {
+            coinBag.load(tag.getCompound("CoinBag"));
+        }
+
         if (!clientPacket) {
             inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
-            coinBag.set(Coin.SPUR, tag.getInt("CoinBag"), 0); // TODO : this doesn't seem to save the amount
-            return;
         }
+    }
+
+    public float computeSCTAmount() {
+        List<ItemStack> itemStacks = inventory.getItemStacks();
+        float sctAmount = 0.0F;
+        for (ItemStack itemStack : itemStacks) {
+            SCTMap sct = itemStack.getItemHolder().getData(DataMaps.SCT_MAP);
+            if (sct != null) { // Removes the item if it has a SCT value and add it to total
+                sctAmount += sct.SCT() * itemStack.getCount();
+                itemStack.setCount(0);
+            }
+        }
+        coinBag.add(Coin.SPUR, (int) sctAmount);
+        notifyUpdate();
+        return sctAmount;
     }
 }

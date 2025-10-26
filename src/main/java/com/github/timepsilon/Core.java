@@ -5,6 +5,7 @@ import com.github.timepsilon.block.entity.ModBlockEntities;
 import com.github.timepsilon.events.ModEventsManager;
 import com.github.timepsilon.events.NeoForgeEventsManager;
 import com.github.timepsilon.gui.ModMenu;
+import com.github.timepsilon.gui.packets.ModPackets;
 import com.github.timepsilon.items.ModItems;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -42,6 +43,7 @@ public class Core {
         ModBlockEntities.register();
         ModItems.register(modEventBus);
         ModMenu.register();
+        ModPackets.register();
 
         // Register Neoforge Events
         NeoForge.EVENT_BUS.register(new NeoForgeEventsManager());

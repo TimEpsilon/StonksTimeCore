@@ -109,16 +109,5 @@ public class StonksTemporalChronoscopeMenu extends MenuBase<StonksTemporalChrono
         return success ? ItemStack.EMPTY : slotStack;
     }
 
-    public float computeSCTAmount() {
-        List<ItemStack> itemStacks = contentHolder.inventory.getItemStacks();
-        float sctAmount = 0.0F;
-        for (ItemStack itemStack : itemStacks) {
-            SCTMap sct = itemStack.getItemHolder().getData(DataMaps.SCT_MAP);
-            if (sct != null) {
-                sctAmount += sct.SCT() * itemStack.getCount();
-            }
-        }
-        contentHolder.coinBag.add(Coin.SPUR, (int) sctAmount);
-        return sctAmount;
-    }
+
 }

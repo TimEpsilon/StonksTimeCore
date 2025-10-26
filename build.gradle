@@ -23,6 +23,11 @@ repositories {
     maven {url "https://maven.k-4u.nl"} // TOP
     maven { url = "https://maven.createmod.net" } // Create, Ponder, Flywheel
     maven { url = "https://maven.ithundxr.dev/snapshots" } // Registrate
+    maven {
+        name "ithundxr's Maven "
+        url "https://maven.ithundxr.dev/releases"
+    }
+
     flatDir {
         dir 'libs'
     }
@@ -161,7 +166,7 @@ dependencies {
     implementation 'curse.maven:moonlight-499980:7017282'
 
     // Numismatic
-    implementation 'curse.maven:numismatics-889722:6791069'
+    implementation "dev.ithundxr.createnumismatics:CreateNumismatics-neoforge-1.21.1:1.0.18+neoforge-mc1.21.1-build.633"
 
     // Geckolib
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"

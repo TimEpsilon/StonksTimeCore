@@ -1,13 +1,16 @@
 package com.github.timepsilon.gui;
 
 import com.github.timepsilon.block.ModBlocks;
+import com.github.timepsilon.gui.packets.StonksTemporalChronoscopeMoneyPacket;
 import com.google.common.collect.ImmutableList;
+import com.simibubi.create.content.redstone.thresholdSwitch.ConfigureThresholdSwitchPacket;
 import com.simibubi.create.content.trains.station.NoShadowFontWrapper;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import net.createmod.catnip.gui.element.GuiGameElement;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
@@ -43,7 +46,9 @@ public class StonksTemporalChronoscopeScreen extends AbstractSimiContainerScreen
         int y = topPos;
 
         confirmButton = new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
-        confirmButton.withCallback(menu::computeSCTAmount);
+        confirmButton.withCallback(() ->
+                CatnipServices.NETWORK.sendToServer(new StonksTemporalChronoscopeMoneyPacket(menu.contentHolder.getBlockPos()))
+        );
         addRenderableWidget(confirmButton);
 
         extraAreas = ImmutableList.of(new Rect2i(x + background.width, y + background.height - 64, 84, 74));
@@ -72,4 +77,5 @@ public class StonksTemporalChronoscopeScreen extends AbstractSimiContainerScreen
     public List<Rect2i> getExtraAreas() {
         return extraAreas;
     }
+
 }
