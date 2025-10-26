@@ -34,6 +34,9 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
 
     public StonksTemporalChronoscopeInventory inventory;
     public MergingCoinBag coinBag;
+    public boolean isActive = false;
+
+    public static final int MIN_SPEED = 30;
 
     public StonksTemporalChronoscopeEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
@@ -42,11 +45,17 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
     }
 
     @Override
+    public void updateFromNetwork(float maxStress, float currentStress, int networkSize) {
+        super.updateFromNetwork(maxStress, currentStress, networkSize);
+        isActive = this.getSpeed() >= MIN_SPEED & !overStressed;
+    }
+
+    @Override
     @OnlyIn(Dist.CLIENT)
     public void tickAudio() {
         super.tickAudio();
 
-        if (getSpeed() < IRotate.SpeedLevel.MEDIUM.getSpeedValue())
+        if (!isActive)
             return;
         float pitch = Mth.clamp((Math.abs(getSpeed()) / 256f) + .45f, .85f, 1f);
         SoundScapes.play(SoundScapes.AmbienceGroup.KINETIC, worldPosition, pitch);
@@ -54,7 +63,7 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
 
     @Override
     public Component getDisplayName() {
-        return Component.literal("Stonks Temporal Chronoscope");
+        return Component.translatable("block.stonkstimecore.stonks_temporal_chronoscope");
     }
 
     @Override
@@ -90,7 +99,11 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
         }
     }
 
-    public float computeSCTAmount() {
+    public void computeSCTAmount() {
+        if (!isActive) {
+            return;
+        }
+
         List<ItemStack> itemStacks = inventory.getItemStacks();
         float sctAmount = 0.0F;
         for (ItemStack itemStack : itemStacks) {
@@ -102,6 +115,5 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
         }
         coinBag.add(Coin.SPUR, (int) sctAmount);
         notifyUpdate();
-        return sctAmount;
     }
 }

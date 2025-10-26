@@ -69,7 +69,7 @@ public class StonksTemporalChronoscope extends KineticBlock implements IBE<Stonk
 
     @Override
     public SpeedLevel getMinimumRequiredSpeedLevel() {
-        return SpeedLevel.MEDIUM;
+        return SpeedLevel.of(StonksTemporalChronoscopeEntity.MIN_SPEED);
     }
 
     @Override

@@ -8,5 +8,7 @@
 
   "block.stonkstimecore.stonks_temporal_chronoscope" : "Stonks Temporal Chronoscope",
 
-  "tooltip.item.stonkstimecore.stonks_temporal_chronoscope" : "Converts any item into its corresponding SCT amount"
+  "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.behaviour1": "Starts spinning.",
+  "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.condition1": "When Powered by Kinetics ≥ 30 RPM",
+  "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.summary": "Converts any item into its corresponding _SCT_ amount"
 }

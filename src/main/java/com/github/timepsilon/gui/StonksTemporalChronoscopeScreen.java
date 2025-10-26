@@ -45,10 +45,16 @@ public class StonksTemporalChronoscopeScreen extends AbstractSimiContainerScreen
         int x = leftPos;
         int y = topPos;
 
-        confirmButton = new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
-        confirmButton.withCallback(() ->
-                CatnipServices.NETWORK.sendToServer(new StonksTemporalChronoscopeMoneyPacket(menu.contentHolder.getBlockPos()))
-        );
+        if (menu.contentHolder.isActive) { // TODO : Server -> Client Packet
+            confirmButton = new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
+            confirmButton.withCallback(() ->
+                    CatnipServices.NETWORK.sendToServer(new StonksTemporalChronoscopeMoneyPacket(menu.contentHolder.getBlockPos()))
+            );
+        } else {
+            confirmButton = new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_MTD_CLOSE);
+            confirmButton.active = false;
+        }
+
         addRenderableWidget(confirmButton);
 
         extraAreas = ImmutableList.of(new Rect2i(x + background.width, y + background.height - 64, 84, 74));
