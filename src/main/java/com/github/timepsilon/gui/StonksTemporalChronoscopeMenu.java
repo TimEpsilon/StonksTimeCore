@@ -9,6 +9,7 @@ import com.mojang.serialization.JsonOps;
 import com.simibubi.create.foundation.gui.menu.MenuBase;
 import dev.ithundxr.createnumismatics.content.backend.BankAccount;
 import dev.ithundxr.createnumismatics.content.backend.Coin;
+import dev.ithundxr.createnumismatics.content.coins.CoinItem;
 import dev.ithundxr.createnumismatics.content.coins.MergingCoinBag;
 import dev.ithundxr.createnumismatics.content.coins.SlotOutputMergingCoinBag;
 import net.minecraft.client.Minecraft;
@@ -27,13 +28,12 @@ import java.util.List;
 
 public class StonksTemporalChronoscopeMenu extends MenuBase<StonksTemporalChronoscopeEntity> {
 
-    public static final int BLOCK_INV_START_ID = 0;
-    public static final int BLOCK_INV_END_ID = BLOCK_INV_START_ID + 27 - 1; // included
-    public static final int MONEY_START_ID = BLOCK_INV_END_ID + 1;
-    public static final int MONEY_END_ID = MONEY_START_ID + 6 - 1;
-    public static final int PLAYER_INV_START_ID = MONEY_END_ID + 1;
-    public static final int PLAYER_HOTBAR_END_ID = PLAYER_INV_START_ID + 9 - 1;
-    public static final int PLAYER_INV_END_ID = PLAYER_INV_START_ID + 36 - 1;
+    public static final int BLOCK_INV_START_ID = 0; //0
+    public static final int BLOCK_INV_END_ID = BLOCK_INV_START_ID + 27 - 1; // included, 26
+    public static final int MONEY_START_ID = BLOCK_INV_END_ID + 1; // 27
+    public static final int MONEY_END_ID = MONEY_START_ID + 6 - 1; // 32
+    public static final int PLAYER_INV_START_ID = MONEY_END_ID + 1; // 33
+    public static final int PLAYER_INV_END_ID = PLAYER_INV_START_ID + 36 - 1; // 68
 
 
     public StonksTemporalChronoscopeMenu(MenuType<?> type, int id, Inventory inv, RegistryFriendlyByteBuf extraData) {
@@ -91,23 +91,44 @@ public class StonksTemporalChronoscopeMenu extends MenuBase<StonksTemporalChrono
     @Override
     public @NotNull ItemStack quickMoveStack(Player player, int i) {
         Slot slot = this.slots.get(i);
+        System.out.println(i + " " + slot);
 
         if (!slot.hasItem()) {
             return ItemStack.EMPTY;
         }
 
         ItemStack slotStack = slot.getItem();
-        boolean success;
+        boolean success = false;
 
-        if ((BLOCK_INV_START_ID <= i) & (i <= MONEY_END_ID)) {
+        if ((BLOCK_INV_START_ID <= i && i <= BLOCK_INV_END_ID)) {
             // In block inventory -> To player inventory
-            success = !moveItemStackTo(slotStack, PLAYER_INV_START_ID, PLAYER_HOTBAR_END_ID+1, false);
-        } else {
-            success = !moveItemStackTo(slotStack, BLOCK_INV_START_ID, BLOCK_INV_END_ID+1, false);
+            success = moveItemStackTo(slotStack, PLAYER_INV_START_ID, PLAYER_INV_END_ID+1, false);
+            System.out.println("Block -> Player " + success);
+
+        } else if (PLAYER_INV_START_ID <= i && i <= PLAYER_INV_END_ID) {
+            // In player inventory -> To block inventory
+            success = moveItemStackTo(slotStack, BLOCK_INV_START_ID, BLOCK_INV_END_ID+1, false);
+            System.out.println("Player -> Block " + success);
+
+        } else if ((MONEY_START_ID <= i && i <= MONEY_END_ID)) {
+            // In bank -> Player inventory
+            ItemStack coinStack = CoinItem.clearDisplayedCount(slotStack); // Removes the tooltip displaying the full amount of money
+            int count = coinStack.getCount();
+            success = moveItemStackTo(coinStack, PLAYER_INV_START_ID, PLAYER_INV_END_ID+1, false);
+            if (success) {slot.remove(count);}
+            System.out.println("Money -> Player " + success);
         }
 
-        return success ? ItemStack.EMPTY : slotStack;
+        if (slotStack.isEmpty()) {
+            slot.set(ItemStack.EMPTY);
+        } else {
+            slot.setChanged();
+        }
+
+        return success ? slotStack : ItemStack.EMPTY;
     }
+
+
 
 
 }

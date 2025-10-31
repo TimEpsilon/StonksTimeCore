@@ -25,7 +25,6 @@ import java.util.List;
 
 public class StonksTemporalChronoscopeScreen extends AbstractSimiContainerScreen<StonksTemporalChronoscopeMenu> {
 
-    private EditBox labelBox;
     private IconButton confirmButton;
 
     private final ModGUI background = ModGUI.STONKS_TEMPORAL_CHRONOSCOPE;
@@ -45,7 +44,7 @@ public class StonksTemporalChronoscopeScreen extends AbstractSimiContainerScreen
         int x = leftPos;
         int y = topPos;
 
-        if (menu.contentHolder.isActive) { // TODO : Server -> Client Packet
+        if (menu.contentHolder.isActive()) { // TODO : Server -> Client Packet
             confirmButton = new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
             confirmButton.withCallback(() ->
                     CatnipServices.NETWORK.sendToServer(new StonksTemporalChronoscopeMoneyPacket(menu.contentHolder.getBlockPos()))

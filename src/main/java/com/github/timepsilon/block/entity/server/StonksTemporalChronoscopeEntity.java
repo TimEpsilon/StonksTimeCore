@@ -8,8 +8,10 @@ import com.github.timepsilon.gui.StonksTemporalChronoscopeMenu;
 import com.github.timepsilon.gui.inventory.StonksTemporalChronoscopeInventory;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.sound.SoundScapes;
 import dev.ithundxr.createnumismatics.content.backend.Coin;
+import dev.ithundxr.createnumismatics.content.coins.CoinBag;
 import dev.ithundxr.createnumismatics.content.coins.MergingCoinBag;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -17,11 +19,13 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
@@ -34,7 +38,6 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
 
     public StonksTemporalChronoscopeInventory inventory;
     public MergingCoinBag coinBag;
-    public boolean isActive = false;
 
     public static final int MIN_SPEED = 30;
 
@@ -47,7 +50,10 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
     @Override
     public void updateFromNetwork(float maxStress, float currentStress, int networkSize) {
         super.updateFromNetwork(maxStress, currentStress, networkSize);
-        isActive = this.getSpeed() >= MIN_SPEED & !overStressed;
+    }
+
+    public boolean isActive() {
+        return Math.abs(this.getSpeed()) >= MIN_SPEED & !overStressed;
     }
 
     @Override
@@ -55,7 +61,7 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
     public void tickAudio() {
         super.tickAudio();
 
-        if (!isActive)
+        if (!isActive())
             return;
         float pitch = Mth.clamp((Math.abs(getSpeed()) / 256f) + .45f, .85f, 1f);
         SoundScapes.play(SoundScapes.AmbienceGroup.KINETIC, worldPosition, pitch);
@@ -99,8 +105,21 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
         }
     }
 
+    public void dropContents(Level level, BlockPos pos) {
+        ItemHelper.dropContents(level, pos, inventory);
+        for (int i = Coin.values().length - 1; i >= 0; i--) {
+            Coin coin = Coin.values()[i];
+            ItemStack item = coinBag.asStack(coin);
+            int amount = item.getCount();
+            coinBag.subtract(coin, amount);
+            if (amount > 0) {
+                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), item);
+            }
+        }
+    }
+
     public void computeSCTAmount() {
-        if (!isActive) {
+        if (!isActive()) {
             return;
         }
 
