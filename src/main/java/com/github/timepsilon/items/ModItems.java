@@ -1,30 +1,32 @@
 package com.github.timepsilon.items;
 
 import com.github.timepsilon.Core;
+import com.simibubi.create.AllCreativeModeTabs;
+import com.simibubi.create.AllTags;
+import com.simibubi.create.content.equipment.wrench.WrenchItem;
+import com.simibubi.create.foundation.data.AssetLookup;
+import com.tterrag.registrate.util.entry.ItemEntry;
+import dev.ithundxr.createnumismatics.registry.NumismaticsCreativeModeTabs;
+import dev.ithundxr.createnumismatics.registry.neoforge.NumismaticsCreativeModeTabsImpl;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ModItems {
 
-    // The Registry
-    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Core.MODID);
+    static {
+        Core.REGISTRATE.setCreativeTab(NumismaticsCreativeModeTabsImpl.MAIN_TAB);
+    }
 
     // The items
-    public static final DeferredItem<Item> MCOIN_1 = createItem("mcoin_1");
-    public static final DeferredItem<Item> MCOIN_10 = createItem("mcoin_10");
-    public static final DeferredItem<Item> MCOIN_50 = createItem("mcoin_50");
-    public static final DeferredItem<Item> MCOIN_100 = createItem("mcoin_100");
-    public static final DeferredItem<Item> MCOIN_500 = createItem("mcoin_500");
-    public static final DeferredItem<Item> MCOIN_10000 = createItem("mcoin_10000");
+    public static final ItemEntry<Item> TIME_GEAR = Core.REGISTRATE.item("time_gear", Item::new)
+            .properties(p -> p.stacksTo(1))
+            .model(AssetLookup.itemModelWithPartials())
+            .properties(p -> p.rarity(Rarity.EPIC))
+            .register();
 
-    public static void register(IEventBus modEventBus) {
-        ITEMS.register(modEventBus);
-    }
-
-    private static DeferredItem<Item> createItem(String name) {
-        return ITEMS.register(name, () -> new Item(new Item.Properties()));
-    }
+    public static void register() {}
 
 }

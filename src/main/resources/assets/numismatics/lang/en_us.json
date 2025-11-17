@@ -1,0 +1,23 @@
+{
+  "item.numismatics.spur": "M-Cent",
+  "item.numismatics.spur.plural": "Cent",
+  "item.numismatics.bevel": "M-Dime",
+  "item.numismatics.bevel.plural": "Dime",
+  "item.numismatics.sprocket": "M-Drachm",
+  "item.numismatics.sprocket.plural": "Drachm",
+  "item.numismatics.cog": "M-Doubloon",
+  "item.numismatics.cog.plural": "Doubloon",
+  "item.numismatics.crown": "M-Crown",
+  "item.numismatics.crown.plural": "Crown",
+  "item.numismatics.sun": "M-Coin",
+  "item.numismatics.sun.plural": "Coin",
+
+  "block.numismatics.andesite_depositor.tooltip.price": "Price: %s %s (%s\u9000)",
+  "block.numismatics.brass_depositor.tooltip.price": "Price: %s %s, %s\u9000",
+  "block.numismatics.vendor.tooltip.price": "For: %s %s, %s\u9000",
+  "gui.numismatics.bank_terminal.balance": "Balance: %s %s, %s\u9000",
+  "gui.numismatics.limit.monetary": "Spent %s %s, %s\u9000 of %s %s, %s\u9000",
+  "gui.numismatics.salepoint.price": "Price/Unit: %s %s, %s\u9000",
+  "item.numismatics.coin.tooltip.value": "Value: %s %s (%s\u9000)",
+  "item.numismatics.coin.tooltip.value.basic": "Value: %s\u9000"
+}

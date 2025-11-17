@@ -90,6 +90,7 @@ public class StonksTemporalChronoscopeMenu extends MenuBase<StonksTemporalChrono
 
     @Override
     public @NotNull ItemStack quickMoveStack(Player player, int i) {
+        // Salut Zelytra c'est probablement ici que tu vas chercher à casser un truc
         Slot slot = this.slots.get(i);
         System.out.println(i + " " + slot);
 

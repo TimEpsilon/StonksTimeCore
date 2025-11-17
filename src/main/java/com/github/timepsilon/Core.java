@@ -39,9 +39,9 @@ public class Core {
         REGISTRATE.registerEventListeners(modEventBus); // This first else it crashes
 
         // Register
+        ModItems.register();
         ModBlocks.register();
         ModBlockEntities.register();
-        ModItems.register(modEventBus);
         ModMenu.register();
         ModPackets.register();
 

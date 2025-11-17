@@ -1,0 +1,10 @@
+{
+  "providers": [
+    {
+      "type": "bitmap",
+      "file": "stonkstimecore:gui/mcoin_icon.png",
+      "chars" : ["\u9000"],
+      "ascent" : 7
+    }
+  ]
+}
