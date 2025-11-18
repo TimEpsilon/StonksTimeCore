@@ -2,6 +2,7 @@ package com.github.timepsilon;
 
 import com.github.timepsilon.block.ModBlocks;
 import com.github.timepsilon.block.entity.ModBlockEntities;
+import com.github.timepsilon.entity.ModEntities;
 import com.github.timepsilon.events.ModEventsManager;
 import com.github.timepsilon.events.NeoForgeEventsManager;
 import com.github.timepsilon.gui.ModMenu;
@@ -44,6 +45,8 @@ public class Core {
         ModBlockEntities.register();
         ModMenu.register();
         ModPackets.register();
+
+        ModEntities.register(modEventBus);
 
         // Register Neoforge Events
         NeoForge.EVENT_BUS.register(new NeoForgeEventsManager());

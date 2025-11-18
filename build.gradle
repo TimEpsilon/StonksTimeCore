@@ -27,6 +27,10 @@ repositories {
         name "ithundxr's Maven "
         url "https://maven.ithundxr.dev/releases"
     }
+    maven {
+        name = "Up-Mods & Cammie's Corner"
+        url = "https://maven.uuid.gg/releases"
+    }
 
     flatDir {
         dir 'libs'
@@ -172,7 +176,9 @@ dependencies {
     // Geckolib
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
 
-    //implementation files("libs/citresewn-neoforge-1.21.1-0.jar")
+    // Velvet
+    implementation "dev.cammiescorner.velvet:Velvet-Common:${velvet_version}"
+    implementation "dev.cammiescorner.velvet:Velvet-NeoForge:${velvet_version}"
 
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
@@ -199,7 +205,9 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             create_version_range      : create_version_range,
             randomium_version_range   : randomium_version_range,
             moonlight_version_range   : moonlight_version_range,
-            numismatics_version_range : numismatics_version_range
+            numismatics_version_range : numismatics_version_range,
+            velvet_version            : velvet_version,
+            velvet_version_range      : velvet_version_range
     ]
     inputs.properties replaceProperties
     expand replaceProperties

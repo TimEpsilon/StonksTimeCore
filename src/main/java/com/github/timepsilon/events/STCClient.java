@@ -2,6 +2,9 @@ package com.github.timepsilon.events;
 
 import com.github.timepsilon.Core;
 import com.github.timepsilon.create.STCPartialModels;
+import com.github.timepsilon.entity.ModEntities;
+import com.github.timepsilon.entity.client.TimeGearRenderer;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -15,7 +18,6 @@ public class STCClient {
 
     public static void onSTCClient(IEventBus eventBus) {
         IEventBus neoEventBus = NeoForge.EVENT_BUS;
-
         eventBus.addListener(STCClient::clientInit);
 
     }
@@ -23,5 +25,7 @@ public class STCClient {
     public static void clientInit(final FMLClientSetupEvent event) {
         STCPartialModels.init();
         Core.LOGGER.info("Registered partial models!");
+
+        EntityRenderers.register(ModEntities.TIME_GEAR.get(), TimeGearRenderer::new);
     }
 }
