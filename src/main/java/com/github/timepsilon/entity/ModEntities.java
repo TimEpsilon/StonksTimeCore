@@ -20,8 +20,8 @@ public class ModEntities {
     public static final Supplier<EntityType<TimeGearEntity>> TIME_GEAR =
             ENTITIY_TYPES.register("time_gear",
                     () -> EntityType.Builder.of(TimeGearEntity::new, MobCategory.MISC)
-                            .sized(6/16f,6/16f)
-                            .eyeHeight(3/16f)
+                            .sized(3/16f,3/16f)
+                            .eyeHeight(2/32f)
                             .fireImmune()
                             .build("time_gear")
             );

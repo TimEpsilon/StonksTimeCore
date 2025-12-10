@@ -1,6 +1,7 @@
 package com.github.timepsilon.items;
 
 import com.github.timepsilon.Core;
+import com.github.timepsilon.items.custom.TimeGearItem;
 import com.simibubi.create.AllCreativeModeTabs;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.equipment.wrench.WrenchItem;
@@ -21,7 +22,7 @@ public class ModItems {
     }
 
     // The items
-    public static final ItemEntry<Item> TIME_GEAR = Core.REGISTRATE.item("time_gear", Item::new)
+    public static final ItemEntry<TimeGearItem> TIME_GEAR = Core.REGISTRATE.item("time_gear", TimeGearItem::new)
             .properties(p -> p.stacksTo(1))
             .model(AssetLookup.itemModelWithPartials())
             .properties(p -> p.rarity(Rarity.EPIC))

@@ -11,6 +11,7 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 
 public class TimeGearRenderer extends GeoEntityRenderer<TimeGearEntity> {
+
     public TimeGearRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new TimeGearModel());
         addRenderLayer(new AutoGlowingGeoLayer<>(this));

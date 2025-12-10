@@ -34,9 +34,21 @@
               "icon": "lucide-file",
               "title": "SCT"
             }
+          },
+          {
+            "id": "8c55e0d9577fc336",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.9.14"
+              },
+              "icon": "lucide-book-up",
+              "title": "Release Notes 1.9.14"
+            }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -157,13 +169,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "StonksTimeCore/SCT.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of SCT"
+              "title": "Outline"
             }
           }
         ],
@@ -185,7 +196,7 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "eee6184cd08585a1",
+  "active": "8c55e0d9577fc336",
   "lastOpenFiles": [
     "StonksTimeCore/Inputs.md",
     "Idées Principales.md",

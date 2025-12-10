@@ -4,8 +4,14 @@ import com.github.timepsilon.Core;
 import com.github.timepsilon.entity.custom.TimeGearEntity;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.model.data.EntityModelData;
 
 public class TimeGearModel extends GeoModel<TimeGearEntity> {
     @Override
@@ -26,5 +32,17 @@ public class TimeGearModel extends GeoModel<TimeGearEntity> {
     @Override
     public @Nullable RenderType getRenderType(TimeGearEntity animatable, ResourceLocation texture) {
         return RenderType.entityTranslucentCull(texture);
+    }
+
+    @Override
+    public void setCustomAnimations(TimeGearEntity animatable, long instanceId, AnimationState<TimeGearEntity> animationState) {
+        GeoBone head = getAnimationProcessor().getBone("time_gear");
+
+        if (head != null) {
+            Entity entity = animationState.getData(DataTickets.ENTITY);
+            head.setRotY((entity.getYRot()+90) * Mth.DEG_TO_RAD); // Align animation axis with orientation direction
+        } else {
+            Core.LOGGER.error("TimeGearModel::setCustomAnimations: No time_gear bone was found in geo file");
+        }
     }
 }
