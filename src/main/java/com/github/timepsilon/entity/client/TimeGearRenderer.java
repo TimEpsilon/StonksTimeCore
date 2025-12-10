@@ -6,7 +6,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 
@@ -19,7 +18,7 @@ public class TimeGearRenderer extends GeoEntityRenderer<TimeGearEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(TimeGearEntity animatable) {
-        return ResourceLocation.fromNamespaceAndPath(Core.MODID, "textures/block/stonks_temporal_chronoscope.png");
+        return ResourceLocation.fromNamespaceAndPath(Core.MODID, "textures/item/time_gear.png");
     }
 
     @Override

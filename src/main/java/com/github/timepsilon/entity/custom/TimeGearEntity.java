@@ -67,7 +67,6 @@ public class TimeGearEntity extends Entity implements GeoEntity {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        System.out.println("hit");
         super.hurt(source, amount);
         if (this.isRemoved()) {
             return false;

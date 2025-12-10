@@ -2,8 +2,8 @@
 	"format_version": "1.21.6",
 	"credit": "Made with Blockbench",
 	"textures": {
-		"7": "stonkstimecore:block/stonks_temporal_chronoscope",
-		"particle": "stonkstimecore:block/stonks_temporal_chronoscope"
+		"7": "stonkstimecore:item/time_gear",
+		"particle": "stonkstimecore:item/time_gear"
 	},
 	"elements": [
 		{
