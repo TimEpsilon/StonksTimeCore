@@ -23,7 +23,7 @@ public class TimeGearRenderer extends GeoEntityRenderer<TimeGearEntity> {
 
     @Override
     public void render(TimeGearEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        poseStack.scale(3f, 3f, 3f);
+        this.withScale(3);
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
     }
 }

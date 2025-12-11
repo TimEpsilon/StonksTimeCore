@@ -1,20 +1,31 @@
 package com.github.timepsilon.entity.custom;
 
+import com.github.timepsilon.entity.ModEntities;
 import com.github.timepsilon.items.ModItems;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -25,30 +36,58 @@ import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import javax.annotation.Nullable;
+import java.util.Optional;
+import java.util.UUID;
+
 public class TimeGearEntity extends Entity implements GeoEntity {
     protected static final RawAnimation TICKING = RawAnimation.begin().thenLoop("clock");
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
 
-    private Player player;
+    protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID;
+
+    static {
+        DATA_OWNERUUID_ID = SynchedEntityData.defineId(TimeGearEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+    }
 
     public TimeGearEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
+        this.refreshDimensions();
+        this.blocksBuilding = true;
     }
-
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
-
+        builder.define(DATA_OWNERUUID_ID, Optional.empty());
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag compoundTag) {
-
+    protected void readAdditionalSaveData(CompoundTag compound) {
+        UUID uuid = compound.getUUID("Player");
+        this.setPlayerUUID(uuid);
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag compoundTag) {
+    protected void addAdditionalSaveData(CompoundTag compound) {
+        if (this.getPlayerUUID() != null) {
+            compound.putUUID("Player", this.getPlayerUUID());
+        }
+    }
 
+    @Override
+    public void tick() {
+
+    }
+
+
+    @Override
+    public PushReaction getPistonPushReaction() {
+        return PushReaction.IGNORE;
+    }
+
+    @Override
+    public boolean isPushable() {
+        return false;
     }
 
     @Override
@@ -62,7 +101,16 @@ public class TimeGearEntity extends Entity implements GeoEntity {
     }
 
     public void setPlayer(Player player) {
-        this.player = player;
+        setPlayerUUID(player.getUUID());
+    }
+
+    public void setPlayerUUID(UUID uuid) {
+        this.entityData.set(DATA_OWNERUUID_ID, Optional.of(uuid)) ;
+    }
+
+    @Nullable
+    public UUID getPlayerUUID() {
+        return (UUID)((Optional)this.entityData.get(DATA_OWNERUUID_ID)).orElse(null);
     }
 
     @Override
@@ -79,7 +127,7 @@ public class TimeGearEntity extends Entity implements GeoEntity {
                 return false;
             }
 
-            if (source.getEntity() instanceof Player) {
+            if (source.getDirectEntity() instanceof Player) {
                 if (!source.isCreativePlayer()) {
                     this.dropItem();
                 }
@@ -112,6 +160,7 @@ public class TimeGearEntity extends Entity implements GeoEntity {
         ItemStack itemstack = new ItemStack(ModItems.TIME_GEAR.get());
         Block.popResource(this.level(), this.blockPosition(), itemstack);
     }
+
     private void playBrokenSound() {
         // TODO Custom sound
         this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.AMETHYST_BLOCK_BREAK, this.getSoundSource(), 1.0F, 1.0F);

@@ -3,8 +3,6 @@ package com.github.timepsilon.entity;
 import com.github.timepsilon.Core;
 import com.github.timepsilon.entity.custom.TimeGearEntity;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.neoforged.bus.api.IEventBus;
@@ -21,8 +19,7 @@ public class ModEntities {
             ENTITIY_TYPES.register("time_gear",
                     () -> EntityType.Builder.of(TimeGearEntity::new, MobCategory.MISC)
                             .sized(9/16f,9/16f)
-                            .eyeHeight(6/32f)
-                            .fireImmune()
+                            .eyeHeight(10/32f)
                             .build("time_gear")
             );
 
