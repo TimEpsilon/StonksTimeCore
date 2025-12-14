@@ -4,6 +4,7 @@ import com.github.timepsilon.Core;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateBuildInfo;
+import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.net.base.BasePacketPayload;
 import net.createmod.catnip.net.base.CatnipPacketRegistry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -16,16 +17,24 @@ import java.util.Locale;
 public enum ModPackets implements BasePacketPayload.PacketTypeProvider {
 
     // Client -> Server
-    COMPUTE_SCT(StonksTemporalChronoscopeMoneyPacket.class, StonksTemporalChronoscopeMoneyPacket.STREAM_CODEC);
+    COMPUTE_SCT(StonksTemporalChronoscopeMoneyPacket.class, StonksTemporalChronoscopeMoneyPacket.STREAM_CODEC),
+
+    // Server -> Client
+    SYNC_TIMER(TimerSyncPacket.class, TimerSyncPacket.STREAM_CODEC);
 
 
     private final CatnipPacketRegistry.PacketType<?> type;
 
-    <T extends BasePacketPayload> ModPackets(Class<T> clazz, StreamCodec<? super RegistryFriendlyByteBuf, T> codec) {
+    <T extends BasePacketPayload> ModPackets(
+            Class<T> clazz,
+            StreamCodec<? super ByteBuf, T> codec) {
         String name = this.name().toLowerCase(Locale.ROOT);
         this.type = new CatnipPacketRegistry.PacketType<>(
-                new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Core.MODID, name)),
-                clazz, codec
+                new CustomPacketPayload.Type<>(
+                        ResourceLocation.fromNamespaceAndPath(Core.MODID, name)
+                ),
+                clazz,
+                codec
         );
     }
 
