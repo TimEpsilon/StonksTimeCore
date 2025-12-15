@@ -179,12 +179,6 @@ dependencies {
     // Velvet
     implementation "dev.cammiescorner.velvet:Velvet-Common:${velvet_version}"
     implementation "dev.cammiescorner.velvet:Velvet-NeoForge:${velvet_version}"
-
-    // For more info:
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
-
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
