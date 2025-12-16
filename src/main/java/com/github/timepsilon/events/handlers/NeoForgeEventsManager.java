@@ -1,4 +1,4 @@
-package com.github.timepsilon.events;
+package com.github.timepsilon.events.handlers;
 
 import com.github.timepsilon.commands.equivalency.GenerateEquivalency;
 import com.github.timepsilon.datamaps.DataMaps;

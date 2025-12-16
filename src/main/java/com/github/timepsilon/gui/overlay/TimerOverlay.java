@@ -1,6 +1,6 @@
 package com.github.timepsilon.gui.overlay;
 
-import com.github.timepsilon.time.PlayerTimer;
+import com.github.timepsilon.time.PlayerTimers;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -22,11 +22,12 @@ public class TimerOverlay implements LayeredDraw.Layer {
     @Override
     public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
         if (Minecraft.getInstance().options.hideGui || Minecraft.getInstance().player.isSpectator()) return; // Hide timer if F1 or spectator
+        if (seconds <= 0) return ;
 
         int width = guiGraphics.guiWidth();
         int height = guiGraphics.guiHeight();
 
-        guiGraphics.drawString(Minecraft.getInstance().font, PlayerTimer.secondsToTime(seconds), width*textX, height*textY, getColor(), true);
+        guiGraphics.drawString(Minecraft.getInstance().font, PlayerTimers.secondsToTime(seconds), width*textX, height*textY, getColor(), true);
         guiGraphics.drawString(Minecraft.getInstance().font, money+"\u9000", width*textX, height*(textY-0.03f), Color.WHITE.getRGB(), true);
     }
 

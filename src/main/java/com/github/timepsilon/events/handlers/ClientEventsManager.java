@@ -1,4 +1,4 @@
-package com.github.timepsilon.events;
+package com.github.timepsilon.events.handlers;
 
 import com.github.timepsilon.Core;
 import com.github.timepsilon.create.STCPartialModels;
@@ -16,14 +16,14 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
 
 @Mod(value = Core.MODID, dist = Dist.CLIENT)
-public class STCClient {
+public class ClientEventsManager {
 
-    public STCClient(IEventBus eventBus) {onSTCClient(eventBus);}
+    public ClientEventsManager(IEventBus eventBus) {onSTCClient(eventBus);}
 
     public static void onSTCClient(IEventBus eventBus) {
         IEventBus neoEventBus = NeoForge.EVENT_BUS;
-        eventBus.addListener(STCClient::clientInit);
-        eventBus.addListener(STCClient::onRegisterOverlay);
+        eventBus.addListener(ClientEventsManager::clientInit);
+        eventBus.addListener(ClientEventsManager::onRegisterOverlay);
 
     }
 

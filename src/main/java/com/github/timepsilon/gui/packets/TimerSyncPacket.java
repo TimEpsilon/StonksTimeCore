@@ -1,7 +1,6 @@
 package com.github.timepsilon.gui.packets;
 
 import com.github.timepsilon.gui.overlay.TimerOverlay;
-import com.simibubi.create.content.equipment.tool.KnockbackPacket;
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.net.base.ClientboundPacketPayload;
 import net.minecraft.client.player.LocalPlayer;

@@ -46,9 +46,21 @@
               "icon": "lucide-book-up",
               "title": "Release Notes 1.9.14"
             }
+          },
+          {
+            "id": "086f5f8c109d3721",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.10.6"
+              },
+              "icon": "lucide-book-up",
+              "title": "Release Notes 1.10.6"
+            }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -196,7 +208,7 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "8c55e0d9577fc336",
+  "active": "086f5f8c109d3721",
   "lastOpenFiles": [
     "StonksTimeCore/Inputs.md",
     "Idées Principales.md",
