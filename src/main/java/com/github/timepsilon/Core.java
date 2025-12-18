@@ -8,7 +8,7 @@ import com.github.timepsilon.events.handlers.NeoForgeEventsManager;
 import com.github.timepsilon.gui.ModMenu;
 import com.github.timepsilon.gui.packets.ModPackets;
 import com.github.timepsilon.items.ModItems;
-import com.github.timepsilon.time.TickHook;
+import com.github.timepsilon.time.TimerHandler;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.ItemDescription;
@@ -46,12 +46,11 @@ public class Core {
         ModBlockEntities.register();
         ModMenu.register();
         ModPackets.register();
-
         ModEntities.register(modEventBus);
 
         // Register Neoforge Events
         NeoForge.EVENT_BUS.register(new NeoForgeEventsManager());
-        NeoForge.EVENT_BUS.register(new TickHook());
+        NeoForge.EVENT_BUS.register(new TimerHandler());
 
         // Register Events
         modEventBus.register(new ModEventsManager());

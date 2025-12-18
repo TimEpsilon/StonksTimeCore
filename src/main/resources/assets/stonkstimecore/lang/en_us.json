@@ -5,5 +5,10 @@
 
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.behaviour1": "Starts spinning.",
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.condition1": "When Powered by Kinetics ≥ 30 RPM",
-  "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.summary": "Converts any item into its corresponding _SCT_ amount"
+  "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.summary": "Converts any item into its corresponding _SCT_ amount",
+
+  "error.stonkstimecore.banking_while_out" : "Banking operation cancelled",
+
+  "commands.stonkstimecore.generate_equivalency" : "Item list and Recipe dict have been saved in the config folder",
+  "commands.stonkstimecore.update_out" : "%s's out status has been set to %s"
 }

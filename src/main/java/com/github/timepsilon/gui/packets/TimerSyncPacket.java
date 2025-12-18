@@ -9,11 +9,12 @@ import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
-public record TimerSyncPacket(int seconds, int money) implements ClientboundPacketPayload {
+public record TimerSyncPacket(int seconds, int money, boolean isOut) implements ClientboundPacketPayload {
 
     public static final StreamCodec<ByteBuf, TimerSyncPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, TimerSyncPacket::seconds,
             ByteBufCodecs.INT, TimerSyncPacket::money,
+            ByteBufCodecs.BOOL,TimerSyncPacket::isOut,
             TimerSyncPacket::new
     );
 
@@ -27,5 +28,6 @@ public record TimerSyncPacket(int seconds, int money) implements ClientboundPack
     public void handle(LocalPlayer player) {
         TimerOverlay.instance.setSeconds(seconds);
         TimerOverlay.instance.setMoney(money);
+        TimerOverlay.instance.setOut(isOut);
     }
 }

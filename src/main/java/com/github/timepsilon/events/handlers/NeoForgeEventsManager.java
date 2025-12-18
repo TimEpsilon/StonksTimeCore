@@ -1,5 +1,6 @@
 package com.github.timepsilon.events.handlers;
 
+import com.github.timepsilon.commands.STCCommand;
 import com.github.timepsilon.commands.equivalency.GenerateEquivalency;
 import com.github.timepsilon.datamaps.DataMaps;
 import com.github.timepsilon.datamaps.SCTMap;
@@ -31,6 +32,6 @@ public class NeoForgeEventsManager {
     @SubscribeEvent
     public void onRegisterCommands(RegisterCommandsEvent event) {
 
-        GenerateEquivalency.register(event.getDispatcher());
+        STCCommand.register(event.getDispatcher());
     }
 }

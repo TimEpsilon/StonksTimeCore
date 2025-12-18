@@ -37,22 +37,18 @@ public class GenerateEquivalency {
         dispatcher.register(literalargumentbuilder);
     }
 
-    private static void generateFiles(CommandContext<CommandSourceStack> ctx) {
+    public static int generateFiles(CommandContext<CommandSourceStack> ctx) {
         CommandSourceStack source = ctx.getSource();
         iterateItems(source);
         iterateRecipes(source);
-        source.sendSystemMessage(Component.literal("Item list and Recipe dict have been saved in the config folder").withStyle(ChatFormatting.DARK_GRAY));
+        source.sendSuccess(() -> Component.translatable("commands.stonkstimecore.generate_equivalency").withStyle(ChatFormatting.DARK_GRAY), true);
+        return Command.SINGLE_SUCCESS;
     }
 
     private static void iterateItems(CommandSourceStack source) {
         ArrayList<String> items = new ArrayList<>();
         for (ResourceLocation itemId : BuiltInRegistries.ITEM.keySet()) {
             items.add(itemId.toString());
-
-            SCTMap sct = BuiltInRegistries.ITEM.get(itemId).builtInRegistryHolder().getData(DataMaps.SCT_MAP);
-            if (sct != null) {
-                System.out.println(sct + " " + sct.SCT());
-            }
         }
         FileManager.writeConfigServerSide("items.txt", items, source.getServer());
     }

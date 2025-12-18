@@ -1,6 +1,7 @@
 package com.github.timepsilon.gui.overlay;
 
-import com.github.timepsilon.time.PlayerTimers;
+import com.github.timepsilon.time.PlayerOutData;
+import com.github.timepsilon.time.TimeManager;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,18 +17,19 @@ public class TimerOverlay implements LayeredDraw.Layer {
 
     private int seconds = 0;
     private int money = 0;
+    private boolean isOut;
     private static final float textX = 0.9f;
     private static final float textY = 0.9f;
 
     @Override
     public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
         if (Minecraft.getInstance().options.hideGui || Minecraft.getInstance().player.isSpectator()) return; // Hide timer if F1 or spectator
-        if (seconds <= 0) return ;
+        if (isOut) return ; // Being out =>  no more render
 
         int width = guiGraphics.guiWidth();
         int height = guiGraphics.guiHeight();
 
-        guiGraphics.drawString(Minecraft.getInstance().font, PlayerTimers.secondsToTime(seconds), width*textX, height*textY, getColor(), true);
+        guiGraphics.drawString(Minecraft.getInstance().font, TimeManager.secondsToTime(seconds), width*textX, height*textY, getColor(), true);
         guiGraphics.drawString(Minecraft.getInstance().font, money+"\u9000", width*textX, height*(textY-0.03f), Color.WHITE.getRGB(), true);
     }
 
@@ -37,6 +39,10 @@ public class TimerOverlay implements LayeredDraw.Layer {
 
     public void setMoney(int money) {
         this.money = money;
+    }
+
+    public void setOut(boolean isOut) {
+        this.isOut = isOut;
     }
 
     private int getColor() {
