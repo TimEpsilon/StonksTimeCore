@@ -3,6 +3,7 @@ package com.github.timepsilon.commands;
 
 import com.github.timepsilon.commands.equivalency.GenerateEquivalency;
 import com.github.timepsilon.commands.isout.OutLogic;
+import com.github.timepsilon.commands.timer.TimerLogic;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
@@ -36,11 +37,13 @@ public class STCCommand {
                         .then(Commands.literal("timer")
                                 .then(Commands.argument("player", EntityArgument.player())
                                         .then(Commands.literal("get")
-                                                .executes((ctx) -> 1))
+                                                .executes(TimerLogic::getTime))
                                         .then(Commands.literal("set")
-                                                .executes((ctx) -> 2))
+                                                .then(Commands.argument("value", IntegerArgumentType.integer(0))
+                                                    .executes(TimerLogic::setTime)))
                                         .then(Commands.literal("add")
-                                                .executes((ctx) -> 3))))
+                                                .then(Commands.argument("value", IntegerArgumentType.integer())
+                                                    .executes(TimerLogic::addTime)))))
                         .then(Commands.literal("out")
                                 .then(Commands.argument("player", EntityArgument.player())
                                         .then(Commands.literal("get")

@@ -55,6 +55,8 @@ public class TimerHandler {
             timer.setOut(uuid, true);
             // TODO : announce in chat and to player, make player translucent
         }
+
+        System.out.println(TimeManager.secondsToTime(seconds));
     }
 
     /**
@@ -79,7 +81,6 @@ public class TimerHandler {
     /**
      * Since this is called when removing 1s worth of money AND when a simple transaction is done,
      * The GUI is updated through here
-     * /!\ The event is fired before actually updating the bank so we need to take into account the new balance
      * <p>
      * Executed every transaction :
      * <ul>

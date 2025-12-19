@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(BankAccount.class)
 public class BankAccountMixin {
 
-    @Inject(method="setBalance", at=@At("HEAD"), cancellable=true)
+    @Inject(method="setBalance", at=@At("TAIL"), cancellable=true)
     private void onSetBalance(int balance, CallbackInfo ci) {
         BankAccount bank = (BankAccount)(Object)this;
 
