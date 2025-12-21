@@ -1,24 +1,19 @@
 package com.github.timepsilon.gui;
 
 import com.github.timepsilon.block.ModBlocks;
-import com.github.timepsilon.gui.packets.StonksTemporalChronoscopeMoneyPacket;
+import com.github.timepsilon.packets.StonksTemporalChronoscopeMoneyPacket;
 import com.google.common.collect.ImmutableList;
-import com.simibubi.create.content.redstone.thresholdSwitch.ConfigureThresholdSwitchPacket;
-import com.simibubi.create.content.trains.station.NoShadowFontWrapper;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.platform.CatnipServices;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.ItemStackHandler;
 
 import java.util.Collections;
 import java.util.List;

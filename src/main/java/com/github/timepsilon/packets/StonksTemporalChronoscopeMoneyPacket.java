@@ -1,4 +1,4 @@
-package com.github.timepsilon.gui.packets;
+package com.github.timepsilon.packets;
 
 import com.github.timepsilon.block.entity.server.StonksTemporalChronoscopeEntity;
 import io.netty.buffer.ByteBuf;

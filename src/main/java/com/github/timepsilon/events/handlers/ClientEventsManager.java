@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
@@ -21,12 +22,11 @@ public class ClientEventsManager {
     public ClientEventsManager(IEventBus eventBus) {onSTCClient(eventBus);}
 
     public static void onSTCClient(IEventBus eventBus) {
-        IEventBus neoEventBus = NeoForge.EVENT_BUS;
         eventBus.addListener(ClientEventsManager::clientInit);
         eventBus.addListener(ClientEventsManager::onRegisterOverlay);
-
     }
 
+    @SubscribeEvent
     public static void clientInit(final FMLClientSetupEvent event) {
         STCPartialModels.init();
         Core.LOGGER.info("Registered partial models!");
@@ -34,6 +34,7 @@ public class ClientEventsManager {
         EntityRenderers.register(ModEntities.TIME_GEAR.get(), TimeGearRenderer::new);
     }
 
+    @SubscribeEvent
     public static void onRegisterOverlay(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.TITLE, ResourceLocation.fromNamespaceAndPath(Core.MODID,"timer_overlay"), TimerOverlay.instance);
     }

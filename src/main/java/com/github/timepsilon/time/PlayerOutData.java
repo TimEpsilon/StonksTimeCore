@@ -1,9 +1,12 @@
 package com.github.timepsilon.time;
 
+import com.github.timepsilon.shader.ShaderUtil;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +57,11 @@ public class PlayerOutData extends SavedData {
 
     public void setOut(UUID uuid, boolean value) {
         PlayerIsOut.put(uuid, value);
+        ServerPlayer player = tryGettingPlayer(uuid);
+        if (player != null) {
+            TimerHandler.sendOverlayPacket(player, -1, -1, value);
+            ShaderUtil.toRenderShader = true;
+        }
         setDirty();
     }
 
@@ -63,6 +71,10 @@ public class PlayerOutData extends SavedData {
 
     public boolean isOut(UUID uuid) {
         return PlayerIsOut.getOrDefault(uuid, false);
+    }
+
+    private static ServerPlayer tryGettingPlayer(UUID uuid) {
+        return ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(uuid);
     }
 
 }

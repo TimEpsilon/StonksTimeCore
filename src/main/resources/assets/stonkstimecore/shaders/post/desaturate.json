@@ -1,0 +1,18 @@
+{
+  "targets": ["swap"],
+  "passes": [
+    {
+      "name": "stonkstimecore:desaturate",
+      "intarget": "minecraft:main",
+      "outtarget": "swap",
+      "uniforms": [
+        { "name": "uDesaturate", "type": "float", "values": [0.7] }
+      ]
+    },
+    {
+      "name": "blit",
+      "intarget" : "swap",
+      "outtarget": "minecraft:main"
+    }
+  ]
+}

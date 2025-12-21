@@ -1,13 +1,9 @@
-package com.github.timepsilon.gui.packets;
+package com.github.timepsilon.packets;
 
 import com.github.timepsilon.Core;
-import com.simibubi.create.AllPackets;
-import com.simibubi.create.Create;
-import com.simibubi.create.CreateBuildInfo;
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.net.base.BasePacketPayload;
 import net.createmod.catnip.net.base.CatnipPacketRegistry;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;

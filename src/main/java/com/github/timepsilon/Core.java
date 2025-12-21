@@ -6,7 +6,7 @@ import com.github.timepsilon.entity.ModEntities;
 import com.github.timepsilon.events.handlers.ModEventsManager;
 import com.github.timepsilon.events.handlers.NeoForgeEventsManager;
 import com.github.timepsilon.gui.ModMenu;
-import com.github.timepsilon.gui.packets.ModPackets;
+import com.github.timepsilon.packets.ModPackets;
 import com.github.timepsilon.items.ModItems;
 import com.github.timepsilon.time.TimerHandler;
 import com.mojang.logging.LogUtils;

@@ -2,7 +2,7 @@ package com.github.timepsilon.time;
 
 import com.github.timepsilon.Core;
 import com.github.timepsilon.events.BankAccountUpdateEvent;
-import com.github.timepsilon.gui.packets.TimerSyncPacket;
+import com.github.timepsilon.packets.TimerSyncPacket;
 import dev.ithundxr.createnumismatics.Numismatics;
 import dev.ithundxr.createnumismatics.content.backend.BankAccount;
 import net.createmod.catnip.platform.CatnipServices;
@@ -65,7 +65,7 @@ public class TimerHandler {
     @SubscribeEvent
     public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
-        BankAccount account = Numismatics.BANK.getAccount(player.getUUID());
+        BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getUUID(), BankAccount.Type.PLAYER);
         MinecraftServer level = player.server;
         PlayerOutData timer = PlayerOutData.getPlayerTimer(level);
 

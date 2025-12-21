@@ -45,6 +45,10 @@ public class TimerOverlay implements LayeredDraw.Layer {
         this.isOut = isOut;
     }
 
+    public boolean isOut() {
+        return this.isOut;
+    }
+
     private int getColor() {
         // Above 6h remaining -> Green
         // Below 30min -> Red
