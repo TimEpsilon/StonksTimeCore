@@ -1,14 +1,12 @@
-package com.github.timepsilon.packets;
+package com.github.timepsilon.packets.server;
 
-import com.github.timepsilon.Core;
 import com.github.timepsilon.gui.overlay.TimerOverlay;
+import com.github.timepsilon.packets.ModPackets;
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.net.base.ClientboundPacketPayload;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 

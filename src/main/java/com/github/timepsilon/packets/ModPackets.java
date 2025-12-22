@@ -1,6 +1,9 @@
 package com.github.timepsilon.packets;
 
 import com.github.timepsilon.Core;
+import com.github.timepsilon.packets.client.StonksTemporalChronoscopeMoneyPacket;
+import com.github.timepsilon.packets.server.ApplyShaderPacket;
+import com.github.timepsilon.packets.server.TimerSyncPacket;
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.net.base.BasePacketPayload;
 import net.createmod.catnip.net.base.CatnipPacketRegistry;
@@ -16,7 +19,9 @@ public enum ModPackets implements BasePacketPayload.PacketTypeProvider {
     COMPUTE_SCT(StonksTemporalChronoscopeMoneyPacket.class, StonksTemporalChronoscopeMoneyPacket.STREAM_CODEC),
 
     // Server -> Client
-    SYNC_TIMER(TimerSyncPacket.class, TimerSyncPacket.STREAM_CODEC);
+    SYNC_TIMER(TimerSyncPacket.class, TimerSyncPacket.STREAM_CODEC),
+    APPLY_SHADER(ApplyShaderPacket.class, ApplyShaderPacket.STREAM_CODEC)
+    ;
 
 
     private final CatnipPacketRegistry.PacketType<?> type;

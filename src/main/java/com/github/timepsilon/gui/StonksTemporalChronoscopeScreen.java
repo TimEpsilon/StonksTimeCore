@@ -1,7 +1,7 @@
 package com.github.timepsilon.gui;
 
 import com.github.timepsilon.block.ModBlocks;
-import com.github.timepsilon.packets.StonksTemporalChronoscopeMoneyPacket;
+import com.github.timepsilon.packets.client.StonksTemporalChronoscopeMoneyPacket;
 import com.google.common.collect.ImmutableList;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;

@@ -26,19 +26,17 @@ public class ShaderUtil {
 
     @SubscribeEvent
     public static void onRender(ClientTickEvent.Post event) {
-        if (!toRenderShader) return;
-        Minecraft mc = Minecraft.getInstance();
-        System.out.println("Update Shader");
+        //if (!toRenderShader) return;
+        //Minecraft mc = Minecraft.getInstance();
+        //System.out.println("Update Shader");
 
-        if (TimerOverlay.instance.isOut()) {
-            System.out.println("Desaturate");
-            mc.gameRenderer.loadEffect(DESATURATE_POST);
-        } else {
-            System.out.println("Basic");
-            mc.gameRenderer.shutdownEffect();
-        }
-        toRenderShader = false;
-
-
+        //if (TimerOverlay.instance.isOut()) {
+        //    System.out.println("Desaturate");
+        //    mc.gameRenderer.loadEffect(DESATURATE_POST);
+        //} else {
+        //    System.out.println("Basic");
+        //    mc.gameRenderer.shutdownEffect();
+        //}
+        //toRenderShader = false;
     }
 }

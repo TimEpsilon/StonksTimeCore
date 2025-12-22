@@ -2,7 +2,7 @@ package com.github.timepsilon.time;
 
 import com.github.timepsilon.Core;
 import com.github.timepsilon.events.BankAccountUpdateEvent;
-import com.github.timepsilon.packets.TimerSyncPacket;
+import com.github.timepsilon.packets.server.TimerSyncPacket;
 import dev.ithundxr.createnumismatics.Numismatics;
 import dev.ithundxr.createnumismatics.content.backend.BankAccount;
 import net.createmod.catnip.platform.CatnipServices;

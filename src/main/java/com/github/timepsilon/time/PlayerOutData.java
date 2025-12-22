@@ -1,6 +1,9 @@
 package com.github.timepsilon.time;
 
+import com.github.timepsilon.packets.server.ApplyShaderPacket;
+import com.github.timepsilon.packets.server.TimerSyncPacket;
 import com.github.timepsilon.shader.ShaderUtil;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
@@ -59,8 +62,11 @@ public class PlayerOutData extends SavedData {
         PlayerIsOut.put(uuid, value);
         ServerPlayer player = tryGettingPlayer(uuid);
         if (player != null) {
-            TimerHandler.sendOverlayPacket(player, -1, -1, value);
-            ShaderUtil.toRenderShader = true;
+            if (value) {
+                CatnipServices.NETWORK.sendToClient(player, ApplyShaderPacket.DESATURATE);
+            } else {
+                CatnipServices.NETWORK.sendToClient(player, ApplyShaderPacket.EMPTY);
+            }
         }
         setDirty();
     }

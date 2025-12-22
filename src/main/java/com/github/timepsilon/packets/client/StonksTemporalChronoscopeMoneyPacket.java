@@ -1,6 +1,7 @@
-package com.github.timepsilon.packets;
+package com.github.timepsilon.packets.client;
 
 import com.github.timepsilon.block.entity.server.StonksTemporalChronoscopeEntity;
+import com.github.timepsilon.packets.ModPackets;
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.net.base.ServerboundPacketPayload;
 import net.minecraft.core.BlockPos;
