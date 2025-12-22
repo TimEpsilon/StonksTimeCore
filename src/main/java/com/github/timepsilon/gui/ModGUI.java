@@ -2,10 +2,11 @@ package com.github.timepsilon.gui;
 
 import com.github.timepsilon.Core;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.createmod.catnip.annotations.Environment;
 import net.createmod.catnip.gui.element.ScreenElement;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public enum ModGUI implements ScreenElement {
     STONKS_TEMPORAL_CHRONOSCOPE("stonks_temporal_chronoscope", 200,110)
@@ -31,14 +32,14 @@ public enum ModGUI implements ScreenElement {
         this.startY = startY;
     }
 
-    @Environment(Environment.EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void render(GuiGraphics graphics, int x, int y) {
         bind();
         graphics.blit(location, x, y, startX, startY, width, height);
     }
 
-    @Environment(Environment.EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void bind() {
         RenderSystem.setShaderTexture(0, location);
     }

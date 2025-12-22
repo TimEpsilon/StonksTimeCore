@@ -6,11 +6,12 @@ import com.simibubi.create.content.kinetics.mixer.MixingRecipe;
 import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipe;
 import com.simibubi.create.content.processing.sequenced.SequencedRecipe;
-import com.simibubi.create.foundation.fluid.FluidIngredient;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,9 +44,9 @@ public class RecipeInput {
         return map;
     }
 
-    private static HashMap<String, Integer> singleFluidMap(FluidIngredient ingredient) {
+    private static HashMap<String, Integer> singleFluidMap(SizedFluidIngredient ingredient) {
         HashMap<String, Integer> map = new HashMap<>();
-        for (FluidStack fluid : ingredient.getMatchingFluidStacks()) {
+        for (FluidStack fluid : ingredient.getFluids()) {
             map.merge(fluid.getFluid().toString(), fluid.getAmount(), Integer::sum);
         }
         return map;
@@ -103,7 +104,7 @@ public class RecipeInput {
     private static HashMap<String, HashMap<String, Integer>> getInputsBasin(BasinRecipe recipe) {
         HashMap<String, HashMap<String, Integer>> inputIngredientMap = getInputsDefault(recipe);
 
-        for (FluidIngredient ingredient : recipe.getFluidIngredients()) {
+        for (SizedFluidIngredient ingredient : recipe.getFluidIngredients()) {
             HashMap<String, Integer> inputMap = singleFluidMap(ingredient);
             inputIngredientMap.put(ingredient.toString(), inputMap);
         }
@@ -114,7 +115,7 @@ public class RecipeInput {
     private static HashMap<String, HashMap<String, Integer>> getInputsFilling(FillingRecipe recipe) {
         HashMap<String, HashMap<String, Integer>> inputIngredientMap = getInputsDefault(recipe);
 
-        for (FluidIngredient ingredient : recipe.getFluidIngredients()) {
+        for (SizedFluidIngredient ingredient : recipe.getFluidIngredients()) {
             HashMap<String, Integer> inputMap = singleFluidMap(ingredient);
             inputIngredientMap.put(ingredient.toString(), inputMap);
         }
@@ -173,7 +174,7 @@ public class RecipeInput {
 
             // Fluid ingredients
             // Fluids aren't products of a recipe so this works the same as other fluid related crafts
-            for (FluidIngredient ingredient : sequenced.getRecipe().getFluidIngredients()) {
+            for (SizedFluidIngredient ingredient : sequenced.getRecipe().getFluidIngredients()) {
                 HashMap<String, Integer> inputMap = singleFluidMap(ingredient);
 
                 // Multiply by loop amount

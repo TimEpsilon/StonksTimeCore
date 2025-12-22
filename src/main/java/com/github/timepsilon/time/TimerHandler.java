@@ -9,6 +9,7 @@ import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -55,8 +56,6 @@ public class TimerHandler {
             timer.setOut(uuid, true);
             // TODO : announce in chat and to player, make player translucent
         }
-
-        System.out.println(TimeManager.secondsToTime(seconds));
     }
 
     /**
@@ -89,6 +88,7 @@ public class TimerHandler {
      * </ul>
      */
     @SubscribeEvent
+    @OnlyIn(Dist.DEDICATED_SERVER)
     public void onBankUpdate(BankAccountUpdateEvent event) {
         BankAccount account = event.getBank();
         UUID uuid = account.id;
