@@ -4,14 +4,13 @@ package com.github.timepsilon.commands;
 import com.github.timepsilon.commands.equivalency.GenerateEquivalency;
 import com.github.timepsilon.commands.isout.OutLogic;
 import com.github.timepsilon.commands.timer.TimerLogic;
-import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.GameProfileArgument;
 
 public class STCCommand {
 
@@ -35,7 +34,7 @@ public class STCCommand {
                                 .then(Commands.literal("generate")
                                         .executes(GenerateEquivalency::generateFiles)))
                         .then(Commands.literal("timer")
-                                .then(Commands.argument("player", EntityArgument.player())
+                                .then(Commands.argument("player", GameProfileArgument.gameProfile())
                                         .then(Commands.literal("get")
                                                 .executes(TimerLogic::getTime))
                                         .then(Commands.literal("set")
@@ -45,7 +44,7 @@ public class STCCommand {
                                                 .then(Commands.argument("value", IntegerArgumentType.integer())
                                                     .executes(TimerLogic::addTime)))))
                         .then(Commands.literal("out")
-                                .then(Commands.argument("player", EntityArgument.player())
+                                .then(Commands.argument("player", GameProfileArgument.gameProfile())
                                         .then(Commands.literal("get")
                                                 .executes(OutLogic::getOut))
                                         .then(Commands.literal("set")
@@ -55,6 +54,5 @@ public class STCCommand {
 
         dispatcher.register(literalargumentbuilder);
     }
-
 
 }

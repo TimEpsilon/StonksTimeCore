@@ -1,15 +1,9 @@
 package com.github.timepsilon.time;
 
-import com.github.timepsilon.packets.server.ApplyShaderPacket;
-import com.github.timepsilon.packets.server.TimerSyncPacket;
-import com.github.timepsilon.shader.ShaderUtil;
-import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,14 +54,6 @@ public class PlayerOutData extends SavedData {
 
     public void setOut(UUID uuid, boolean value) {
         PlayerIsOut.put(uuid, value);
-        ServerPlayer player = tryGettingPlayer(uuid);
-        if (player != null) {
-            if (value) {
-                CatnipServices.NETWORK.sendToClient(player, ApplyShaderPacket.DESATURATE);
-            } else {
-                CatnipServices.NETWORK.sendToClient(player, ApplyShaderPacket.EMPTY);
-            }
-        }
         setDirty();
     }
 
@@ -79,8 +65,30 @@ public class PlayerOutData extends SavedData {
         return PlayerIsOut.getOrDefault(uuid, false);
     }
 
-    private static ServerPlayer tryGettingPlayer(UUID uuid) {
-        return ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(uuid);
-    }
+    // makes player transparent
+    //@OnlyIn(Dist.CLIENT)
+    //@SubscribeEvent
+    //public void preRender2(RenderPlayerEvent.Pre event) {
+    //    // see yourself because invisible is annoying
+    //    if(Minecraft.getInstance().player.getUUID() == event.getEntity().getUUID()) {
+    //        RenderSystem.enableBlend();
+    //        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
+    //                GlStateManager.DestFactor.ONE_MINUS_CONSTANT_ALPHA);
+    //        // is this only triggered for items that are "active"?
+    //        // would it be possible to make layers transparent?
+    //        RenderSystem.setShaderColor(1.0F,1.0F, 1.0F, 0.5F);
+    //    } else {
+    //        // hides for other players
+    //        event.setCanceled(true);
+    //    }
+    //}
+//
+    //@OnlyIn(Dist.CLIENT)
+    //@SubscribeEvent
+    //public void postRender2(RenderPlayerEvent.Post event) {
+    //    RenderSystem.disableBlend();
+    //    RenderSystem.defaultBlendFunc();
+    //    RenderSystem.setShaderColor(1.0F,1.0F, 1.0F, 1.0F);
+    //}
 
 }

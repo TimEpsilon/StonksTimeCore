@@ -2,17 +2,12 @@ package com.github.timepsilon.items.custom;
 
 import com.github.timepsilon.entity.ModEntities;
 import com.github.timepsilon.entity.custom.TimeGearEntity;
-import com.github.timepsilon.items.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.players.OldUsersConverter;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;

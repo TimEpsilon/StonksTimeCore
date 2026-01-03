@@ -1,7 +1,6 @@
 package com.github.timepsilon.create;
 
 import com.github.timepsilon.Core;
-import com.simibubi.create.Create;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.resources.ResourceLocation;
 

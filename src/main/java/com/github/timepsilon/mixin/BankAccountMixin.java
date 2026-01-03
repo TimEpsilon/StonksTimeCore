@@ -1,7 +1,6 @@
 package com.github.timepsilon.mixin;
 
 import com.github.timepsilon.events.BankAccountUpdateEvent;
-import com.llamalad7.mixinextras.sugar.Cancellable;
 import dev.ithundxr.createnumismatics.content.backend.BankAccount;
 import net.neoforged.neoforge.common.NeoForge;
 import org.spongepowered.asm.mixin.Mixin;

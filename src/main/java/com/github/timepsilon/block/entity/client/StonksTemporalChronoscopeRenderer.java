@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import org.joml.Quaternionf;
 
 public class StonksTemporalChronoscopeRenderer extends KineticBlockEntityRenderer<StonksTemporalChronoscopeEntity> {
 

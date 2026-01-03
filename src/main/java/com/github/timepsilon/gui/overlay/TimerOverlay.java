@@ -1,6 +1,5 @@
 package com.github.timepsilon.gui.overlay;
 
-import com.github.timepsilon.time.PlayerOutData;
 import com.github.timepsilon.time.TimeManager;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;

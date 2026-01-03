@@ -1,13 +1,9 @@
 package com.github.timepsilon.block;
 
-import com.github.timepsilon.Core;
 import com.github.timepsilon.block.custom.StonksTemporalChronoscope;
 import com.simibubi.create.api.stress.BlockStressValues;
-import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.SharedProperties;
-import com.simibubi.create.foundation.item.ItemDescription;
 import com.tterrag.registrate.util.entry.BlockEntry;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.material.MapColor;
 
 import static com.github.timepsilon.Core.REGISTRATE;

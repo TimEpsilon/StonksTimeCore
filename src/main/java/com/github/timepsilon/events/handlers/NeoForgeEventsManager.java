@@ -1,7 +1,6 @@
 package com.github.timepsilon.events.handlers;
 
 import com.github.timepsilon.commands.STCCommand;
-import com.github.timepsilon.commands.equivalency.GenerateEquivalency;
 import com.github.timepsilon.datamaps.DataMaps;
 import com.github.timepsilon.datamaps.SCTMap;
 import net.minecraft.network.chat.Component;

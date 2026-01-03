@@ -1,7 +1,6 @@
 package com.github.timepsilon.time;
 
 import com.github.timepsilon.Core;
-import com.github.timepsilon.events.BankAccountUpdateEvent;
 import com.github.timepsilon.packets.server.TimerSyncPacket;
 import dev.ithundxr.createnumismatics.Numismatics;
 import dev.ithundxr.createnumismatics.content.backend.BankAccount;
@@ -9,7 +8,6 @@ import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -53,9 +51,10 @@ public class TimerHandler {
 
         // If time is now 0 -> set as out, preventing timer to update
         if (account.getBalance() <= 0) {
-            timer.setOut(uuid, true);
-            // TODO : announce in chat and to player, make player translucent
+            PlayerOutHandler.setOut(player, true);
         }
+
+        sendOverlayPacket(player, seconds, account.getBalance(), timer.isOut(uuid));
     }
 
     /**
@@ -71,40 +70,14 @@ public class TimerHandler {
         // Setup for players with no money
         // If the player is not in the map, we assume that it's their first time connecting
         if (!timer.getPlayerIsOut().containsKey(player.getUUID())) {
-            System.out.println("First Connection");
+            Core.LOGGER.info("{} joined for the first time. {}s have been added to their timer", player.getName(), TimeManager.BASE_TIME);
             account.setBalance(TimeManager.BASE_TIME * TimeManager.TIME_TO_MONEY);
-            timer.setOut(player.getUUID(), false);
+            PlayerOutHandler.setOut(player, false);
         }
-    }
 
-    /**
-     * Since this is called when removing 1s worth of money AND when a simple transaction is done,
-     * The GUI is updated through here
-     * <p>
-     * Executed every transaction :
-     * <ul>
-     *   <li>The money is converted to seconds.</li>
-     *   <li>The GUI is updated.</li>
-     * </ul>
-     */
-    @SubscribeEvent
-    @OnlyIn(Dist.DEDICATED_SERVER)
-    public void onBankUpdate(BankAccountUpdateEvent event) {
-        BankAccount account = event.getBank();
-        UUID uuid = account.id;
-        PlayerOutData timer = PlayerOutData.getPlayerTimer(event.getServer());
-        // player will be null if disconnected (through shops)
-        ServerPlayer player = event.getServer().getPlayerList().getPlayer(uuid);
-
-        // Convert money to seconds
-        seconds = account.getBalance() / TimeManager.TIME_TO_MONEY;
-
-        // Packet for overlay
-        int money = event.getNewBalance();
-
-        // Update GUI
-        if (player != null) {
-            sendOverlayPacket(player, seconds, money, timer.isOut(uuid));
+        // If the player is out, send them the desaturate packet
+        if (timer.isOut(player.getUUID())) {
+            PlayerOutHandler.setOut(player, true);
         }
     }
 

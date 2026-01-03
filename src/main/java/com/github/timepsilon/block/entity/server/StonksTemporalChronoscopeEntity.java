@@ -1,19 +1,14 @@
 package com.github.timepsilon.block.entity.server;
 
-import com.github.timepsilon.Core;
 import com.github.timepsilon.datamaps.DataMaps;
 import com.github.timepsilon.datamaps.SCTMap;
-import com.github.timepsilon.gui.ModMenu;
 import com.github.timepsilon.gui.StonksTemporalChronoscopeMenu;
 import com.github.timepsilon.gui.inventory.StonksTemporalChronoscopeInventory;
-import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.sound.SoundScapes;
 import dev.ithundxr.createnumismatics.content.backend.Coin;
-import dev.ithundxr.createnumismatics.content.coins.CoinBag;
 import dev.ithundxr.createnumismatics.content.coins.MergingCoinBag;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -28,8 +23,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -57,7 +50,6 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public void tickAudio() {
         super.tickAudio();
 

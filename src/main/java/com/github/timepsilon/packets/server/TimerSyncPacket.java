@@ -7,8 +7,6 @@ import net.createmod.catnip.net.base.ClientboundPacketPayload;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public record TimerSyncPacket(int seconds, int money, boolean isOut) implements ClientboundPacketPayload {
 
@@ -25,7 +23,6 @@ public record TimerSyncPacket(int seconds, int money, boolean isOut) implements 
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
     public void handle(LocalPlayer player) {
         if (seconds > 0) TimerOverlay.instance.setSeconds(seconds); // allows for a purely "out" packet
         if (money > 0) TimerOverlay.instance.setMoney(money);

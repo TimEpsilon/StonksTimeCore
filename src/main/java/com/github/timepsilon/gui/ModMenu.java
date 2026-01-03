@@ -1,7 +1,6 @@
 package com.github.timepsilon.gui;
 
 import com.github.timepsilon.Core;
-import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.builders.MenuBuilder;
 import com.tterrag.registrate.util.entry.MenuEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;

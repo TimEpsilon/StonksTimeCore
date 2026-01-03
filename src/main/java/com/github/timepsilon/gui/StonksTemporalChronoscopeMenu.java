@@ -1,16 +1,10 @@
 package com.github.timepsilon.gui;
 
 import com.github.timepsilon.block.entity.server.StonksTemporalChronoscopeEntity;
-import com.github.timepsilon.datamaps.DataMaps;
-import com.github.timepsilon.datamaps.SCTMap;
-import com.github.timepsilon.gui.inventory.StonksTemporalChronoscopeInventory;
 import com.github.timepsilon.gui.inventory.StonksTemporalChronoscopeTradeSlot;
-import com.mojang.serialization.JsonOps;
 import com.simibubi.create.foundation.gui.menu.MenuBase;
-import dev.ithundxr.createnumismatics.content.backend.BankAccount;
 import dev.ithundxr.createnumismatics.content.backend.Coin;
 import dev.ithundxr.createnumismatics.content.coins.CoinItem;
-import dev.ithundxr.createnumismatics.content.coins.MergingCoinBag;
 import dev.ithundxr.createnumismatics.content.coins.SlotOutputMergingCoinBag;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -21,10 +15,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 public class StonksTemporalChronoscopeMenu extends MenuBase<StonksTemporalChronoscopeEntity> {
 

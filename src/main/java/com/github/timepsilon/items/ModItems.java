@@ -2,18 +2,10 @@ package com.github.timepsilon.items;
 
 import com.github.timepsilon.Core;
 import com.github.timepsilon.items.custom.TimeGearItem;
-import com.simibubi.create.AllCreativeModeTabs;
-import com.simibubi.create.AllTags;
-import com.simibubi.create.content.equipment.wrench.WrenchItem;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.tterrag.registrate.util.entry.ItemEntry;
-import dev.ithundxr.createnumismatics.registry.NumismaticsCreativeModeTabs;
 import dev.ithundxr.createnumismatics.registry.neoforge.NumismaticsCreativeModeTabsImpl;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredItem;
-import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ModItems {
 
