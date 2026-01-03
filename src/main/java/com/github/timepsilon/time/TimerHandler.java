@@ -74,11 +74,6 @@ public class TimerHandler {
             account.setBalance(TimeManager.BASE_TIME * TimeManager.TIME_TO_MONEY);
             PlayerOutHandler.setOut(player, false);
         }
-
-        // If the player is out, send them the desaturate packet
-        if (timer.isOut(player.getUUID())) {
-            PlayerOutHandler.setOut(player, true);
-        }
     }
 
     public static void sendOverlayPacket(ServerPlayer player, int time, int money,  boolean isOut) {

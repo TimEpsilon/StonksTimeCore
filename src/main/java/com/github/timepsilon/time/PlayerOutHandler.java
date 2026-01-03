@@ -3,8 +3,11 @@ package com.github.timepsilon.time;
 import com.github.timepsilon.Core;
 import com.github.timepsilon.packets.server.isOutPacket;
 import com.github.timepsilon.time.client.ClientOutState;
+import dev.ithundxr.createnumismatics.Numismatics;
+import dev.ithundxr.createnumismatics.content.backend.BankAccount;
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -12,6 +15,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.util.UUID;
@@ -79,7 +83,7 @@ public class PlayerOutHandler {
     /**
      * When a player is out, this tries to apply the desaturate shader every tick
      * <p> However, in order to not block other post shaders effect,
-     * when a player isn't out, the shader is only removed once
+     * when a player isn't out, the shader is only removed once </p>
      */
     @SubscribeEvent
     public void onClientTick(ClientTickEvent.Post event) {
@@ -100,6 +104,25 @@ public class PlayerOutHandler {
                 renderer.shutdownEffect();
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        MinecraftServer level = player.server;
+        PlayerOutData timer = PlayerOutData.getPlayerTimer(level);
+
+        // If the player is out, send them the desaturate packet, else, removes it
+        PlayerOutHandler.setOut(player, timer.isOut(player.getUUID()));
+    }
+
+    @SubscribeEvent
+    public void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
+        // Remove any kind of post effect to the player when they leave
+
+        if (!(event.getEntity() instanceof LocalPlayer player)) return;
+        Minecraft.getInstance().gameRenderer.shutdownEffect();
+
     }
 
 }
