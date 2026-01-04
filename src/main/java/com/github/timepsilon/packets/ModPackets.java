@@ -2,8 +2,9 @@ package com.github.timepsilon.packets;
 
 import com.github.timepsilon.Core;
 import com.github.timepsilon.packets.client.StonksTemporalChronoscopeMoneyPacket;
+import com.github.timepsilon.packets.server.PlayersAreOutPacket;
 import com.github.timepsilon.packets.server.TimerSyncPacket;
-import com.github.timepsilon.packets.server.isOutPacket;
+import com.github.timepsilon.packets.server.IsOutPacket;
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.net.base.BasePacketPayload;
 import net.createmod.catnip.net.base.CatnipPacketRegistry;
@@ -20,7 +21,8 @@ public enum ModPackets implements BasePacketPayload.PacketTypeProvider {
 
     // Server -> Client
     SYNC_TIMER(TimerSyncPacket.class, TimerSyncPacket.STREAM_CODEC),
-    IS_OUT(isOutPacket.class, isOutPacket.STREAM_CODEC)
+    IS_OUT(IsOutPacket.class, IsOutPacket.STREAM_CODEC),
+    PLAYERS_OUT_SET(PlayersAreOutPacket.class, PlayersAreOutPacket.STREAM_CODEC)
     ;
 
 

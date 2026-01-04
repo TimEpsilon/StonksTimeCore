@@ -8,6 +8,7 @@ import com.github.timepsilon.events.handlers.NeoForgeEventsManager;
 import com.github.timepsilon.gui.ModMenu;
 import com.github.timepsilon.items.ModItems;
 import com.github.timepsilon.packets.ModPackets;
+import com.github.timepsilon.sounds.ModSounds;
 import com.github.timepsilon.time.PlayerOutHandler;
 import com.github.timepsilon.time.TimerHandler;
 import com.mojang.logging.LogUtils;
@@ -48,6 +49,7 @@ public class Core {
         ModMenu.register();
         ModPackets.register();
         ModEntities.register(modEventBus);
+        ModSounds.register(modEventBus);
 
         // Register Neoforge Events
         NeoForge.EVENT_BUS.register(new NeoForgeEventsManager());

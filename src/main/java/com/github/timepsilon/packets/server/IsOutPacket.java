@@ -8,11 +8,11 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-public record isOutPacket(boolean isOut) implements ClientboundPacketPayload {
+public record IsOutPacket(boolean isOut) implements ClientboundPacketPayload {
 
-    public static final StreamCodec<ByteBuf, isOutPacket> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.BOOL, isOutPacket::isOut,
-            isOutPacket::new
+    public static final StreamCodec<ByteBuf, IsOutPacket> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.BOOL, IsOutPacket::isOut,
+            IsOutPacket::new
     );
 
     @Override

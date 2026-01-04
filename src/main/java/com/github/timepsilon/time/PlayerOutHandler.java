@@ -1,23 +1,35 @@
 package com.github.timepsilon.time;
 
 import com.github.timepsilon.Core;
-import com.github.timepsilon.packets.server.isOutPacket;
+import com.github.timepsilon.packets.server.IsOutPacket;
+import com.github.timepsilon.packets.server.PlayersAreOutPacket;
+import com.github.timepsilon.sounds.ModSounds;
 import com.github.timepsilon.time.client.ClientOutState;
-import dev.ithundxr.createnumismatics.Numismatics;
-import dev.ithundxr.createnumismatics.content.backend.BankAccount;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.createmod.catnip.platform.CatnipServices;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.RenderPlayerEvent;
+import net.neoforged.neoforge.common.UsernameCache;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
+import java.awt.*;
+import java.util.Set;
 import java.util.UUID;
 
 @Mod(value = Core.MODID)
@@ -37,8 +49,28 @@ public class PlayerOutHandler {
     public static void setOut(UUID uuid, boolean out) {
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         if (server != null) {
-            PlayerOutData timer = PlayerOutData.getPlayerTimer(server);
+            PlayerOutData timer = PlayerOutData.getPlayerOutData(server);
             timer.setOut(uuid, out);
+            String username = UsernameCache.getLastKnownUsername(uuid);
+
+            if (out) {
+                Core.LOGGER.info("{} is out of time", username);
+
+                for (ServerPlayer p : server.getPlayerList().getPlayers()) {
+                    // Global chat message
+                    p.sendSystemMessage(
+                            Component.translatable("info.stonkstimecore.player_is_out", username)
+                                    .withColor(Color.RED.getRGB()));
+                }
+
+                // Global sound
+                server.overworld().playSound(null, 0,0,0, SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.PLAYERS, 10000.0f, 0.6f);
+                server.overworld().playSound(null, 0,0,0, ModSounds.TIME_OUT.get(), SoundSource.PLAYERS, 10000.0f, 0.8f);
+            }
+
+
+
+
         } else {
             Core.LOGGER.error("Player status couldn't be set to out : server is null");
         }
@@ -53,31 +85,23 @@ public class PlayerOutHandler {
      */
     public static void setOut(ServerPlayer player, boolean out) {
         setOut(player.getUUID(), out);
-        System.out.println(out);
+
+        // Updates the "semi-transparent" list to every player
+        Set<UUID> playerOutSet = PlayersAreOutPacket.getOutPlayers(player.server);
+        for (ServerPlayer p : player.server.getPlayerList().getPlayers()) {
+            CatnipServices.NETWORK.sendToClient(p, new PlayersAreOutPacket(playerOutSet));
+        }
 
         if (out) {
             // outPlayer desaturated visual
-            CatnipServices.NETWORK.sendToClient(player, new isOutPacket(true));
+            CatnipServices.NETWORK.sendToClient(player, new IsOutPacket(true));
 
-            // outPlayer semi-transparent
-
-            // Global chat message
-
-            // Global sound
-
+            // Player chat message
+            player.sendSystemMessage(Component.translatable("info.stonkstimecore.self_is_out", player.getName()).withColor(Color.GRAY.getRGB()).withStyle(ChatFormatting.ITALIC));
 
         } else {
-            CatnipServices.NETWORK.sendToClient(player, new isOutPacket(false));
+            CatnipServices.NETWORK.sendToClient(player, new IsOutPacket(false));
         }
-    }
-
-    /** Manages the permanent effects of being out (only needed when player is online)
-     * <p> i.e. the desaturated effect, transparent player model
-     *
-     * @param player : the ServerPlayer that is out
-     */
-    public static void permanentIsOutEffects(ServerPlayer player) {
-
     }
 
     /**
@@ -110,19 +134,34 @@ public class PlayerOutHandler {
     public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         MinecraftServer level = player.server;
-        PlayerOutData timer = PlayerOutData.getPlayerTimer(level);
+        PlayerOutData timer = PlayerOutData.getPlayerOutData(level);
 
         // If the player is out, send them the desaturate packet, else, removes it
-        PlayerOutHandler.setOut(player, timer.isOut(player.getUUID()));
+        CatnipServices.NETWORK.sendToClient(player, new IsOutPacket(timer.isOut(player.getUUID())));
     }
 
     @SubscribeEvent
     public void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
         // Remove any kind of post effect to the player when they leave
-
-        if (!(event.getEntity() instanceof LocalPlayer player)) return;
+        if (!(event.getEntity().isLocalPlayer())) return;
         Minecraft.getInstance().gameRenderer.shutdownEffect();
 
+    }
+
+    /**
+     * When a player is out, this makes them semi transparent.
+     */
+    // TODO : find a better way to do this
+    @SubscribeEvent
+    public void playerRender(RenderPlayerEvent.Post event) {
+        if (Minecraft.getInstance().player == null) return;
+
+        if(true) {
+            RenderSystem.enableBlend();
+            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
+                    GlStateManager.DestFactor.ONE_MINUS_CONSTANT_ALPHA);
+            RenderSystem.setShaderColor(1.0f,1.0f, 1.0f, 0.5f);
+        }
     }
 
 }

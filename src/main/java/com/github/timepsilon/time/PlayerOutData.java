@@ -15,13 +15,12 @@ public class PlayerOutData extends SavedData {
     private static final String KEY_IS_OUT = "is_out";
     private static final String DATA_ID = "player_out";
 
-    public static PlayerOutData getPlayerTimer(MinecraftServer level) {
+    public static PlayerOutData getPlayerOutData(MinecraftServer level) {
 
-        PlayerOutData timer = level.overworld().getDataStorage().computeIfAbsent(
+        return level.overworld().getDataStorage().computeIfAbsent(
                 new Factory<>(PlayerOutData::create, PlayerOutData::load),
                 DATA_ID
         );
-        return timer;
     }
 
     public static PlayerOutData create() {
@@ -64,31 +63,5 @@ public class PlayerOutData extends SavedData {
     public boolean isOut(UUID uuid) {
         return PlayerIsOut.getOrDefault(uuid, false);
     }
-
-    // makes player transparent
-    //@OnlyIn(Dist.CLIENT)
-    //@SubscribeEvent
-    //public void preRender2(RenderPlayerEvent.Pre event) {
-    //    // see yourself because invisible is annoying
-    //    if(Minecraft.getInstance().player.getUUID() == event.getEntity().getUUID()) {
-    //        RenderSystem.enableBlend();
-    //        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
-    //                GlStateManager.DestFactor.ONE_MINUS_CONSTANT_ALPHA);
-    //        // is this only triggered for items that are "active"?
-    //        // would it be possible to make layers transparent?
-    //        RenderSystem.setShaderColor(1.0F,1.0F, 1.0F, 0.5F);
-    //    } else {
-    //        // hides for other players
-    //        event.setCanceled(true);
-    //    }
-    //}
-//
-    //@OnlyIn(Dist.CLIENT)
-    //@SubscribeEvent
-    //public void postRender2(RenderPlayerEvent.Post event) {
-    //    RenderSystem.disableBlend();
-    //    RenderSystem.defaultBlendFunc();
-    //    RenderSystem.setShaderColor(1.0F,1.0F, 1.0F, 1.0F);
-    //}
 
 }

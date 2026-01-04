@@ -7,10 +7,15 @@
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.condition1": "When Powered by Kinetics ≥ 30 RPM",
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.summary": "Converts any item into its corresponding _SCT_ amount",
 
+  "sounds.stonkstimecore.time_out" : "Time Out Bell",
+
   "error.stonkstimecore.banking_while_out" : "Banking operation cancelled",
 
   "commands.stonkstimecore.generate_equivalency" : "Item list and Recipe dict have been saved in the config folder",
   "commands.stonkstimecore.update_out" : "%s's out status has been set to %s",
   "commands.stonkstimecore.set_time" : "%s's time has been set to %s",
-  "commands.stonkstimecore.add_time" : "%ss have been added to %s's time"
+  "commands.stonkstimecore.add_time" : "%ss have been added to %s's time",
+
+  "info.stonkstimecore.player_is_out" : "[!] %s has run out of time!",
+  "info.stonkstimecore.self_is_out" : "You are now out of time. You will no longer be able to interact with your bank account."
 }

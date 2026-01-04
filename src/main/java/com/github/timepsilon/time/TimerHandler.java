@@ -35,7 +35,7 @@ public class TimerHandler {
 
         UUID uuid = player.getUUID();
         MinecraftServer level = player.server;
-        PlayerOutData timer = PlayerOutData.getPlayerTimer(level);
+        PlayerOutData timer = PlayerOutData.getPlayerOutData(level);
         BankAccount account = Numismatics.BANK.getAccount(uuid);
 
         if (timer.isOut(uuid)) {
@@ -65,7 +65,7 @@ public class TimerHandler {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getUUID(), BankAccount.Type.PLAYER);
         MinecraftServer level = player.server;
-        PlayerOutData timer = PlayerOutData.getPlayerTimer(level);
+        PlayerOutData timer = PlayerOutData.getPlayerOutData(level);
 
         // Setup for players with no money
         // If the player is not in the map, we assume that it's their first time connecting

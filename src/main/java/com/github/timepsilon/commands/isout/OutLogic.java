@@ -19,7 +19,7 @@ public class OutLogic {
 
     public static int getOut(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         Collection<GameProfile> players = GameProfileArgument.getGameProfiles(ctx, "player");
-        PlayerOutData timer = PlayerOutData.getPlayerTimer(ctx.getSource().getServer());
+        PlayerOutData timer = PlayerOutData.getPlayerOutData(ctx.getSource().getServer());
 
         boolean isOut = players.stream()
                 .map(player -> timer.isOut(player.getId()))
@@ -34,7 +34,7 @@ public class OutLogic {
         boolean out = BoolArgumentType.getBool(ctx, "boolean");
 
         for (GameProfile player : players) {
-            ServerPlayer sPlayer = tryGettingPlayer(ctx, player.getId());
+            ServerPlayer sPlayer = tryGettingPlayer(ctx.getSource().getServer(), player.getId());
             if (sPlayer != null) {
                 // player is online -> add client effects
                 PlayerOutHandler.setOut(sPlayer, out);
@@ -50,8 +50,7 @@ public class OutLogic {
         return out ? 1 : 0;
     }
 
-    public static ServerPlayer tryGettingPlayer(CommandContext<CommandSourceStack> ctx, UUID uuid) throws CommandSyntaxException {
-        MinecraftServer server = ctx.getSource().getServer();
+    public static ServerPlayer tryGettingPlayer(MinecraftServer server, UUID uuid) {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             if (player.getUUID().equals(uuid)) {
                 return player;

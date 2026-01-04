@@ -150,7 +150,6 @@ public class TimeGearEntity extends Entity implements GeoEntity {
     }
 
     private void playBrokenSound() {
-        // TODO Custom sound
         this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.AMETHYST_BLOCK_BREAK, this.getSoundSource(), 1.0F, 1.0F);
     }
 

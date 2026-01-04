@@ -1,0 +1,8 @@
+{
+  "time_out" : {
+    "subtitle" : "sounds.stonkstimecore.time_out",
+    "sounds" : [
+      "stonkstimecore:time_out"
+    ]
+  }
+}
