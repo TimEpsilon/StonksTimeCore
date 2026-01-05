@@ -1,10 +1,10 @@
 package com.github.timepsilon.events.handlers;
 
 import com.github.timepsilon.Core;
+import com.github.timepsilon.client.gui.overlay.TimerOverlay;
 import com.github.timepsilon.create.STCPartialModels;
 import com.github.timepsilon.entity.ModEntities;
 import com.github.timepsilon.entity.client.TimeGearRenderer;
-import com.github.timepsilon.gui.overlay.TimerOverlay;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
@@ -17,6 +17,8 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 @Mod(value = Core.MODID, dist = Dist.CLIENT)
 public class ClientEventsManager {
+
+    private static boolean hasRenderedFlag = false;
 
     public ClientEventsManager(IEventBus eventBus) {onSTCClient(eventBus);}
 
@@ -37,4 +39,5 @@ public class ClientEventsManager {
     public static void onRegisterOverlay(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.TITLE, ResourceLocation.fromNamespaceAndPath(Core.MODID,"timer_overlay"), TimerOverlay.instance);
     }
+
 }

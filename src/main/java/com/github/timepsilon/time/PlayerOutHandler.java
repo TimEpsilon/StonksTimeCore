@@ -5,25 +5,19 @@ import com.github.timepsilon.packets.server.IsOutPacket;
 import com.github.timepsilon.packets.server.PlayersAreOutPacket;
 import com.github.timepsilon.sounds.ModSounds;
 import com.github.timepsilon.time.client.ClientOutState;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.event.RenderPlayerEvent;
 import net.neoforged.neoforge.common.UsernameCache;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
@@ -146,22 +140,6 @@ public class PlayerOutHandler {
         if (!(event.getEntity().isLocalPlayer())) return;
         Minecraft.getInstance().gameRenderer.shutdownEffect();
 
-    }
-
-    /**
-     * When a player is out, this makes them semi transparent.
-     */
-    // TODO : find a better way to do this
-    @SubscribeEvent
-    public void playerRender(RenderPlayerEvent.Post event) {
-        if (Minecraft.getInstance().player == null) return;
-
-        if(true) {
-            RenderSystem.enableBlend();
-            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
-                    GlStateManager.DestFactor.ONE_MINUS_CONSTANT_ALPHA);
-            RenderSystem.setShaderColor(1.0f,1.0f, 1.0f, 0.5f);
-        }
     }
 
 }

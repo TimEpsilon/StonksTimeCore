@@ -1,7 +1,7 @@
-package com.github.timepsilon.gui;
+package com.github.timepsilon.client.gui;
 
 import com.github.timepsilon.block.entity.server.StonksTemporalChronoscopeEntity;
-import com.github.timepsilon.gui.inventory.StonksTemporalChronoscopeTradeSlot;
+import com.github.timepsilon.client.gui.inventory.StonksTemporalChronoscopeTradeSlot;
 import com.simibubi.create.foundation.gui.menu.MenuBase;
 import dev.ithundxr.createnumismatics.content.backend.Coin;
 import dev.ithundxr.createnumismatics.content.coins.CoinItem;

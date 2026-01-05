@@ -2,6 +2,7 @@ package com.github.timepsilon.time;
 
 import com.github.timepsilon.Core;
 import com.github.timepsilon.packets.server.TimerSyncPacket;
+import com.github.timepsilon.utils.TimeUtils;
 import dev.ithundxr.createnumismatics.Numismatics;
 import dev.ithundxr.createnumismatics.content.backend.BankAccount;
 import net.createmod.catnip.platform.CatnipServices;
@@ -44,10 +45,10 @@ public class TimerHandler {
         }
 
         // Decrease account by 1s
-        account.deduct(TimeManager.TIME_TO_MONEY, true);
+        account.deduct(TimeUtils.TIME_TO_MONEY, true);
 
         // Convert money to seconds
-        seconds = account.getBalance() / TimeManager.TIME_TO_MONEY;
+        seconds = account.getBalance() / TimeUtils.TIME_TO_MONEY;
 
         // If time is now 0 -> set as out, preventing timer to update
         if (account.getBalance() <= 0) {
@@ -70,8 +71,8 @@ public class TimerHandler {
         // Setup for players with no money
         // If the player is not in the map, we assume that it's their first time connecting
         if (!timer.getPlayerIsOut().containsKey(player.getUUID())) {
-            Core.LOGGER.info("{} joined for the first time. {}s have been added to their timer", player.getName(), TimeManager.BASE_TIME);
-            account.setBalance(TimeManager.BASE_TIME * TimeManager.TIME_TO_MONEY);
+            Core.LOGGER.info("{} joined for the first time. {}s have been added to their timer", player.getName(), TimeUtils.BASE_TIME);
+            account.setBalance(TimeUtils.BASE_TIME * TimeUtils.TIME_TO_MONEY);
             PlayerOutHandler.setOut(player, false);
         }
     }

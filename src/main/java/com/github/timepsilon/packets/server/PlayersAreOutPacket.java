@@ -11,6 +11,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,6 +26,8 @@ public record PlayersAreOutPacket(Set<UUID> playersAreOutSet) implements Clientb
 
     @Override
     public void handle(LocalPlayer player) {
+        ClientOutState.PLAYERS_ARE_OUT = playersAreOutSet;
+        System.out.println(ClientOutState.PLAYERS_ARE_OUT);
     }
 
     @Override

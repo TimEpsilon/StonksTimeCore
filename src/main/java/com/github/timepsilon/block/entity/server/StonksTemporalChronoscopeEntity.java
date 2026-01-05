@@ -1,9 +1,9 @@
 package com.github.timepsilon.block.entity.server;
 
+import com.github.timepsilon.client.gui.StonksTemporalChronoscopeMenu;
+import com.github.timepsilon.client.gui.inventory.StonksTemporalChronoscopeInventory;
 import com.github.timepsilon.datamaps.DataMaps;
 import com.github.timepsilon.datamaps.SCTMap;
-import com.github.timepsilon.gui.StonksTemporalChronoscopeMenu;
-import com.github.timepsilon.gui.inventory.StonksTemporalChronoscopeInventory;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.sound.SoundScapes;

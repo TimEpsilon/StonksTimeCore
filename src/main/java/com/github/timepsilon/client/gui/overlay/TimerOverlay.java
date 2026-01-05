@@ -1,6 +1,6 @@
-package com.github.timepsilon.gui.overlay;
+package com.github.timepsilon.client.gui.overlay;
 
-import com.github.timepsilon.time.TimeManager;
+import com.github.timepsilon.utils.TimeUtils;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -28,7 +28,7 @@ public class TimerOverlay implements LayeredDraw.Layer {
         int width = guiGraphics.guiWidth();
         int height = guiGraphics.guiHeight();
 
-        guiGraphics.drawString(Minecraft.getInstance().font, TimeManager.secondsToTime(seconds), width*textX, height*textY, getColor(), true);
+        guiGraphics.drawString(Minecraft.getInstance().font, TimeUtils.secondsToTime(seconds), width*textX, height*textY, getColor(), true);
         guiGraphics.drawString(Minecraft.getInstance().font, money+"\u9000", width*textX, height*(textY-0.03f), Color.WHITE.getRGB(), true);
     }
 

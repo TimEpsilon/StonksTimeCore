@@ -1,6 +1,6 @@
-package com.github.timepsilon.time;
+package com.github.timepsilon.utils;
 
-public class TimeManager {
+public class TimeUtils {
 
     public static final int BASE_TIME = 4 * 60 * 60; // 4h TODO : Make this a config
 

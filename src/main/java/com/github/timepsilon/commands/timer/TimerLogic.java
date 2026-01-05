@@ -1,6 +1,6 @@
 package com.github.timepsilon.commands.timer;
 
-import com.github.timepsilon.time.TimeManager;
+import com.github.timepsilon.utils.TimeUtils;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -19,10 +19,10 @@ public class TimerLogic {
         Collection<GameProfile> players = GameProfileArgument.getGameProfiles(ctx, "player");
         int seconds = players.stream()
                 .map(player -> Numismatics.BANK.getOrCreateAccount(player.getId(), BankAccount.Type.PLAYER))
-                .mapToInt(account -> account.getBalance() / TimeManager.TIME_TO_MONEY)
+                .mapToInt(account -> account.getBalance() / TimeUtils.TIME_TO_MONEY)
                 .sum();
 
-        ctx.getSource().sendSuccess(() -> Component.literal(TimeManager.secondsToTime(seconds)), false);
+        ctx.getSource().sendSuccess(() -> Component.literal(TimeUtils.secondsToTime(seconds)), false);
         return seconds;
     }
 
@@ -32,8 +32,8 @@ public class TimerLogic {
 
         for (GameProfile player : players) {
             BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getId(), BankAccount.Type.PLAYER);
-            account.setBalance(seconds*TimeManager.TIME_TO_MONEY);
-            ctx.getSource().sendSuccess(() -> Component.translatable("commands.stonkstimecore.set_time",player.getName(),TimeManager.secondsToTime(seconds)), false);
+            account.setBalance(seconds* TimeUtils.TIME_TO_MONEY);
+            ctx.getSource().sendSuccess(() -> Component.translatable("commands.stonkstimecore.set_time",player.getName(), TimeUtils.secondsToTime(seconds)), false);
         }
         return seconds;
     }
@@ -45,9 +45,9 @@ public class TimerLogic {
         for (GameProfile player : players) {
             BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getId(), BankAccount.Type.PLAYER);
             if (seconds > 0) {
-                account.deposit(seconds*TimeManager.TIME_TO_MONEY);
+                account.deposit(seconds* TimeUtils.TIME_TO_MONEY);
             } else {
-                account.deduct(-seconds*TimeManager.TIME_TO_MONEY);
+                account.deduct(-seconds* TimeUtils.TIME_TO_MONEY);
             }
             ctx.getSource().sendSuccess(() -> Component.translatable("commands.stonkstimecore.add_time",seconds,player.getName()), false);
         }

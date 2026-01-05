@@ -1,6 +1,6 @@
-package com.github.timepsilon.gui.inventory;
+package com.github.timepsilon.client.gui.inventory;
 
-import com.github.timepsilon.gui.StonksTemporalChronoscopeMenu;
+import com.github.timepsilon.client.gui.StonksTemporalChronoscopeMenu;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
 

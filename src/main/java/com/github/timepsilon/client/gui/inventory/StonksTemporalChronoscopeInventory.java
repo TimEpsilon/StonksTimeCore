@@ -1,4 +1,4 @@
-package com.github.timepsilon.gui.inventory;
+package com.github.timepsilon.client.gui.inventory;
 
 import com.github.timepsilon.block.entity.server.StonksTemporalChronoscopeEntity;
 import net.minecraft.world.item.ItemStack;

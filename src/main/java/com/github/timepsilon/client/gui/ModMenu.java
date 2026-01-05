@@ -1,4 +1,4 @@
-package com.github.timepsilon.gui;
+package com.github.timepsilon.client.gui;
 
 import com.github.timepsilon.Core;
 import com.tterrag.registrate.builders.MenuBuilder;

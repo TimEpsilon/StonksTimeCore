@@ -2,9 +2,9 @@ package com.github.timepsilon.packets;
 
 import com.github.timepsilon.Core;
 import com.github.timepsilon.packets.client.StonksTemporalChronoscopeMoneyPacket;
+import com.github.timepsilon.packets.server.IsOutPacket;
 import com.github.timepsilon.packets.server.PlayersAreOutPacket;
 import com.github.timepsilon.packets.server.TimerSyncPacket;
-import com.github.timepsilon.packets.server.IsOutPacket;
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.net.base.BasePacketPayload;
 import net.createmod.catnip.net.base.CatnipPacketRegistry;

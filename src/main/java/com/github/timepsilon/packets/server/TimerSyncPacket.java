@@ -1,6 +1,6 @@
 package com.github.timepsilon.packets.server;
 
-import com.github.timepsilon.gui.overlay.TimerOverlay;
+import com.github.timepsilon.client.gui.overlay.TimerOverlay;
 import com.github.timepsilon.packets.ModPackets;
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.net.base.ClientboundPacketPayload;

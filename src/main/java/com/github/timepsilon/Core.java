@@ -2,15 +2,16 @@ package com.github.timepsilon;
 
 import com.github.timepsilon.block.ModBlocks;
 import com.github.timepsilon.block.entity.ModBlockEntities;
+import com.github.timepsilon.client.gui.ModMenu;
 import com.github.timepsilon.entity.ModEntities;
 import com.github.timepsilon.events.handlers.ModEventsManager;
 import com.github.timepsilon.events.handlers.NeoForgeEventsManager;
-import com.github.timepsilon.gui.ModMenu;
 import com.github.timepsilon.items.ModItems;
 import com.github.timepsilon.packets.ModPackets;
 import com.github.timepsilon.sounds.ModSounds;
 import com.github.timepsilon.time.PlayerOutHandler;
 import com.github.timepsilon.time.TimerHandler;
+import com.github.timepsilon.time.client.PlayerOutHandlerClient;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.ItemDescription;
@@ -52,6 +53,7 @@ public class Core {
         ModSounds.register(modEventBus);
 
         // Register Neoforge Events
+        // TODO : cleanup events
         NeoForge.EVENT_BUS.register(new NeoForgeEventsManager());
         NeoForge.EVENT_BUS.register(new TimerHandler());
         NeoForge.EVENT_BUS.register(new PlayerOutHandler());
