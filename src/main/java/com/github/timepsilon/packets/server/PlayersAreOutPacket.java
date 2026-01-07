@@ -27,7 +27,6 @@ public record PlayersAreOutPacket(Set<UUID> playersAreOutSet) implements Clientb
     @Override
     public void handle(LocalPlayer player) {
         ClientOutState.PLAYERS_ARE_OUT = playersAreOutSet;
-        System.out.println(ClientOutState.PLAYERS_ARE_OUT);
     }
 
     @Override

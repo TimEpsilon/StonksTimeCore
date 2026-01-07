@@ -83,7 +83,6 @@ public class StonksTemporalChronoscopeMenu extends MenuBase<StonksTemporalChrono
     public @NotNull ItemStack quickMoveStack(Player player, int i) {
         // Salut Zelytra c'est probablement ici que tu vas chercher à casser un truc
         Slot slot = this.slots.get(i);
-        System.out.println(i + " " + slot);
 
         if (!slot.hasItem()) {
             return ItemStack.EMPTY;
@@ -95,12 +94,10 @@ public class StonksTemporalChronoscopeMenu extends MenuBase<StonksTemporalChrono
         if ((BLOCK_INV_START_ID <= i && i <= BLOCK_INV_END_ID)) {
             // In block inventory -> To player inventory
             success = moveItemStackTo(slotStack, PLAYER_INV_START_ID, PLAYER_INV_END_ID+1, false);
-            System.out.println("Block -> Player " + success);
 
         } else if (PLAYER_INV_START_ID <= i && i <= PLAYER_INV_END_ID) {
             // In player inventory -> To block inventory
             success = moveItemStackTo(slotStack, BLOCK_INV_START_ID, BLOCK_INV_END_ID+1, false);
-            System.out.println("Player -> Block " + success);
 
         } else if ((MONEY_START_ID <= i && i <= MONEY_END_ID)) {
             // In bank -> Player inventory
@@ -108,7 +105,6 @@ public class StonksTemporalChronoscopeMenu extends MenuBase<StonksTemporalChrono
             int count = coinStack.getCount();
             success = moveItemStackTo(coinStack, PLAYER_INV_START_ID, PLAYER_INV_END_ID+1, false);
             if (success) {slot.remove(count);}
-            System.out.println("Money -> Player " + success);
         }
 
         if (slotStack.isEmpty()) {
