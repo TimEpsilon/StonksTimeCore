@@ -51,7 +51,7 @@ public class TimeGearItem extends Item {
             UUID uuid;
 
             if (!Component.translatable("item.stonkstimecore.time_gear").equals(playerName)) {
-                uuid = UUIDUtil.createOfflinePlayerUUID(playerName.toString());
+                uuid = UUIDUtil.createOfflinePlayerUUID(playerName.getString());
             } else {
                 uuid = context.getPlayer().getUUID();
             }

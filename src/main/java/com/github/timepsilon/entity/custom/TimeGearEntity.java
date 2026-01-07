@@ -1,9 +1,15 @@
 package com.github.timepsilon.entity.custom;
 
 import com.github.timepsilon.items.ModItems;
+import com.github.timepsilon.time.PlayerOutData;
+import com.github.timepsilon.utils.TimeUtils;
+import dev.ithundxr.createnumismatics.Numismatics;
+import dev.ithundxr.createnumismatics.content.backend.BankAccount;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -18,6 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.PushReaction;
+import net.neoforged.neoforge.common.UsernameCache;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -31,6 +38,9 @@ import java.util.UUID;
 public class TimeGearEntity extends Entity implements GeoEntity {
     protected static final RawAnimation TICKING = RawAnimation.begin().thenLoop("clock");
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
+    private PlayerOutData outData;
+    private BankAccount bank;
+    private State state = State.ONLINE;
 
     protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID;
 
@@ -42,6 +52,10 @@ public class TimeGearEntity extends Entity implements GeoEntity {
         super(entityType, level);
         this.refreshDimensions();
         this.blocksBuilding = true;
+
+        this.setCustomName(Component.literal("00:00:00").withStyle(ChatFormatting.GOLD));
+
+        if (this.getServer() != null) this.outData = PlayerOutData.getPlayerOutData(this.getServer());
     }
 
     @Override
@@ -64,9 +78,19 @@ public class TimeGearEntity extends Entity implements GeoEntity {
 
     @Override
     public void tick() {
+        if (this.state == State.OUT) return;
 
+        if (this.bank != null) {
+            this.state = this.outData.isOut(getPlayerUUID()) ? State.OUT : this.state;
+
+            if (this.state == State.OFFLINE) return;
+
+            int seconds = this.bank.getBalance() / TimeUtils.TIME_TO_MONEY;
+            String time = TimeUtils.secondsToTime(seconds);
+            this.setCustomName(Component.literal(time).withStyle(ChatFormatting.GOLD));
+
+        }
     }
-
 
     @Override
     public PushReaction getPistonPushReaction() {
@@ -88,17 +112,37 @@ public class TimeGearEntity extends Entity implements GeoEntity {
         return new ItemStack(ModItems.TIME_GEAR.get());
     }
 
-    public void setPlayer(Player player) {
-        setPlayerUUID(player.getUUID());
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public State getState() {
+        return this.state;
     }
 
     public void setPlayerUUID(UUID uuid) {
-        this.entityData.set(DATA_OWNERUUID_ID, Optional.of(uuid)) ;
+        this.entityData.set(DATA_OWNERUUID_ID, Optional.of(uuid));
+
+        // Update the bank
+        this.bank = Numismatics.BANK.getOrCreateAccount(uuid, BankAccount.Type.PLAYER);
+    }
+
+    public void setPlayer(Player player) {
+        setPlayerUUID(player.getUUID());
     }
 
     @Nullable
     public UUID getPlayerUUID() {
         return (UUID)((Optional)this.entityData.get(DATA_OWNERUUID_ID)).orElse(null);
+    }
+
+    @Nullable
+    public String getOwnerName() {
+        if (this.getPlayerUUID() == null) return null;
+        if (UsernameCache.containsUUID(this.getPlayerUUID())) {
+            return UsernameCache.getLastKnownUsername(this.getPlayerUUID());
+        }
+        return null;
     }
 
     @Override
@@ -166,6 +210,24 @@ public class TimeGearEntity extends Entity implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.geoCache;
+    }
+
+    public static enum State {
+        ONLINE(true,false),
+        OFFLINE(false,false),
+        OUT(false,true);
+
+        private final boolean shouldSpin;
+        private final boolean isOut;
+
+        private State(boolean shouldSpin, boolean isOut) {
+            this.shouldSpin = shouldSpin;
+            this.isOut = isOut;
+        }
+
+        public boolean shouldSpin() {return shouldSpin;}
+
+        public boolean isOut() {return isOut;}
     }
 
 

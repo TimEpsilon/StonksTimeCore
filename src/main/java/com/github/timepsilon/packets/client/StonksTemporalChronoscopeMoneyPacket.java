@@ -16,8 +16,6 @@ public record StonksTemporalChronoscopeMoneyPacket(BlockPos STCPos) implements S
             StonksTemporalChronoscopeMoneyPacket::new, StonksTemporalChronoscopeMoneyPacket::STCPos
     );
 
-
-
     @Override
     public PacketTypeProvider getTypeProvider() {
         return ModPackets.COMPUTE_SCT;

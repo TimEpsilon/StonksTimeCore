@@ -14,8 +14,6 @@ public class PlayerOutHandlerClient {
 
     // Layer needs to be applied once, the logic is then contained within the object
     private static boolean hasLayerFlag = false;
-
-    public PlayerOutHandlerClient() {}
     
     /**
      * When a player is out, this makes them semi transparent.
