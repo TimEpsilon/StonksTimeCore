@@ -37,15 +37,18 @@ import java.util.UUID;
 
 public class TimeGearEntity extends Entity implements GeoEntity {
     protected static final RawAnimation TICKING = RawAnimation.begin().thenLoop("clock");
+
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
     private PlayerOutData outData;
     private BankAccount bank;
-    private State state = State.ONLINE;
 
+    // This ensures sync between client and server
     protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID;
+    protected static final EntityDataAccessor<Byte> DATA_STATE;
 
     static {
         DATA_OWNERUUID_ID = SynchedEntityData.defineId(TimeGearEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+        DATA_STATE = SynchedEntityData.defineId(TimeGearEntity.class, EntityDataSerializers.BYTE);
     }
 
     public TimeGearEntity(EntityType<?> entityType, Level level) {
@@ -61,12 +64,16 @@ public class TimeGearEntity extends Entity implements GeoEntity {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(DATA_OWNERUUID_ID, Optional.empty());
+        builder.define(DATA_STATE, (byte) State.OFFLINE.ordinal());
     }
 
     @Override
     protected void readAdditionalSaveData(CompoundTag compound) {
         UUID uuid = compound.getUUID("Player");
         this.setPlayerUUID(uuid);
+
+        State state = State.values()[compound.getByte("State")];
+        this.setState(state);
     }
 
     @Override
@@ -74,17 +81,16 @@ public class TimeGearEntity extends Entity implements GeoEntity {
         if (this.getPlayerUUID() != null) {
             compound.putUUID("Player", this.getPlayerUUID());
         }
+        compound.putByte("State", (byte) this.getState().ordinal());
     }
 
     @Override
     public void tick() {
-        if (this.state == State.OUT) return;
+        if (!this.level().isClientSide()) setState(computeState());
+
+        if (!this.getState().shouldSpin()) return;
 
         if (this.bank != null) {
-            this.state = this.outData.isOut(getPlayerUUID()) ? State.OUT : this.state;
-
-            if (this.state == State.OFFLINE) return;
-
             int seconds = this.bank.getBalance() / TimeUtils.TIME_TO_MONEY;
             String time = TimeUtils.secondsToTime(seconds);
             this.setCustomName(Component.literal(time).withStyle(ChatFormatting.GOLD));
@@ -113,11 +119,23 @@ public class TimeGearEntity extends Entity implements GeoEntity {
     }
 
     public void setState(State state) {
-        this.state = state;
+        this.entityData.set(DATA_STATE, (byte) state.ordinal());
     }
 
     public State getState() {
-        return this.state;
+        return State.values()[this.entityData.get(DATA_STATE)];
+    }
+
+    public State computeState() {
+        boolean isOut = this.outData.isOut(getPlayerUUID());
+        if (isOut) {
+            return State.OUT;
+        } else {
+            for (Player player : this.getServer().getPlayerList().getPlayers()) {
+                if (player.getUUID().equals(this.getPlayerUUID())) return State.ONLINE;
+            }
+            return State.OFFLINE;
+        }
     }
 
     public void setPlayerUUID(UUID uuid) {
@@ -199,13 +217,19 @@ public class TimeGearEntity extends Entity implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
+        controllers.add(new AnimationController<>(this, "ticking", 1, this::predicate));
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> state) {
-        state.getController().setAnimation(TICKING);
-        return PlayState.CONTINUE;
+        if (this.getState().shouldSpin) {
+            state.getController().setAnimation(TICKING);
+            return PlayState.CONTINUE;
+        }
+        state.getController().stop();
+        state.resetCurrentAnimation();
+        return PlayState.STOP;
     }
+
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
@@ -220,7 +244,7 @@ public class TimeGearEntity extends Entity implements GeoEntity {
         private final boolean shouldSpin;
         private final boolean isOut;
 
-        private State(boolean shouldSpin, boolean isOut) {
+        State(boolean shouldSpin, boolean isOut) {
             this.shouldSpin = shouldSpin;
             this.isOut = isOut;
         }

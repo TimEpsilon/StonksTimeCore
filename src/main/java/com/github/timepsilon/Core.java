@@ -11,7 +11,6 @@ import com.github.timepsilon.packets.ModPackets;
 import com.github.timepsilon.sounds.ModSounds;
 import com.github.timepsilon.time.PlayerOutHandler;
 import com.github.timepsilon.time.TimerHandler;
-import com.github.timepsilon.time.client.PlayerOutHandlerClient;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.ItemDescription;

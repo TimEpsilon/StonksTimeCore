@@ -16,6 +16,7 @@ public class TransparentPlayerLayer extends RenderLayer<AbstractClientPlayer, Pl
         super(renderer);
     }
 
+    // TODO : find why culling layers are also rendered transparent
     @Override
     public void render(PoseStack poseStack,
                        MultiBufferSource multiBufferSource,

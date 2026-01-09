@@ -41,7 +41,9 @@ public class TimeGearItem extends Item {
         EntityType<TimeGearEntity> type = ModEntities.TIME_GEAR.get();
         TimeGearEntity timeGearEntity = type.create(world);
         timeGearEntity.moveTo(spawn.x, spawn.y, spawn.z);
-        timeGearEntity.absRotateTo(direction.toYRot(), 0);
+        timeGearEntity.setYRot(direction.toYRot());
+        timeGearEntity.setYHeadRot(direction.toYRot());
+        timeGearEntity.setYBodyRot(direction.toYRot());
 
         ItemStack itemInHand = context.getItemInHand();
 
