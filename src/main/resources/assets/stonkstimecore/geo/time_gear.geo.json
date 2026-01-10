@@ -12,7 +12,12 @@
 			},
 			"bones": [
 				{
+					"name": "head",
+					"pivot": [0, 1.5, 0]
+				},
+				{
 					"name": "time_gear",
+					"parent": "head",
 					"pivot": [0, 1.5, 0],
 					"cubes": [
 						{

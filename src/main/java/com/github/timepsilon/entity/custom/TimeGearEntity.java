@@ -226,6 +226,7 @@ public class TimeGearEntity extends Entity implements GeoEntity {
             return PlayState.CONTINUE;
         }
         state.getController().stop();
+        state.getController().forceAnimationReset();
         state.resetCurrentAnimation();
         return PlayState.STOP;
     }

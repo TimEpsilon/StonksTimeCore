@@ -183,8 +183,8 @@ dependencies {
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
 
     // Velvet
-    implementation "dev.cammiescorner.velvet:Velvet-Common:${velvet_version}"
-    implementation "dev.cammiescorner.velvet:Velvet-NeoForge:${velvet_version}"
+    //implementation "dev.cammiescorner.velvet:Velvet-Common:${velvet_version}"
+    //implementation "dev.cammiescorner.velvet:Velvet-NeoForge:${velvet_version}"
 
     implementation fileTree(dir: 'libs', include: '*.jar')
 }
