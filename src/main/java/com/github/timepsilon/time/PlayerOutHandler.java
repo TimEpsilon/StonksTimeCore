@@ -132,6 +132,10 @@ public class PlayerOutHandler {
 
         // If the player is out, send them the desaturate packet, else, removes it
         CatnipServices.NETWORK.sendToClient(player, new IsOutPacket(timer.isOut(player.getUUID())));
+
+        // Send the list of out players to a joining player
+        Set<UUID> playerOutSet = PlayersAreOutPacket.getOutPlayers(player.server);
+        CatnipServices.NETWORK.sendToClient(player, new PlayersAreOutPacket(playerOutSet));
     }
 
     @SubscribeEvent
