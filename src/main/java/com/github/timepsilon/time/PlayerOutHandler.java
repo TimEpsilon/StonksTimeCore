@@ -15,7 +15,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.common.UsernameCache;
@@ -26,12 +28,10 @@ import java.awt.*;
 import java.util.Set;
 import java.util.UUID;
 
-@Mod(value = Core.MODID)
+@EventBusSubscriber(modid = Core.MODID)
 public class PlayerOutHandler {
 
     public static ResourceLocation DESATURATE_SHADER = ResourceLocation.fromNamespaceAndPath(Core.MODID, "shaders/post/desaturate.json");
-
-    public PlayerOutHandler() {}
 
     /** Set a player's out status
      * <p>
@@ -104,7 +104,7 @@ public class PlayerOutHandler {
      * when a player isn't out, the shader is only removed once </p>
      */
     @SubscribeEvent
-    public void onClientTick(ClientTickEvent.Post event) {
+    public static void onClientTick(ClientTickEvent.Post event) {
         if (Minecraft.getInstance().player == null) return;
         if (Minecraft.getInstance().level == null) return;
 
@@ -125,7 +125,7 @@ public class PlayerOutHandler {
     }
 
     @SubscribeEvent
-    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+    public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         MinecraftServer level = player.server;
         PlayerOutData timer = PlayerOutData.getPlayerOutData(level);
@@ -139,7 +139,7 @@ public class PlayerOutHandler {
     }
 
     @SubscribeEvent
-    public void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
+    public static void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
         // Remove any kind of post effect to the player when they leave
         if (!(event.getEntity().isLocalPlayer())) return;
         Minecraft.getInstance().gameRenderer.shutdownEffect();

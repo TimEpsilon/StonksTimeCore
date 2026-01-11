@@ -21,7 +21,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.common.NeoForge;
 import org.slf4j.Logger;
 
 @Mod(Core.MODID)
@@ -50,16 +49,6 @@ public class Core {
         ModPackets.register();
         ModEntities.register(modEventBus);
         ModSounds.register(modEventBus);
-
-        // Register Neoforge Events
-        // TODO : cleanup events
-        NeoForge.EVENT_BUS.register(new NeoForgeEventsManager());
-        NeoForge.EVENT_BUS.register(new TimerHandler());
-        NeoForge.EVENT_BUS.register(new PlayerOutHandler());
-
-        // Register Events
-        modEventBus.register(new ModEventsManager());
-
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {

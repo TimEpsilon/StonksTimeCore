@@ -10,16 +10,16 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.UUID;
 
-@Mod(value = Core.MODID, dist = Dist.DEDICATED_SERVER)
+@EventBusSubscriber(value = Dist.DEDICATED_SERVER, modid = Core.MODID)
 public class TimerHandler {
 
-    int seconds;
 
     /**
      * Executed every second (if player not out):
@@ -30,7 +30,7 @@ public class TimerHandler {
      * </ul>
      */
     @SubscribeEvent
-    public void onPlayerTick(PlayerTickEvent.Post event) {
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (!(player.serverLevel().getGameTime() % 20 == 0)) return;
 
@@ -48,7 +48,7 @@ public class TimerHandler {
         account.deduct(TimeUtils.TIME_TO_MONEY, true);
 
         // Convert money to seconds
-        seconds = account.getBalance() / TimeUtils.TIME_TO_MONEY;
+        int seconds = account.getBalance() / TimeUtils.TIME_TO_MONEY;
 
         // If time is now 0 -> set as out, preventing timer to update
         if (account.getBalance() <= 0) {
@@ -62,7 +62,7 @@ public class TimerHandler {
      * Logic for giving a player time / money on first join
      */
     @SubscribeEvent
-    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+    public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getUUID(), BankAccount.Type.PLAYER);
         MinecraftServer level = player.server;
