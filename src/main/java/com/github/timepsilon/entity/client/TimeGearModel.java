@@ -21,7 +21,11 @@ public class TimeGearModel extends GeoModel<TimeGearEntity> {
 
     @Override
     public ResourceLocation getTextureResource(TimeGearEntity animatable) {
-        return ResourceLocation.fromNamespaceAndPath(Core.MODID, "textures/block/stonks_temporal_chronoscope.png");
+        if (animatable.getState().isOut()) {
+            return ResourceLocation.fromNamespaceAndPath(Core.MODID, "textures/item/time_gear_out.png");
+        } else {
+            return ResourceLocation.fromNamespaceAndPath(Core.MODID, "textures/item/time_gear.png");
+        }
     }
 
     @Override
