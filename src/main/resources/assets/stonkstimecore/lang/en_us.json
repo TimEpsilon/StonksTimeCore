@@ -9,7 +9,7 @@
 
   "sounds.stonkstimecore.time_out" : "Time Out Bell",
 
-  "error.stonkstimecore.banking_while_out" : "Banking operation cancelled",
+  "error.stonkstimecore.banking_while_out" : "Bank is unavailable to out players",
 
   "commands.stonkstimecore.generate_equivalency" : "Item list and Recipe dict have been saved in the config folder",
   "commands.stonkstimecore.update_out" : "%s's out status has been set to %s",

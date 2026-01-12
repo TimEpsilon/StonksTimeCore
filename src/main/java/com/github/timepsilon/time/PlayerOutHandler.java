@@ -5,16 +5,23 @@ import com.github.timepsilon.packets.server.IsOutPacket;
 import com.github.timepsilon.packets.server.PlayersAreOutPacket;
 import com.github.timepsilon.sounds.ModSounds;
 import com.github.timepsilon.time.client.ClientOutState;
+import dev.ithundxr.createnumismatics.registry.NumismaticsBlocks;
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -22,6 +29,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.common.UsernameCache;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.awt.*;
@@ -61,10 +69,6 @@ public class PlayerOutHandler {
                 server.overworld().playSound(null, 0,0,0, SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.PLAYERS, 10000.0f, 0.6f);
                 server.overworld().playSound(null, 0,0,0, ModSounds.TIME_OUT.get(), SoundSource.PLAYERS, 10000.0f, 0.8f);
             }
-
-
-
-
         } else {
             Core.LOGGER.error("Player status couldn't be set to out : server is null");
         }
@@ -89,7 +93,6 @@ public class PlayerOutHandler {
         if (out) {
             // outPlayer desaturated visual
             CatnipServices.NETWORK.sendToClient(player, new IsOutPacket(true));
-
             // Player chat message
             player.sendSystemMessage(Component.translatable("info.stonkstimecore.self_is_out", player.getName()).withColor(Color.GRAY.getRGB()).withStyle(ChatFormatting.ITALIC));
 
@@ -143,7 +146,27 @@ public class PlayerOutHandler {
         // Remove any kind of post effect to the player when they leave
         if (!(event.getEntity().isLocalPlayer())) return;
         Minecraft.getInstance().gameRenderer.shutdownEffect();
+    }
 
+    @SubscribeEvent
+    public static void onBankInteraction(PlayerInteractEvent.RightClickBlock event) {
+        Level level = event.getLevel();
+        Player player = event.getEntity();
+        boolean isOut = player.isLocalPlayer()
+                ? ClientOutState.IS_OUT
+                : PlayerOutData.getPlayerOutData(level.getServer()).isOut(player.getUUID());
+
+        if  (!isOut) return;
+
+        BlockPos pos = event.getPos();
+        if (level.getBlockState(pos).getBlock().equals(NumismaticsBlocks.BANK_TERMINAL.get())) {
+            event.setCancellationResult(InteractionResult.FAIL);
+            event.setCanceled(true);
+            if (player.isLocalPlayer()) {
+                player.sendSystemMessage(Component.translatable("error.stonkstimecore.banking_while_out").withStyle(ChatFormatting.RED));
+                player.playNotifySound(SoundEvents.NOTE_BLOCK_BASS.value(), SoundSource.BLOCKS, 1, 2);
+            }
+        }
     }
 
 }

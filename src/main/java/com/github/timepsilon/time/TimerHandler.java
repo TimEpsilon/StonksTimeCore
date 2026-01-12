@@ -17,10 +17,8 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.UUID;
 
-@EventBusSubscriber(value = Dist.DEDICATED_SERVER, modid = Core.MODID)
+@EventBusSubscriber(modid = Core.MODID)
 public class TimerHandler {
-
-
     /**
      * Executed every second (if player not out):
      * <ul>
