@@ -11,9 +11,6 @@ import java.awt.*;
 public class TimerOverlay implements LayeredDraw.Layer {
     public static final TimerOverlay instance = new TimerOverlay();
 
-    private static final int safeTime = 21600; // 6h
-    private static final int dangerTime = 1800; // 30min
-
     private int seconds = 0;
     private int money = 0;
     private boolean isOut;
@@ -52,9 +49,9 @@ public class TimerOverlay implements LayeredDraw.Layer {
         // Above 6h remaining -> Green
         // Below 30min -> Red
         // In between -> Green -> Yellow -> Orange -> Red
-        if (seconds > safeTime) return Color.decode("#39a32a").getRGB();
-        if (seconds < dangerTime) return Color.decode("#c90808").getRGB();
-        float t = ((float)seconds - dangerTime) / (safeTime-dangerTime);
+        if (seconds > TimeUtils.SAFE_TIME) return Color.decode("#39a32a").getRGB();
+        if (seconds < TimeUtils.DANGER_TIME) return Color.decode("#c90808").getRGB();
+        float t = ((float)seconds - TimeUtils.DANGER_TIME) / (TimeUtils.SAFE_TIME-TimeUtils.DANGER_TIME);
 
         return interpolateColor(t);
     }
