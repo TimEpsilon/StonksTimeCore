@@ -2,7 +2,6 @@
   "item.stonkstimecore.time_gear": "Time Gear",
 
   "block.stonkstimecore.stonks_temporal_chronoscope" : "Stonks Temporal Chronoscope",
-
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.behaviour1": "Starts spinning.",
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.condition1": "When Powered by Kinetics ≥ 30 RPM",
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.summary": "Converts any item into its corresponding _SCT_ amount",
@@ -17,5 +16,16 @@
   "commands.stonkstimecore.add_time" : "%ss have been added to %s's time",
 
   "info.stonkstimecore.player_is_out" : "[!] %s has run out of time!",
-  "info.stonkstimecore.self_is_out" : "You are now out of time. You will no longer be able to interact with your bank account."
+  "info.stonkstimecore.self_is_out" : "You are now out of time. You will no longer be able to interact with your bank account.",
+
+  "config.stonkstimecore.timer": "Timer",
+  "config.stonkstimecore.minHP": "minHP",
+  "config.stonkstimecore.maxHP": "maxHP",
+  "config.stonkstimecore.baseTime": "baseTime",
+  "config.stonkstimecore.timeToMoney": "timeToMoney",
+  "config.stonkstimecore.safeTime": "safeTime",
+  "config.stonkstimecore.dtForGain1HP": "dtForGain1HP",
+  "config.stonkstimecore.dangerTime": "dangerTime",
+  "config.stonkstimecore.dtForLose1HP": "dtForLose1HP"
+
 }

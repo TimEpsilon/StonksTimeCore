@@ -24,8 +24,7 @@ public class STCConfig {
     }
 
     private STCConfig(ModConfigSpec.Builder builder) {
-        builder.comment("Server Config");
-        builder.push("timer");
+        builder.translation("config.stonkstimecore.timer").push("timer");
         BASE_TIME = builder
                 .comment("The starting time that a new player starts at. (s)")
                 .translation("config.stonkstimecore.baseTime")
