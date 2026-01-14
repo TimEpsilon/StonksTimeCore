@@ -26,6 +26,8 @@
   "config.stonkstimecore.safeTime": "safeTime",
   "config.stonkstimecore.dtForGain1HP": "dtForGain1HP",
   "config.stonkstimecore.dangerTime": "dangerTime",
-  "config.stonkstimecore.dtForLose1HP": "dtForLose1HP"
+  "config.stonkstimecore.dtForLose1HP": "dtForLose1HP",
+
+  "attribute.stonkstimecore.time_hp": "Time HP"
 
 }

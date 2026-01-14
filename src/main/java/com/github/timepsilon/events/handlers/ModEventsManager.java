@@ -2,7 +2,6 @@ package com.github.timepsilon.events.handlers;
 
 import com.github.timepsilon.Core;
 import com.github.timepsilon.datamaps.DataMaps;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;

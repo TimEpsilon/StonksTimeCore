@@ -21,7 +21,7 @@ public class TimeUtils {
     public static int howMuchHP(int seconds) {
         int hp = 0;
         if (seconds < DANGER_TIME) {
-            hp = Math.max(-MIN_HP, (seconds-DANGER_TIME)/DT_FOR_LOSE_1HP);
+            hp = Math.max(-MIN_HP, (seconds-DANGER_TIME)/DT_FOR_LOSE_1HP - 1);
         } else if (seconds > SAFE_TIME) {
             hp = Math.min(MAX_HP, (seconds-SAFE_TIME)/DT_FOR_GAIN_1HP + 1);
         }

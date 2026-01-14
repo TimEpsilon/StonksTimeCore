@@ -6,12 +6,13 @@ import com.github.timepsilon.utils.TimeUtils;
 import dev.ithundxr.createnumismatics.Numismatics;
 import dev.ithundxr.createnumismatics.content.backend.BankAccount;
 import net.createmod.catnip.platform.CatnipServices;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.api.distmarker.Dist;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
@@ -19,6 +20,9 @@ import java.util.UUID;
 
 @EventBusSubscriber(modid = Core.MODID)
 public class TimerHandler {
+
+    private static final ResourceLocation TIME_HP = ResourceLocation.fromNamespaceAndPath(Core.MODID, "time_hp");
+
     /**
      * Executed every second (if player not out):
      * <ul>
@@ -35,7 +39,7 @@ public class TimerHandler {
         UUID uuid = player.getUUID();
         MinecraftServer level = player.server;
         PlayerOutData timer = PlayerOutData.getPlayerOutData(level);
-        BankAccount account = Numismatics.BANK.getAccount(uuid);
+        BankAccount account = Numismatics.BANK.getOrCreateAccount(uuid, BankAccount.Type.PLAYER);
 
         if (timer.isOut(uuid)) {
             sendOverlayPacket(player, 0, 0, true);
@@ -54,6 +58,17 @@ public class TimerHandler {
         }
 
         sendOverlayPacket(player, seconds, account.getBalance(), timer.isOut(uuid));
+
+        // HP logic
+        if (!(TimeUtils.DANGER_TIME < seconds && seconds < TimeUtils.SAFE_TIME)) {
+            int hp = TimeUtils.howMuchHP(seconds);
+            System.out.println(hp);
+            if (hp != player.getAttribute(Attributes.MAX_HEALTH).getModifier(TIME_HP).amount()) {
+                AttributeModifier timeHPModifier = new AttributeModifier(TIME_HP, hp, AttributeModifier.Operation.ADD_VALUE);
+                player.getAttribute(Attributes.MAX_HEALTH).addOrReplacePermanentModifier(timeHPModifier);
+            }
+            System.out.println(player.getAttribute(Attributes.MAX_HEALTH).getModifier(TIME_HP).amount());
+        }
     }
 
     /**
@@ -65,6 +80,12 @@ public class TimerHandler {
         BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getUUID(), BankAccount.Type.PLAYER);
         MinecraftServer level = player.server;
         PlayerOutData timer = PlayerOutData.getPlayerOutData(level);
+
+        // Setup for HP
+        if (!player.getAttribute(Attributes.MAX_HEALTH).hasModifier(TIME_HP)) {
+            AttributeModifier timeHPModifier = new AttributeModifier(TIME_HP, 0, AttributeModifier.Operation.ADD_VALUE);
+            player.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(timeHPModifier);
+        }
 
         // Setup for players with no money
         // If the player is not in the map, we assume that it's their first time connecting
