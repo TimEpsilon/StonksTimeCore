@@ -6,14 +6,41 @@
     "B": {
       "tag": "c:ingots/brass"
     },
+    "S": {
+      "tag": "c:plates/brass"
+    },
     "P": {
       "item": "create:precision_mechanism"
+    },
+    "M": {
+      "tag": "irons_spellbooks:mithril_material"
+    },
+    "D": {
+      "item": "irons_spellbooks:divine_soulshard"
+    },
+    "T": {
+      "item": "stonkstimecore:time_gear"
+    },
+    "E": {
+      "item": "create:electron_tube"
+    },
+    "C": {
+      "item": "irons_spellbooks:energized_core"
+    },
+    "#": {
+      "item": "numismatics:sun"
+    },
+    "*": {
+      "item": "create:mechanical_crafter"
     }
   },
   "pattern": [
-    "BBB",
-    "BPB",
-    "BBB"
+    " SSS ",
+    "SMDMS",
+    "SMTMS",
+    "SECES",
+    " P#P ",
+    " B*B "
   ],
   "result": {
     "count": 1,

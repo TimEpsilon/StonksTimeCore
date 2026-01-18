@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "DTD",
+    "NLN"
+  ],
+  "key": {
+    "#": {
+      "item": "irons_spellbooks:arcane_ingot"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "T": {
+      "item": "stonkstimecore:time_gear"
+    },
+    "N": {
+      "item": "minecraft:nether_star"
+    },
+    "L": {
+      "item": "irons_spellbooks:lightning_bottle"
+    }
+  },
+  "result": {
+    "id": "tiab:time_in_a_bottle",
+    "count": 1
+  }
+}

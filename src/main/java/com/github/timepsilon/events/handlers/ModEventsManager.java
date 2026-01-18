@@ -15,5 +15,4 @@ public class ModEventsManager {
         event.register(DataMaps.SCT_MAP);
         Core.LOGGER.info("Registered SCT Map");
     }
-
 }

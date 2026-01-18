@@ -31,6 +31,11 @@ repositories {
         name = "Up-Mods & Cammie's Corner"
         url = "https://maven.uuid.gg/releases"
     }
+    maven {
+        name = "Iron's Maven - Release"
+        url = "https://code.redspace.io/releases"
+    }
+
 
     flatDir {
         dir 'libs'
@@ -182,9 +187,8 @@ dependencies {
     // Geckolib
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
 
-    // Velvet
-    //implementation "dev.cammiescorner.velvet:Velvet-Common:${velvet_version}"
-    //implementation "dev.cammiescorner.velvet:Velvet-NeoForge:${velvet_version}"
+    // Iron's Spellbooks
+    implementation "io.redspace:irons_spellbooks:${irons_spells_version}"
 
     implementation fileTree(dir: 'libs', include: '*.jar')
 }
@@ -208,8 +212,7 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             randomium_version_range   : randomium_version_range,
             moonlight_version_range   : moonlight_version_range,
             numismatics_version_range : numismatics_version_range,
-            velvet_version            : velvet_version,
-            velvet_version_range      : velvet_version_range
+            irons_spells_version      : irons_spells_version
     ]
     inputs.properties replaceProperties
     expand replaceProperties

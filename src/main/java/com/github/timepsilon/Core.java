@@ -9,11 +9,14 @@ import com.github.timepsilon.packets.ModPackets;
 import com.github.timepsilon.sounds.ModSounds;
 import com.github.timepsilon.utils.STCConfig;
 import com.mojang.logging.LogUtils;
+import com.simibubi.create.AllCreativeModeTabs;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipModifier;
 import net.createmod.catnip.lang.FontHelper;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.CreativeModeTab;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -48,6 +51,8 @@ public class Core {
         ModPackets.register();
         ModEntities.register(modEventBus);
         ModSounds.register(modEventBus);
+
+        System.out.println(Core.REGISTRATE.getCreativeTab());
 
         // Config register
         modContainer.registerConfig(ModConfig.Type.SERVER, STCConfig.CONFIG_SPEC);

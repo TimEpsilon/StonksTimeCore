@@ -4,6 +4,7 @@ import com.github.timepsilon.block.custom.StonksTemporalChronoscope;
 import com.simibubi.create.api.stress.BlockStressValues;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import dev.ithundxr.createnumismatics.registry.NumismaticsCreativeModeTabs;
 import net.minecraft.world.level.material.MapColor;
 
 import static com.github.timepsilon.Core.REGISTRATE;
@@ -22,6 +23,7 @@ public class ModBlocks {
             .transform(pickaxeOnly())
             .onRegister(block -> BlockStressValues.IMPACTS.register(block, () -> 9284d)) // 9284 su/rpm * 30 rpm = 278 520 su (max su : 278 528)
             .item()
+            .tab(NumismaticsCreativeModeTabs.getBaseTabKey())
             .transform(customItemModel())
             .register();
 }

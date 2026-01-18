@@ -57,17 +57,16 @@ public class TimerHandler {
             PlayerOutHandler.setOut(player, true);
         }
 
+        // Update Overlay
         sendOverlayPacket(player, seconds, account.getBalance(), timer.isOut(uuid));
 
         // HP logic
         if (!(TimeUtils.DANGER_TIME < seconds && seconds < TimeUtils.SAFE_TIME)) {
             int hp = TimeUtils.howMuchHP(seconds);
-            System.out.println(hp);
             if (hp != player.getAttribute(Attributes.MAX_HEALTH).getModifier(TIME_HP).amount()) {
                 AttributeModifier timeHPModifier = new AttributeModifier(TIME_HP, hp, AttributeModifier.Operation.ADD_VALUE);
                 player.getAttribute(Attributes.MAX_HEALTH).addOrReplacePermanentModifier(timeHPModifier);
             }
-            System.out.println(player.getAttribute(Attributes.MAX_HEALTH).getModifier(TIME_HP).amount());
         }
     }
 
