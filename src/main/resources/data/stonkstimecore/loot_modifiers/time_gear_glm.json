@@ -1,8 +1,26 @@
 {
   "type": "stonkstimecore:time_gear_glm",
   "conditions": [],
-  "probability": 1,
-  "paths": [
-    "chests/*"
+  "probability": 0.0004,
+  "whitelist": [
+    "^.*:.*chests/.*$",
+    "^betterarcheology:archeology/chest_.*$",
+    "^minecraft:archaeology/.*$",
+    "^kaisyn:archaeology/.*$",
+    "^.*:(?:.*[_/])?ominous(?:$|[_/].*$)",
+    "^.*:(?:.*[_/])?spawners?(?:$|[_/].*$)",
+    "^nova_structures:archeology/.*$",
+    "^structory:.*$",
+    "^terralith:.*$"
+  ],
+  "blacklist": [
+    "^.*:(?:.*[_/])?additional(?:$|[_/].*$)",
+    "^.*:(?:.*[_/])?spawner_projectile(?:$|[_/].*$)",
+    "^protection_pixel:.*$",
+    "^.*:(?:.*[_/])?inject(?:$|[_/].*$)",
+    "^.*:(?:.*[_/])?extra(?:$|[_/].*$)",
+    "^.*:(?:.*[_/])?blocks?(?:$|[_/].*$)",
+    "^.*:(?:.*[_/])?mob(?:$|[_/].*$)",
+    "^.*:(?:.*[_/])?entities(?:$|[_/].*$)"
   ]
 }

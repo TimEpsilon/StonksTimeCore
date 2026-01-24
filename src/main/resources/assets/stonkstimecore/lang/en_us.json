@@ -10,13 +10,16 @@
 
   "error.stonkstimecore.banking_while_out" : "Bank is unavailable to out players",
 
-  "commands.stonkstimecore.generate_equivalency" : "Item list and Recipe dict have been saved in the config folder",
+  "commands.stonkstimecore.generate_equivalency" : "Item list and Recipe dict have been saved in your world folder",
   "commands.stonkstimecore.update_out" : "%s's out status has been set to %s",
   "commands.stonkstimecore.set_time" : "%s's time has been set to %s",
   "commands.stonkstimecore.add_time" : "%ss have been added to %s's time",
+  "commands.stonkstimecore.generate_loot" : "Loot Tree has been saved in your world folder",
+  "commands.stonkstimecore.match_loot" : "Matching patterns have been logged to the server console",
 
   "info.stonkstimecore.player_is_out" : "[!] %s has run out of time!",
   "info.stonkstimecore.self_is_out" : "You are now out of time. You will no longer be able to interact with your bank account.",
+  "info.stonkstimecore.time_gear_found" : "A Time Gear has been discovered!",
 
   "config.stonkstimecore.timer": "Timer",
   "config.stonkstimecore.minHP": "minHP",

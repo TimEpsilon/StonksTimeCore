@@ -1,23 +1,29 @@
 package com.github.timepsilon.commands.loot;
 
+import com.github.timepsilon.Core;
+import com.github.timepsilon.events.handlers.ModEventsManager;
+import com.github.timepsilon.events.handlers.NeoForgeEventsManager;
+import com.github.timepsilon.loot.ModLoot;
+import com.github.timepsilon.loot.TimeGearGlobalLootModifier;
 import com.github.timepsilon.utils.FileManager;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.neoforged.neoforge.common.NeoForgeEventHandler;
+import net.neoforged.neoforge.common.loot.LootModifierManager;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class IterateLoots {
-
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public static int iterateLoots(CommandContext<CommandSourceStack> ctx) {
         MinecraftServer server = ctx.getSource().getServer();
@@ -30,6 +36,22 @@ public class IterateLoots {
         }
 
         FileManager.writeFileOnWorld("lootTableTree.json", root.toJson(), server);
+        ctx.getSource().sendSystemMessage(Component.translatable("commands.stonkstimecore.generate_loot"));
+
+        return Command.SINGLE_SUCCESS;
+    }
+
+    public static int PatternMatch(CommandContext<CommandSourceStack> ctx) {
+        MinecraftServer server = ctx.getSource().getServer();
+        Collection<ResourceLocation> loots = server.reloadableRegistries().getKeys(Registries.LOOT_TABLE);
+
+        for (ResourceLocation id : loots) {
+            if (TimeGearGlobalLootModifier.INSTANCE.canGenerate(id.toString())) {
+                Core.LOGGER.debug(id.toString());
+            }
+        }
+
+        ctx.getSource().sendSystemMessage(Component.translatable("commands.stonkstimecore.match_loot"));
 
         return Command.SINGLE_SUCCESS;
     }
