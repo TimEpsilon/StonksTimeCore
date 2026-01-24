@@ -1,0 +1,8 @@
+{
+  "type": "stonkstimecore:time_gear_glm",
+  "conditions": [],
+  "probability": 1,
+  "paths": [
+    "chests/*"
+  ]
+}

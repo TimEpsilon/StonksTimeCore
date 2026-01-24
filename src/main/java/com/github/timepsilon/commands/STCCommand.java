@@ -3,6 +3,7 @@ package com.github.timepsilon.commands;
 
 import com.github.timepsilon.commands.equivalency.GenerateEquivalency;
 import com.github.timepsilon.commands.isout.OutLogic;
+import com.github.timepsilon.commands.loot.IterateLoots;
 import com.github.timepsilon.commands.timer.TimerLogic;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
@@ -33,6 +34,8 @@ public class STCCommand {
                         .then(Commands.literal("equiv")
                                 .then(Commands.literal("generate")
                                         .executes(GenerateEquivalency::generateFiles)))
+                        .then(Commands.literal("loots")
+                                .executes(IterateLoots::iterateLoots))
                         .then(Commands.literal("timer")
                                 .then(Commands.argument("player", GameProfileArgument.gameProfile())
                                         .then(Commands.literal("get")

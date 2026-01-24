@@ -2,12 +2,9 @@ package com.github.timepsilon.commands.equivalency;
 
 import com.github.timepsilon.utils.FileManager;
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -20,20 +17,6 @@ import java.util.Collection;
 import java.util.HashMap;
 
 public class GenerateEquivalency {
-
-
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-
-        LiteralArgumentBuilder<CommandSourceStack> literalargumentbuilder = Commands.literal("equivalency").requires(p -> p.hasPermission(2));
-
-        literalargumentbuilder
-                .executes(context -> {
-                            GenerateEquivalency.generateFiles(context);
-                            return Command.SINGLE_SUCCESS;
-                        }
-                );
-        dispatcher.register(literalargumentbuilder);
-    }
 
     public static int generateFiles(CommandContext<CommandSourceStack> ctx) {
         CommandSourceStack source = ctx.getSource();
@@ -48,7 +31,7 @@ public class GenerateEquivalency {
         for (ResourceLocation itemId : BuiltInRegistries.ITEM.keySet()) {
             items.add(itemId.toString());
         }
-        FileManager.writeConfigServerSide("items.txt", items, source.getServer());
+        FileManager.writeFileOnWorld("items.txt", items, source.getServer());
     }
 
     private static void iterateRecipes(CommandSourceStack source) {
@@ -83,7 +66,7 @@ public class GenerateEquivalency {
             recipeMap.put(holder.id().toString(), singleRecipeDict);
         }
 
-        FileManager.writeConfigServerSide("recipes.json", recipeMap, source.getServer());
+        FileManager.writeFileOnWorld("recipes.json", recipeMap, source.getServer());
 
     }
 

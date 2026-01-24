@@ -15,7 +15,7 @@ public class FileManager {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    public static void writeConfigServerSide(String name, Object content, MinecraftServer server) {
+    public static void writeFileOnWorld(String name, Object content, MinecraftServer server) {
         // Config directory
         Path dir = makeServerSideDirectory(server);
 
@@ -38,7 +38,7 @@ public class FileManager {
     }
 
     private static Path makeServerSideDirectory(MinecraftServer server) {
-        Path dir = server.getWorldPath(LevelResource.ROOT).resolve("serverconfig").resolve(Core.MODID);
+        Path dir = server.getWorldPath(LevelResource.ROOT).resolve(Core.MODID);
         try {
             Files.createDirectories(dir);
         } catch (IOException e) {
