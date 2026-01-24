@@ -51,6 +51,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
     private void overrideOverlayColor(Args args, @Local(argsOnly = true) LivingEntity entity) {
         if (!(entity instanceof Player)) return;
         if (!ClientOutState.canClientSeePlayer(entity.getUUID())) return;
+        if (!STCConfigClient.CONFIG.SEE_OUT_TRANSLUCENT.getAsBoolean()) return;
 
         args.set(4,0x80FFFFFF);
     }
