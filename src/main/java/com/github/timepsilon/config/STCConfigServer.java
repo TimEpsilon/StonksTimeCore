@@ -1,11 +1,11 @@
-package com.github.timepsilon.utils;
+package com.github.timepsilon.config;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
-public class STCConfig {
+public class STCConfigServer {
 
-    public static final STCConfig CONFIG;
+    public static final STCConfigServer CONFIG;
     public static final ModConfigSpec CONFIG_SPEC;
 
     public final ModConfigSpec.IntValue BASE_TIME;
@@ -18,12 +18,12 @@ public class STCConfig {
     public final ModConfigSpec.IntValue MIN_HP;
 
     static {
-        Pair<STCConfig,ModConfigSpec> pair = new ModConfigSpec.Builder().configure(STCConfig::new);
+        Pair<STCConfigServer,ModConfigSpec> pair = new ModConfigSpec.Builder().configure(STCConfigServer::new);
         CONFIG = pair.getLeft();
         CONFIG_SPEC = pair.getRight();
     }
 
-    private STCConfig(ModConfigSpec.Builder builder) {
+    private STCConfigServer(ModConfigSpec.Builder builder) {
         builder.translation("config.stonkstimecore.timer").push("timer");
         BASE_TIME = builder
                 .comment("The starting time that a new player starts at. (s)")

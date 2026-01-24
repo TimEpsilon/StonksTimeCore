@@ -1,5 +1,6 @@
 package com.github.timepsilon.mixin;
 
+import com.github.timepsilon.config.STCConfigClient;
 import com.github.timepsilon.time.client.ClientOutState;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.model.EntityModel;
@@ -25,6 +26,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
     @Inject(method="getRenderType", at=@At("HEAD"), cancellable=true)
     private void onGetRenderType(T entity, boolean bodyVisible, boolean translucent, boolean glowing, CallbackInfoReturnable<RenderType> info) {
         if (!(entity instanceof Player)) return;
+        if (!STCConfigClient.CONFIG.SEE_OUT_TRANSLUCENT.getAsBoolean()) return;
 
         ResourceLocation resourcelocation = ((LivingEntityRenderer<T, M>)(Object)this).getTextureLocation(entity);
         if (ClientOutState.canClientSeePlayer(entity.getUUID())) {

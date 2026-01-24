@@ -21,7 +21,7 @@ import java.util.UUID;
 @EventBusSubscriber(modid = Core.MODID)
 public class TimerHandler {
 
-    private static final ResourceLocation TIME_HP = ResourceLocation.fromNamespaceAndPath(Core.MODID, "time_hp");
+    public static final ResourceLocation TIME_HP = ResourceLocation.fromNamespaceAndPath(Core.MODID, "time_hp");
 
     /**
      * Executed every second (if player not out):

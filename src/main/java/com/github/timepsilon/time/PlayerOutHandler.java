@@ -1,10 +1,12 @@
 package com.github.timepsilon.time;
 
 import com.github.timepsilon.Core;
+import com.github.timepsilon.config.STCConfigClient;
 import com.github.timepsilon.packets.server.IsOutPacket;
 import com.github.timepsilon.packets.server.PlayersAreOutPacket;
 import com.github.timepsilon.sounds.ModSounds;
 import com.github.timepsilon.time.client.ClientOutState;
+import com.github.timepsilon.config.STCConfigServer;
 import dev.ithundxr.createnumismatics.registry.NumismaticsBlocks;
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
@@ -18,6 +20,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -31,6 +35,8 @@ import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import java.awt.*;
 import java.util.Set;
 import java.util.UUID;
+
+import static com.github.timepsilon.time.TimerHandler.TIME_HP;
 
 @EventBusSubscriber(modid = Core.MODID)
 public class PlayerOutHandler {
@@ -91,6 +97,8 @@ public class PlayerOutHandler {
             CatnipServices.NETWORK.sendToClient(player, new IsOutPacket(true));
             // Player chat message
             player.sendSystemMessage(Component.translatable("info.stonkstimecore.self_is_out", player.getName()).withColor(Color.GRAY.getRGB()).withStyle(ChatFormatting.ITALIC));
+            // Low HP
+            setLowHp(player);
 
         } else {
             CatnipServices.NETWORK.sendToClient(player, new IsOutPacket(false));
@@ -106,6 +114,7 @@ public class PlayerOutHandler {
     public static void onClientTick(ClientTickEvent.Post event) {
         if (Minecraft.getInstance().player == null) return;
         if (Minecraft.getInstance().level == null) return;
+        if (!STCConfigClient.CONFIG.APPLY_SHADER.getAsBoolean()) return;
 
         GameRenderer renderer = Minecraft.getInstance().gameRenderer;
 
@@ -131,6 +140,11 @@ public class PlayerOutHandler {
 
         // If the player is out, send them the desaturate packet, else, removes it
         CatnipServices.NETWORK.sendToClient(player, new IsOutPacket(timer.isOut(player.getUUID())));
+
+        // If out, set HP to low
+        if (timer.isOut(player.getUUID())) {
+            setLowHp(player);
+        }
 
         // Send the list of out players to a joining player
         Set<UUID> playerOutSet = PlayersAreOutPacket.getOutPlayers(player.server);
@@ -163,6 +177,11 @@ public class PlayerOutHandler {
                 player.playNotifySound(SoundEvents.NOTE_BLOCK_BASS.value(), SoundSource.BLOCKS, 1, 2);
             }
         }
+    }
+
+    public static void setLowHp(ServerPlayer player) {
+        AttributeModifier timeHPModifier = new AttributeModifier(TIME_HP, -STCConfigServer.CONFIG.MIN_HP.get(), AttributeModifier.Operation.ADD_VALUE);
+        player.getAttribute(Attributes.MAX_HEALTH).addOrReplacePermanentModifier(timeHPModifier);
     }
 
 }

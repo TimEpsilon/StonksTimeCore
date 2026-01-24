@@ -9,7 +9,6 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.LootTableLoadEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
@@ -30,11 +29,6 @@ public class NeoForgeEventsManager {
                             .append(Float.toString(sct.SCT()))
                             .withStyle(Style.EMPTY.withColor(COLOR.getRGB())));
         }
-    }
-
-    @SubscribeEvent
-    public static void loot(LootTableLoadEvent event) {
-        System.out.println(event.getTable());
     }
 
     @SubscribeEvent

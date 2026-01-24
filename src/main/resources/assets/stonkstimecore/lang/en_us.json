@@ -31,6 +31,9 @@
   "config.stonkstimecore.dangerTime": "dangerTime",
   "config.stonkstimecore.dtForLose1HP": "dtForLose1HP",
 
+  "config.stonkstimecore.applyShader": "applyShader",
+  "config.stonkstimecore.seeOutAsTranslucent": "seeOutAsTranslucent",
+
   "attribute.stonkstimecore.time_hp": "Time HP"
 
 }

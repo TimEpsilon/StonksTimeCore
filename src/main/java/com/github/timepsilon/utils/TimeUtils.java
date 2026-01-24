@@ -1,15 +1,17 @@
 package com.github.timepsilon.utils;
 
+import com.github.timepsilon.config.STCConfigServer;
+
 public class TimeUtils {
 
-    public static final int BASE_TIME = STCConfig.CONFIG.BASE_TIME.getAsInt(); // 4h
-    public static final int TIME_TO_MONEY = STCConfig.CONFIG.TIME_TO_MONEY.getAsInt();
-    public static final int SAFE_TIME = STCConfig.CONFIG.SAFE_TIME.getAsInt(); // 6h - above this time, slowly start gaining HP
-    public static final int DANGER_TIME = STCConfig.CONFIG.DANGER_TIME.getAsInt(); // 30min - below this time, start loosing HP
-    public static final int DT_FOR_GAIN_1HP = STCConfig.CONFIG.DT_FOR_GAIN_1HP.getAsInt(); // 2h - time to gain 1 additional HP above SAFE_TIME
-    public static final int DT_FOR_LOSE_1HP = STCConfig.CONFIG.DT_FOR_LOSE_1HP.getAsInt(); // 3min - time to lose 1 HP below DANGER_TIME
-    public static final int MAX_HP = STCConfig.CONFIG.MAX_HP.getAsInt();
-    public static final int MIN_HP = STCConfig.CONFIG.MIN_HP.getAsInt();
+    public static final int BASE_TIME = STCConfigServer.CONFIG.BASE_TIME.getAsInt(); // 4h
+    public static final int TIME_TO_MONEY = STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt();
+    public static final int SAFE_TIME = STCConfigServer.CONFIG.SAFE_TIME.getAsInt(); // 6h - above this time, slowly start gaining HP
+    public static final int DANGER_TIME = STCConfigServer.CONFIG.DANGER_TIME.getAsInt(); // 30min - below this time, start loosing HP
+    public static final int DT_FOR_GAIN_1HP = STCConfigServer.CONFIG.DT_FOR_GAIN_1HP.getAsInt(); // 2h - time to gain 1 additional HP above SAFE_TIME
+    public static final int DT_FOR_LOSE_1HP = STCConfigServer.CONFIG.DT_FOR_LOSE_1HP.getAsInt(); // 3min - time to lose 1 HP below DANGER_TIME
+    public static final int MAX_HP = STCConfigServer.CONFIG.MAX_HP.getAsInt();
+    public static final int MIN_HP = STCConfigServer.CONFIG.MIN_HP.getAsInt();
 
     public static String secondsToTime(int seconds) {
         int h = seconds / 3600;
