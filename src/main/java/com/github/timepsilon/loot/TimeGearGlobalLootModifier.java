@@ -11,6 +11,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -56,6 +57,10 @@ public class TimeGearGlobalLootModifier extends LootModifier {
     @Override
     protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext lootContext) {
         String id = lootContext.getQueriedLootTableId().toString();
+        Entity entity = lootContext.getParamOrNull(LootContextParams.THIS_ENTITY);
+
+        // Only a player can find a time gear
+        if (!(entity instanceof Player)) return generatedLoot;
 
         // Only if loot not on blacklist and in whitelist
         if (!canGenerate(id)) return generatedLoot;
@@ -65,7 +70,6 @@ public class TimeGearGlobalLootModifier extends LootModifier {
             generatedLoot.add(new ItemStack(ModItems.TIME_GEAR.get()));
 
             Vec3 vec = lootContext.getParamOrNull(LootContextParams.ORIGIN);
-            Entity entity = lootContext.getParamOrNull(LootContextParams.THIS_ENTITY);
             Core.LOGGER.info("{} Has discovered a Time Gear at {} ({})", entity, vec, id);
 
             for (ServerPlayer p : lootContext.getLevel().getServer().getPlayerList().getPlayers()) {

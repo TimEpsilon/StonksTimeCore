@@ -47,7 +47,7 @@ public class IterateLoots {
 
         for (ResourceLocation id : loots) {
             if (TimeGearGlobalLootModifier.INSTANCE.canGenerate(id.toString())) {
-                Core.LOGGER.debug(id.toString());
+                Core.LOGGER.info(id.toString());
             }
         }
 
