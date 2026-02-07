@@ -32,7 +32,7 @@ public class STCConfigServer {
         TIME_TO_MONEY = builder
                 .comment("Conversion factor to convert the player's time (s) to the player's money.")
                 .translation("config.stonkstimecore.timeToMoney")
-                .defineInRange("timeToMoney", 2, 1, Integer.MAX_VALUE);
+                .defineInRange("timeToMoney", 1, 1, Integer.MAX_VALUE);
         SAFE_TIME = builder
                 .comment("Time above which the player starts gaining max HP. (s)")
                 .translation("config.stonkstimecore.safeTime")

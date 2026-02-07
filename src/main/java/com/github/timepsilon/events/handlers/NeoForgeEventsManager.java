@@ -4,6 +4,7 @@ import com.github.timepsilon.Core;
 import com.github.timepsilon.commands.STCCommand;
 import com.github.timepsilon.datamaps.DataMaps;
 import com.github.timepsilon.datamaps.SCTMap;
+import com.github.timepsilon.utils.TimeUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
@@ -18,6 +19,7 @@ import java.awt.*;
 public class NeoForgeEventsManager {
 
     public static final Color COLOR = Color.decode("#4f913f");
+    public static final Color COLOR_TIME = Color.decode("#4a5c46");
 
     @SubscribeEvent
     public static void onTooltip(ItemTooltipEvent event) {
@@ -27,7 +29,8 @@ public class NeoForgeEventsManager {
             event.getToolTip()
                     .add(Component.literal("SCT : ")
                             .append(Float.toString(sct.SCT()))
-                            .withStyle(Style.EMPTY.withColor(COLOR.getRGB())));
+                            .withStyle(Style.EMPTY.withColor(COLOR.getRGB()))
+                            .append(Component.literal(" (" + TimeUtils.SCTToTime(sct.SCT()) + ")").withStyle(Style.EMPTY.withColor(COLOR_TIME.getRGB()))));
         }
     }
 

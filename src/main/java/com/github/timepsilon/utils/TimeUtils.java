@@ -20,6 +20,21 @@ public class TimeUtils {
         return String.format("%d:%02d:%02d", h, m, s);
     }
 
+    public static String SCTToTime(double sct) {
+        int seconds = (int) Math.ceil(sct / TIME_TO_MONEY);
+        int h = seconds / 3600;
+        int m = (seconds % 3600) / 60;
+        int s = seconds % 60;
+
+        if (h > 0) {
+            return String.format("%dh %02dm %02ds", h, m, s);
+        } else if (m > 0) {
+            return String.format("%dm %02ds", m, s);
+        } else {
+            return String.format("%ds", s);
+        }
+    }
+
     public static int howMuchHP(int seconds) {
         int hp = 0;
         if (seconds < DANGER_TIME) {

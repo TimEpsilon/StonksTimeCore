@@ -5,16 +5,22 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
+import oshi.util.tuples.Pair;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.*;
 
 public class GenerateEquivalency {
 
@@ -22,6 +28,7 @@ public class GenerateEquivalency {
         CommandSourceStack source = ctx.getSource();
         iterateItems(source);
         iterateRecipes(source);
+        iterateTags(source);
         source.sendSuccess(() -> Component.translatable("commands.stonkstimecore.generate_equivalency").withStyle(ChatFormatting.DARK_GRAY), true);
         return Command.SINGLE_SUCCESS;
     }
@@ -68,6 +75,24 @@ public class GenerateEquivalency {
 
         FileManager.writeFileOnWorld("recipes.json", recipeMap, source.getServer());
 
+    }
+
+    private static void iterateTags(CommandSourceStack source) {
+        Registry<Item> itemRegistry = source.getLevel().registryAccess().registry(Registries.ITEM).orElseThrow();
+        HashMap<String, List<String>> tagMap = new HashMap<>();
+
+        itemRegistry.getTags().forEach(pair -> {
+            TagKey<Item> tag = pair.getFirst();
+            HolderSet.Named<Item> content = pair.getSecond();
+
+            List<String> items = new ArrayList<>();
+            for (Holder<Item> holder : content) {
+                items.add(holder.unwrapKey().map(k -> k.location().toString()).orElse(""));
+            }
+            tagMap.put(tag.location().toString(), items);
+        });
+
+        FileManager.writeFileOnWorld("tags.json", tagMap, source.getServer());
     }
 
 

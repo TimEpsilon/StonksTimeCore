@@ -1,23 +1,16 @@
 package com.github.timepsilon.commands.loot;
 
 import com.github.timepsilon.Core;
-import com.github.timepsilon.events.handlers.ModEventsManager;
-import com.github.timepsilon.events.handlers.NeoForgeEventsManager;
-import com.github.timepsilon.loot.ModLoot;
 import com.github.timepsilon.loot.TimeGearGlobalLootModifier;
 import com.github.timepsilon.utils.FileManager;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.neoforged.neoforge.common.NeoForgeEventHandler;
-import net.neoforged.neoforge.common.loot.LootModifierManager;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.Collection;
 import java.util.Map;

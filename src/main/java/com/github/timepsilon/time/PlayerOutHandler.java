@@ -1,12 +1,13 @@
 package com.github.timepsilon.time;
 
 import com.github.timepsilon.Core;
+import com.github.timepsilon.block.ModBlocks;
 import com.github.timepsilon.config.STCConfigClient;
+import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.packets.server.IsOutPacket;
 import com.github.timepsilon.packets.server.PlayersAreOutPacket;
 import com.github.timepsilon.sounds.ModSounds;
 import com.github.timepsilon.time.client.ClientOutState;
-import com.github.timepsilon.config.STCConfigServer;
 import dev.ithundxr.createnumismatics.registry.NumismaticsBlocks;
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
@@ -24,6 +25,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
@@ -169,7 +171,8 @@ public class PlayerOutHandler {
         if  (!isOut) return;
 
         BlockPos pos = event.getPos();
-        if (level.getBlockState(pos).getBlock().equals(NumismaticsBlocks.BANK_TERMINAL.get())) {
+        Block block = level.getBlockState(pos).getBlock();
+        if (block.equals(NumismaticsBlocks.BANK_TERMINAL.get()) || block.equals(ModBlocks.STONKS_TEMPORAL_CHRONOSCOPE.get())) {
             event.setCancellationResult(InteractionResult.FAIL);
             event.setCanceled(true);
             if (player.isLocalPlayer()) {
