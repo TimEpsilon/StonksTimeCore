@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "stonkstimecore:block/stonks_temporal_chronoscope"
+  }
+}

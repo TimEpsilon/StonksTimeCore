@@ -47,9 +47,9 @@ public class Core {
         // Register
         ModItems.register();
         ModBlocks.register();
-        ModBlockEntities.register();
         ModMenu.register();
         ModPackets.register();
+        ModBlockEntities.register();
         ModEntities.register(modEventBus);
         ModSounds.register(modEventBus);
         ModLoot.register(modEventBus);

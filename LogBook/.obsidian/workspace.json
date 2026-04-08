@@ -20,8 +20,21 @@
               "icon": "lucide-file",
               "title": "Liste de Mods"
             }
+          },
+          {
+            "id": "2b6bd77585371579",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.12.4"
+              },
+              "icon": "lucide-book-up",
+              "title": "Notes de version 1.12.4"
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -44,7 +57,7 @@
                 "autoReveal": false
               },
               "icon": "lucide-folder-closed",
-              "title": "Files"
+              "title": "Explorateur de fichiers"
             }
           },
           {
@@ -142,13 +155,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Mods/Liste de Mods.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Liste de Mods"
+              "title": "Plan"
             }
           }
         ],
@@ -160,17 +172,17 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "bases:Create new base": false,
-      "obsidian-excalidraw-plugin:New drawing": false,
-      "switcher:Open quick switcher": false,
-      "graph:Open graph view": false,
-      "canvas:Create new canvas": false,
-      "daily-notes:Open today's daily note": false,
-      "templates:Insert template": false,
-      "command-palette:Open command palette": false
+      "switcher:Ouvrir le sélecteur rapide": false,
+      "graph:Ouvrir la vue graphique": false,
+      "canvas:Créer une nouvelle toile": false,
+      "daily-notes:Ouvrir la note quotidienne": false,
+      "templates:Insérer le modèle": false,
+      "command-palette:Ouvrir la palette de commandes": false,
+      "bases:Créer une nouvelle base": false,
+      "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "a6d7dc79baa635bb",
+  "active": "2b6bd77585371579",
   "lastOpenFiles": [
     "Mods/Mods.md",
     "Excalidraw/Gear Logic.excalidraw.md",

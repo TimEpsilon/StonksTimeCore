@@ -1,6 +1,8 @@
 package com.github.timepsilon.events.handlers;
 
 import com.github.timepsilon.Core;
+import com.github.timepsilon.block.entity.ModBlockEntities;
+import com.github.timepsilon.block.entity.client.SlotMachineRenderer;
 import com.github.timepsilon.client.gui.overlay.TimerOverlay;
 import com.github.timepsilon.create.STCPartialModels;
 import com.github.timepsilon.entity.ModEntities;
@@ -8,6 +10,7 @@ import com.github.timepsilon.entity.client.TimeGearRenderer;
 import com.github.timepsilon.entity.custom.TimeGearEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -32,6 +35,7 @@ public class ClientEventsManager {
         Core.LOGGER.info("Registered partial models!");
 
         EntityRenderers.register(ModEntities.TIME_GEAR.get(), TimeGearRenderer::new);
+        BlockEntityRenderers.register(ModBlockEntities.SLOT_MACHINE_ENTITY.get(), SlotMachineRenderer::new);
     }
 
     @SubscribeEvent
