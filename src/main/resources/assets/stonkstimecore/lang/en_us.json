@@ -1,7 +1,7 @@
 {
   "item.stonkstimecore.time_gear": "Time Gear",
 
-  "item.stonkstimecore.slot_machine": "Slot Machine",
+  "block.stonkstimecore.slot_machine": "Slot Machine",
 
   "block.stonkstimecore.stonks_temporal_chronoscope" : "Stonks Temporal Chronoscope",
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.behaviour1": "Starts spinning.",

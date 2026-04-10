@@ -2,13 +2,17 @@ package com.github.timepsilon.block.custom;
 
 import com.github.timepsilon.block.entity.ModBlockEntities;
 import com.github.timepsilon.block.entity.server.SlotMachineEntity;
+import io.redspace.ironsspellbooks.block.portal_frame.PortalFrameBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -16,6 +20,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -25,14 +30,32 @@ public class SlotMachine extends Block implements EntityBlock {
 
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
-    public static final VoxelShape SHAPE_N =  Block.box(0, 0, 0, 16, 24, 9);
-    public static final VoxelShape SHAPE_E =  Block.box(6, 0, 0, 16, 24, 16);
-    public static final VoxelShape SHAPE_W =  Block.box(0, 0, 0, 9, 24, 16);
-    public static final VoxelShape SHAPE_S =  Block.box(0, 0, 6, 16, 24, 16);
+    public static final VoxelShape SHAPE_LOW_N =  Block.box(0, 0, 0, 16, 16, 9);
+    public static final VoxelShape SHAPE_LOW_E =  Block.box(6, 0, 0, 16, 16, 16);
+    public static final VoxelShape SHAPE_LOW_W =  Block.box(0, 0, 0, 9, 16, 16);
+    public static final VoxelShape SHAPE_LOW_S =  Block.box(0, 0, 6, 16, 16, 16);
+    public static final VoxelShape SHAPE_UP_N =  Block.box(0, 0, 0, 16, 8, 9);
+    public static final VoxelShape SHAPE_UP_E =  Block.box(6, 0, 0, 16, 8, 16);
+    public static final VoxelShape SHAPE_UP_W =  Block.box(0, 0, 0, 9, 8, 16);
+    public static final VoxelShape SHAPE_UP_S =  Block.box(0, 0, 6, 16, 8, 16);
+    public static final VoxelShape SHAPE_FULL_N =  Block.box(0, 0, 0, 16, 24, 9);
+    public static final VoxelShape SHAPE_FULL_E =  Block.box(6, 0, 0, 16, 24, 16);
+    public static final VoxelShape SHAPE_FULL_W =  Block.box(0, 0, 0, 9, 24, 16);
+    public static final VoxelShape SHAPE_FULL_S =  Block.box(0, 0, 6, 16, 24, 16);
+
 
 
     public SlotMachine(Properties properties) {
         super(properties);
+        this.registerDefaultState(
+                this.stateDefinition.any()
+                        .setValue(FACING, Direction.NORTH)
+                        .setValue(HALF, DoubleBlockHalf.LOWER)
+        );
+    }
+
+    public static BlockPos getMainPos(BlockState state, BlockPos pos) {
+        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? pos : pos.above();
     }
 
     @Override
@@ -47,22 +70,89 @@ public class SlotMachine extends Block implements EntityBlock {
 
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection());
+        BlockPos blockpos = context.getClickedPos();
+        BlockGetter level =  context.getLevel();
+
+        if (blockpos.getY() >= level.getMaxBuildHeight()-1 || !context.canPlace()) {
+            return null;
+        }
+
+        return this.defaultBlockState()
+                .setValue(FACING, context.getHorizontalDirection())
+                .setValue(HALF, DoubleBlockHalf.LOWER);
+    }
+
+    @Override
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        DoubleBlockHalf half = state.getValue(HALF);
+        if (!level.isClientSide) {
+            if (player.isCreative()) {
+                if (half == DoubleBlockHalf.UPPER) {
+                    BlockPos lowerPos = pos.below();
+                    BlockState lowerState = level.getBlockState(lowerPos);
+                    if (lowerState.is(state.getBlock()) && lowerState.getValue(HALF) == DoubleBlockHalf.LOWER) {
+                        level.setBlock(lowerPos, Blocks.AIR.defaultBlockState(), 35);
+                        level.levelEvent(player, 2001, lowerPos, Block.getId(lowerState));
+                    }
+                }
+            } else {
+                BlockPos oPos = state.getValue(HALF) == DoubleBlockHalf.LOWER ? pos.above() : pos.below();
+                BlockState oState = level.getBlockState(oPos);
+
+                if (oState.is(this)) {
+                    level.setBlock(oPos, Blocks.AIR.defaultBlockState(), 35);
+                    level.levelEvent(player, 2001, oPos, Block.getId(oState));
+                    return Blocks.AIR.defaultBlockState();
+                }
+            }
+
+        }
+
+        return super.playerWillDestroy(level, pos, state, player);
+    }
+
+    @Override
+    public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack tool) {
+        super.playerDestroy(level, player, pos, state, blockEntity, tool);
+    }
+
+    @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        level.setBlock(pos.above(), state.setValue(HALF, DoubleBlockHalf.UPPER), 3);
     }
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new SlotMachineEntity(ModBlockEntities.SLOT_MACHINE_ENTITY.get(), blockPos, blockState);
+        return blockState.getValue(HALF) == DoubleBlockHalf.LOWER
+                ? new SlotMachineEntity(ModBlockEntities.SLOT_MACHINE_ENTITY.get(), blockPos, blockState)
+                : null;
     }
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        boolean bottom = state.getValue(HALF) == DoubleBlockHalf.LOWER;
         return switch (state.getValue(FACING)) {
-            case EAST -> SHAPE_E;
-            case SOUTH -> SHAPE_S;
-            case WEST -> SHAPE_W;
-            default -> SHAPE_N;
+            case EAST -> bottom ? SHAPE_LOW_E : SHAPE_UP_E;
+            case SOUTH -> bottom ? SHAPE_LOW_S : SHAPE_UP_S;
+            case WEST -> bottom ? SHAPE_LOW_W : SHAPE_UP_W;
+            default -> bottom ? SHAPE_LOW_N : SHAPE_UP_N;
         };
+    }
+
+    @Override
+    protected BlockState updateShape(BlockState state, Direction direction, BlockState facingState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+        DoubleBlockHalf half = state.getValue(HALF);
+        BlockState air = Blocks.AIR.defaultBlockState();
+
+        if (direction.getAxis() == Direction.Axis.Y) {
+            if (half == DoubleBlockHalf.LOWER && direction == Direction.UP) {
+                return facingState.is(this) && facingState.getValue(HALF) == DoubleBlockHalf.UPPER ? state : air;
+            } else if (half == DoubleBlockHalf.UPPER && direction == Direction.DOWN) {
+                return facingState.is(this) && facingState.getValue(HALF) == DoubleBlockHalf.LOWER ? state : air;
+            }
+        }
+
+        return super.updateShape(state, direction, facingState, level, pos, neighborPos);
     }
 
     @Override
