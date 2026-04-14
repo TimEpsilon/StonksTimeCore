@@ -84,28 +84,16 @@ public class SlotMachine extends Block implements EntityBlock {
 
     @Override
     public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
-        DoubleBlockHalf half = state.getValue(HALF);
-        if (!level.isClientSide) {
-            if (player.isCreative()) {
-                if (half == DoubleBlockHalf.UPPER) {
-                    BlockPos lowerPos = pos.below();
-                    BlockState lowerState = level.getBlockState(lowerPos);
-                    if (lowerState.is(state.getBlock()) && lowerState.getValue(HALF) == DoubleBlockHalf.LOWER) {
-                        level.setBlock(lowerPos, Blocks.AIR.defaultBlockState(), 35);
-                        level.levelEvent(player, 2001, lowerPos, Block.getId(lowerState));
-                    }
-                }
-            } else {
-                BlockPos oPos = state.getValue(HALF) == DoubleBlockHalf.LOWER ? pos.above() : pos.below();
-                BlockState oState = level.getBlockState(oPos);
-
-                if (oState.is(this)) {
-                    level.setBlock(oPos, Blocks.AIR.defaultBlockState(), 35);
-                    level.levelEvent(player, 2001, oPos, Block.getId(oState));
-                    return Blocks.AIR.defaultBlockState();
+        if (!level.isClientSide && (player.isCreative() || !player.hasCorrectToolForDrops(state, level, pos))) {
+            DoubleBlockHalf half = state.getValue(HALF);
+            if (half == DoubleBlockHalf.UPPER) {
+                BlockPos otherPos = pos.below();
+                BlockState otherState = level.getBlockState(otherPos);
+                if (otherState.is(this) && otherState.getValue(HALF) == DoubleBlockHalf.LOWER) {
+                    level.setBlock(otherPos, Blocks.AIR.defaultBlockState(), 35);
+                    level.levelEvent(player, 2001, otherPos, Block.getId(otherState));
                 }
             }
-
         }
 
         return super.playerWillDestroy(level, pos, state, player);
@@ -142,14 +130,15 @@ public class SlotMachine extends Block implements EntityBlock {
     @Override
     protected BlockState updateShape(BlockState state, Direction direction, BlockState facingState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
         DoubleBlockHalf half = state.getValue(HALF);
-        BlockState air = Blocks.AIR.defaultBlockState();
+        BlockPos otherPos = (half == DoubleBlockHalf.LOWER) ? pos.above() : pos.below();
+        BlockState otherState = level.getBlockState(otherPos);
 
-        if (direction.getAxis() == Direction.Axis.Y) {
-            if (half == DoubleBlockHalf.LOWER && direction == Direction.UP) {
-                return facingState.is(this) && facingState.getValue(HALF) == DoubleBlockHalf.UPPER ? state : air;
-            } else if (half == DoubleBlockHalf.UPPER && direction == Direction.DOWN) {
-                return facingState.is(this) && facingState.getValue(HALF) == DoubleBlockHalf.LOWER ? state : air;
-            }
+        if (!otherState.is(this)) {
+            BlockState air = Blocks.AIR.defaultBlockState();
+
+            level.setBlock(otherPos, air, 35);
+            level.levelEvent(null, 2001, pos, Block.getId(air));
+            return air;
         }
 
         return super.updateShape(state, direction, facingState, level, pos, neighborPos);
