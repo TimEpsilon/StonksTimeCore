@@ -33,6 +33,8 @@ public class Core {
     public static final String MODID = "stonkstimecore";
     public static final Logger LOGGER = LogUtils.getLogger();
     public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(Core.MODID);
+    private static Database database;
+    private static StatsService statsService;
 
     public Core(IEventBus modEventBus, ModContainer modContainer) {
 
@@ -65,6 +67,23 @@ public class Core {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         LOGGER.info("Started loading StonksTimeCore...");
+
+        // Stats
+        database = new Database();
+        database.connect();
+
+        statsService = new StatsService(database);
+        statsService.start();
+        NeoForge.EVENT_BUS.register(new StatsEventHandler(statsService));
+    }
+
+    private void shutdown() {
+        statsService.shutdown();
+        database.close();
+    }
+
+    public static StatsService stats() {
+        return statsService;
     }
 
     static {
