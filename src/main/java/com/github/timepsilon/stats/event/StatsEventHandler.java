@@ -7,13 +7,13 @@ public class StatsEventHandler {
     }
 
     @SubscribeEvent
-    public void onLogin(PlayerEvent.PlayerLoggedInEvent e) {
+    public void onJoin(PlayerEvent.PlayerLoggedInEvent e) {
         stats.get(e.getEntity().getUUID());
     }
 
     @SubscribeEvent
-    public void onLogout(PlayerEvent.PlayerLoggedOutEvent e) {
-        // optional: keep or remove
+    public void onLeave(PlayerEvent.PlayerLoggedOutEvent e) {
+        stats.remove(e.getEntity().getUUID());
     }
 
     @SubscribeEvent
