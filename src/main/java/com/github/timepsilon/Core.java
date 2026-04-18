@@ -2,6 +2,7 @@ package com.github.timepsilon;
 
 import com.github.timepsilon.block.ModBlocks;
 import com.github.timepsilon.block.entity.ModBlockEntities;
+import com.github.timepsilon.block.entity.server.SlotMachineEntity;
 import com.github.timepsilon.client.gui.ModMenu;
 import com.github.timepsilon.config.STCConfigClient;
 import com.github.timepsilon.config.STCConfigServer;
@@ -26,6 +27,7 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.slf4j.Logger;
+import software.bernie.geckolib.loading.math.MolangQueries;
 
 @Mod(Core.MODID)
 public class Core {
@@ -53,6 +55,11 @@ public class Core {
         ModEntities.register(modEventBus);
         ModSounds.register(modEventBus);
         ModLoot.register(modEventBus);
+
+        // Molang Queries
+        MolangQueries.<SlotMachineEntity>setActorVariable("query.stc_wheel1", actor -> actor.animatable().getAngleWheel1());
+        MolangQueries.<SlotMachineEntity>setActorVariable("query.stc_wheel2", actor -> actor.animatable().getAngleWheel2());
+        MolangQueries.<SlotMachineEntity>setActorVariable("query.stc_wheel3", actor -> actor.animatable().getAngleWheel3());
 
         // Config register
         modContainer.registerConfig(ModConfig.Type.SERVER, STCConfigServer.CONFIG_SPEC);

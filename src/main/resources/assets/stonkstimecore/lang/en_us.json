@@ -23,6 +23,8 @@
   "info.stonkstimecore.self_is_out" : "You are now out of time. You will no longer be able to interact with your bank account.",
   "info.stonkstimecore.time_gear_found" : "A Time Gear has been discovered!",
 
+  "rse.stonkstimecore.speed_up" : "",
+
   "config.stonkstimecore.timer": "Timer",
   "config.stonkstimecore.minHP": "minHP",
   "config.stonkstimecore.maxHP": "maxHP",

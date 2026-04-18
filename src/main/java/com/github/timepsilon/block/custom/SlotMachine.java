@@ -2,9 +2,11 @@ package com.github.timepsilon.block.custom;
 
 import com.github.timepsilon.block.entity.ModBlockEntities;
 import com.github.timepsilon.block.entity.server.SlotMachineEntity;
+import com.github.timepsilon.randomevent.StonksEventType;
 import io.redspace.ironsspellbooks.block.portal_frame.PortalFrameBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -20,11 +22,12 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 
 public class SlotMachine extends Block implements EntityBlock {
 
@@ -44,7 +47,6 @@ public class SlotMachine extends Block implements EntityBlock {
     public static final VoxelShape SHAPE_FULL_S =  Block.box(0, 0, 6, 16, 24, 16);
 
 
-
     public SlotMachine(Properties properties) {
         super(properties);
         this.registerDefaultState(
@@ -55,7 +57,20 @@ public class SlotMachine extends Block implements EntityBlock {
     }
 
     public static BlockPos getMainPos(BlockState state, BlockPos pos) {
-        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? pos : pos.above();
+        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? pos : pos.below();
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (level.isClientSide) return InteractionResult.SUCCESS;
+        StonksEventType event = StonksEventType.startRandomEvent(player);
+        System.out.println(event.toString() + " " + event.getCombination());
+
+        BlockEntity be = level.getBlockEntity(getMainPos(state, pos));
+        if (be instanceof SlotMachineEntity e) {
+            e.interact(event);
+        }
+        return InteractionResult.SUCCESS;
     }
 
     @Override
