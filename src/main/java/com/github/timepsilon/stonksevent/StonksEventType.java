@@ -1,16 +1,17 @@
-package com.github.timepsilon.randomevent;
+package com.github.timepsilon.stonksevent;
 
-import com.github.timepsilon.randomevent.slowdown.SRESlowDown;
-import com.github.timepsilon.randomevent.speedup.SRESpeedUp;
+import com.github.timepsilon.stonksevent.slowdown.SRESlowDown;
+import com.github.timepsilon.stonksevent.speedup.SRESpeedUp;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public enum StonksEventType {
+public enum StonksEventType implements StringRepresentable {
 
-    SLOW_DOWN(new SRESlowDown(5, false, "0MC")),
-    SPEED_UP(new SRESpeedUp(5, false, "0M7")),
+    SLOW_DOWN(new SRESlowDown(5, false, "0MC", "slow_down")),
+    SPEED_UP(new SRESpeedUp(5, false, "0M7", "speed_up")),
 
     ;
 
@@ -18,7 +19,6 @@ public enum StonksEventType {
 
     StonksEventType(AbstractRandomStonksEvent instance) {
         this.instance = instance;
-        this.instance.setDescription(name().toLowerCase());
     }
 
     public static StonksEventType startRandomEvent(Player player) {
@@ -35,11 +35,20 @@ public enum StonksEventType {
             x += eventType.getWeight();
 
             if (x >= sample) {
-                //eventType.instance.start(player);
-                return eventType;
+                return startGivenEvent(player, eventType);
             }
         }
         return null;
+    }
+
+    public static StonksEventType startGivenEvent(Player player, StonksEventType eventType) {
+        eventType.instance.start(player);
+        return eventType;
+    }
+
+    public static StonksEventType stopGivenEvent(Player player, StonksEventType eventType) {
+        eventType.instance.stop(player);
+        return eventType;
     }
 
     public float getWeight() {
@@ -50,4 +59,9 @@ public enum StonksEventType {
         return this.instance.getCombination();
     }
 
+
+    @Override
+    public String getSerializedName() {
+        return instance.getName();
+    }
 }

@@ -1,21 +1,12 @@
 package com.github.timepsilon.block;
 
-import com.github.timepsilon.Core;
 import com.github.timepsilon.block.custom.SlotMachine;
 import com.github.timepsilon.block.custom.StonksTemporalChronoscope;
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.api.stress.BlockStressValues;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import dev.ithundxr.createnumismatics.registry.NumismaticsCreativeModeTabs;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredRegister;
 
 import static com.github.timepsilon.Core.REGISTRATE;
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;

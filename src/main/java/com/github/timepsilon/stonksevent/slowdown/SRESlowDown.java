@@ -1,38 +1,42 @@
-package com.github.timepsilon.randomevent.slowdown;
+package com.github.timepsilon.stonksevent.slowdown;
 
-import com.github.timepsilon.randomevent.AbstractRandomStonksEvent;
-import com.github.timepsilon.utils.TaskScheduler;
+import com.github.timepsilon.stonksevent.AbstractRandomStonksEvent;
+import com.github.timepsilon.stonksevent.StonksEventManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerTickRateManager;
 import net.minecraft.world.entity.player.Player;
 
 public class SRESlowDown extends AbstractRandomStonksEvent {
 
-    public SRESlowDown(float weight, boolean isPositive, String combination) {
-        super(weight, isPositive, combination);
+    public SRESlowDown(float weight, boolean isPositive, String combination, String name) {
+        super(weight, isPositive, combination, name);
     }
 
     private static final float FACTOR = 5/20f;
-    private static final int DURATION = 15*60*20; // in ticks
+    private static final int DURATION = 5*60; // in seconds
 
 
     @Override
     public void start(Player player) {
+        super.start(player);
         MinecraftServer server = player.getServer();
         if (server == null) return;
 
         ServerTickRateManager tickManager = server.tickRateManager();
-        tickManager.setTickRate(20*FACTOR);
+        tickManager.setTickRate(tickManager.tickrate()*FACTOR);
 
-        TaskScheduler.schedule((int) (DURATION*FACTOR), () -> this.stop(player));
+        StonksEventManager.addEvent(player, this, DURATION);
     }
 
     @Override
     public void stop(Player player) {
+        super.stop(player);
         MinecraftServer server = player.getServer();
         if (server == null) return;
 
         ServerTickRateManager tickManager = server.tickRateManager();
-        tickManager.setTickRate(20);
+        tickManager.setTickRate(tickManager.tickrate()/FACTOR);
+
+        StonksEventManager.removeEvent(player, this);
     }
 }

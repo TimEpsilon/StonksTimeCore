@@ -1,27 +1,25 @@
 package com.github.timepsilon.block.entity.server;
 
-import com.github.timepsilon.randomevent.AbstractRandomStonksEvent;
-import com.github.timepsilon.randomevent.StonksEventType;
+import com.github.timepsilon.stonksevent.AbstractRandomStonksEvent;
+import com.github.timepsilon.stonksevent.StonksEventType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
@@ -51,8 +49,6 @@ public class SlotMachineEntity extends BlockEntity implements GeoBlockEntity {
         angleWheel2 = currentScore.get(1).getAngle();
         angleWheel3 = currentScore.get(2).getAngle();
         setChanged();
-
-        System.out.println(currentScore);
 
         triggerAnim("spinController","spinning");
         triggerAnim("scoreController","score");

@@ -2,12 +2,15 @@ package com.github.timepsilon.commands;
 
 
 import com.github.timepsilon.commands.equivalency.GenerateEquivalency;
+import com.github.timepsilon.commands.events.EventsLogic;
 import com.github.timepsilon.commands.isout.OutLogic;
 import com.github.timepsilon.commands.loot.IterateLoots;
 import com.github.timepsilon.commands.timer.TimerLogic;
+import com.github.timepsilon.stonksevent.StonksEventType;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -20,11 +23,12 @@ public class STCCommand {
      * <p>
      * Syntax is as follows :
      * <p>
-     * /stc (equiv|timer|out) ...
+     * /stc (equiv|timer|out|events) ...
      * <ul>
      *     <li>... equiv generate</li>
      *     <li>... timer &lt;player&gt; (get|set|add)</li>
      *     <li>... out &lt;player&gt; (get|set)</li>
+     *     <li>... list | add &lt;player&gt; &lt;EventType&gt; | remove &lt;player&gt; &lt;EventType&gt; </li>
      * </ul>
      */
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -55,7 +59,31 @@ public class STCCommand {
                                                 .executes(OutLogic::getOut))
                                         .then(Commands.literal("set")
                                                 .then(Commands.argument("boolean", BoolArgumentType.bool())
-                                                        .executes(OutLogic::setOut)))));
+                                                        .executes(OutLogic::setOut)))))
+                        .then(Commands.literal("events")
+                                .then(Commands.literal("list")
+                                        .executes(EventsLogic::listEvents))
+                                .then(Commands.literal("add")
+                                        .then(Commands.argument("player", GameProfileArgument.gameProfile())
+                                                .then(Commands.argument("event", StringArgumentType.word())
+                                                        .suggests((ctx, builder) -> {
+                                                            for (StonksEventType stonksEventType : StonksEventType.values()) {
+                                                                builder.suggest(stonksEventType.name());
+                                                            }
+                                                            return builder.buildFuture();
+                                                        })
+                                                        .executes(EventsLogic::addEvent))))
+                                .then(Commands.literal("remove")
+                                        .then(Commands.argument("player", GameProfileArgument.gameProfile())
+                                                .then(Commands.argument("event", StringArgumentType.word())
+                                                        .suggests((ctx, builder) -> {
+                                                            for (StonksEventType stonksEventType : StonksEventType.values()) {
+                                                                builder.suggest(stonksEventType.name());
+                                                            }
+                                                            return builder.buildFuture();
+                                                        })
+                                                        .executes(EventsLogic::removeEvent))))
+                        );
 
 
         dispatcher.register(literalargumentbuilder);

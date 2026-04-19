@@ -2,8 +2,7 @@ package com.github.timepsilon.block.custom;
 
 import com.github.timepsilon.block.entity.ModBlockEntities;
 import com.github.timepsilon.block.entity.server.SlotMachineEntity;
-import com.github.timepsilon.randomevent.StonksEventType;
-import io.redspace.ironsspellbooks.block.portal_frame.PortalFrameBlockEntity;
+import com.github.timepsilon.stonksevent.StonksEventType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -27,7 +26,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 
 public class SlotMachine extends Block implements EntityBlock {
 
@@ -64,7 +62,6 @@ public class SlotMachine extends Block implements EntityBlock {
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (level.isClientSide) return InteractionResult.SUCCESS;
         StonksEventType event = StonksEventType.startRandomEvent(player);
-        System.out.println(event.toString() + " " + event.getCombination());
 
         BlockEntity be = level.getBlockEntity(getMainPos(state, pos));
         if (be instanceof SlotMachineEntity e) {

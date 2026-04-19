@@ -3,6 +3,7 @@ package com.github.timepsilon.events.handlers;
 import com.github.timepsilon.Core;
 import com.github.timepsilon.block.entity.ModBlockEntities;
 import com.github.timepsilon.block.entity.client.SlotMachineRenderer;
+import com.github.timepsilon.block.entity.server.SlotMachineEntity;
 import com.github.timepsilon.client.gui.overlay.TimerOverlay;
 import com.github.timepsilon.create.STCPartialModels;
 import com.github.timepsilon.entity.ModEntities;
@@ -25,6 +26,7 @@ import net.neoforged.neoforge.client.event.RenderNameTagEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.util.TriState;
 import org.joml.Matrix4f;
+import software.bernie.geckolib.loading.math.MolangQueries;
 
 @EventBusSubscriber(value = Dist.CLIENT, modid = Core.MODID)
 public class ClientEventsManager {
@@ -33,6 +35,11 @@ public class ClientEventsManager {
     public static void clientInit(final FMLClientSetupEvent event) {
         STCPartialModels.init();
         Core.LOGGER.info("Registered partial models!");
+
+        // Molang Queries
+        MolangQueries.<SlotMachineEntity>setActorVariable("query.stc_wheel1", actor -> actor.animatable().getAngleWheel1());
+        MolangQueries.<SlotMachineEntity>setActorVariable("query.stc_wheel2", actor -> actor.animatable().getAngleWheel2());
+        MolangQueries.<SlotMachineEntity>setActorVariable("query.stc_wheel3", actor -> actor.animatable().getAngleWheel3());
 
         EntityRenderers.register(ModEntities.TIME_GEAR.get(), TimeGearRenderer::new);
         BlockEntityRenderers.register(ModBlockEntities.SLOT_MACHINE_ENTITY.get(), SlotMachineRenderer::new);

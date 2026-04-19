@@ -18,12 +18,22 @@
   "commands.stonkstimecore.add_time" : "%ss have been added to %s's time",
   "commands.stonkstimecore.generate_loot" : "Loot Tree has been saved in your world folder",
   "commands.stonkstimecore.match_loot" : "Matching patterns have been logged to the server console",
+  "commands.stonkstimecore.events_list" : "There are currently %s running events",
+  "commands.stonkstimecore.add_event" : "Started event %s for player %s",
+  "commands.stonkstimecore.remove_event" : "Removed event %s for player %s",
+  "commands.stonkstimecore.add_event_fail" : "Failed to add event. Player might not be online",
+  "commands.stonkstimecore.remove_event_fail" : "Failed to remove event. Player might not be online",
 
   "info.stonkstimecore.player_is_out" : "[!] %s has run out of time!",
   "info.stonkstimecore.self_is_out" : "You are now out of time. You will no longer be able to interact with your bank account.",
   "info.stonkstimecore.time_gear_found" : "A Time Gear has been discovered!",
 
-  "rse.stonkstimecore.speed_up" : "",
+  "rse.stonkstimecore.generic.starting" : "%s has gambled for %s!",
+  "rse.stonkstimecore.generic.stopping" : "%s is ending...",
+  "rse.stonkstimecore.speed_up.description" : "Time has been sped up for the next 5mins",
+  "rse.stonkstimecore.speed_up.name" : "Speed Up",
+  "rse.stonkstimecore.slow_down.description" : "Time has been slowed down for the next 5mins",
+  "rse.stonkstimecore.slow_down.name" : "Slow Down",
 
   "config.stonkstimecore.timer": "Timer",
   "config.stonkstimecore.minHP": "minHP",

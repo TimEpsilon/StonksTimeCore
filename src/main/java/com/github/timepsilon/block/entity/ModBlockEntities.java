@@ -1,6 +1,5 @@
 package com.github.timepsilon.block.entity;
 
-import com.github.timepsilon.Core;
 import com.github.timepsilon.block.ModBlocks;
 import com.github.timepsilon.block.entity.client.SlotMachineRenderer;
 import com.github.timepsilon.block.entity.client.StonksTemporalChronoscopeRenderer;
@@ -8,7 +7,6 @@ import com.github.timepsilon.block.entity.client.StonksTemporalChronoscopeVisual
 import com.github.timepsilon.block.entity.server.SlotMachineEntity;
 import com.github.timepsilon.block.entity.server.StonksTemporalChronoscopeEntity;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
-
 
 import static com.github.timepsilon.Core.REGISTRATE;
 
