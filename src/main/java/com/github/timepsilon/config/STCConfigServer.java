@@ -16,6 +16,7 @@ public class STCConfigServer {
     public final ModConfigSpec.IntValue DT_FOR_LOSE_1HP;
     public final ModConfigSpec.IntValue MAX_HP;
     public final ModConfigSpec.IntValue MIN_HP;
+    public final ModConfigSpec.DoubleValue DEATH_LOSS;
 
     static {
         Pair<STCConfigServer,ModConfigSpec> pair = new ModConfigSpec.Builder().configure(STCConfigServer::new);
@@ -57,6 +58,10 @@ public class STCConfigServer {
                 .comment("Minimum HP a player can lose through time.")
                 .translation("config.stonkstimecore.minHP")
                 .defineInRange("minHP",10, 0, 20);
+        DEATH_LOSS = builder
+                .comment("Fraction of money that should be lost on player death.")
+                .translation("config.stonkstimecore.deathLoss")
+                .defineInRange("deathLoss",0.1, 0, 1);
     }
 
 }

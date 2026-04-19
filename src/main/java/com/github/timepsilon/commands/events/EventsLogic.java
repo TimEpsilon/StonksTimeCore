@@ -69,7 +69,7 @@ public class EventsLogic {
             Player player = ctx.getSource().getServer().getPlayerList().getPlayers().stream().filter(
                     p -> p.getUUID().equals(gProfile.getId())).findFirst().orElse(null);
 
-            if (player != null) {
+            if ((player != null) && (StonksEventManager.isEventRunning(type))) {
                 StonksEventType.stopGivenEvent(player, type);
                 ctx.getSource().sendSuccess(() -> Component.translatable("commands.stonkstimecore.remove_event", type.name(), player.getName()), true);
             } else {

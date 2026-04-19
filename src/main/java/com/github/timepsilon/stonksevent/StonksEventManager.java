@@ -17,7 +17,6 @@ public class StonksEventManager {
     @SubscribeEvent
     public static void onTick(ServerTickEvent.Post event) {
         if (currentEvents.isEmpty()) return;
-        //if (event.getServer().overworld().getGameTime() % 20 == 0) return;
 
         long currentTime = new Date().getTime()/1000;
 
@@ -26,21 +25,16 @@ public class StonksEventManager {
         while (mapIterator.hasNext()) {
             Map.Entry<Player, List<Pair<AbstractRandomStonksEvent, Long>>> entry = mapIterator.next();
             Player player = entry.getKey();
-            List<Pair<AbstractRandomStonksEvent, Long>> events = entry.getValue();
 
-            Iterator<Pair<AbstractRandomStonksEvent, Long>> listIterator = events.iterator();
+            Iterator<Pair<AbstractRandomStonksEvent, Long>> listIterator = entry.getValue().iterator();
 
             while (listIterator.hasNext()) {
                 Pair<AbstractRandomStonksEvent, Long> pair = listIterator.next();
 
                 if (pair.getRight() < currentTime) {
+                    // This directly removes the event from the list and the list from the map when necessary
                     pair.getLeft().stop(player);
-                    listIterator.remove();
                 }
-            }
-
-            if (events.isEmpty()) {
-                mapIterator.remove();
             }
         }
     }
@@ -64,23 +58,28 @@ public class StonksEventManager {
         while (mapIterator.hasNext()) {
             Map.Entry<Player, List<Pair<AbstractRandomStonksEvent, Long>>> entry = mapIterator.next();
             Player p = entry.getKey();
-            if (p != player) continue;
+
+            if (!p.equals(player)) continue;
 
             List<Pair<AbstractRandomStonksEvent, Long>> events = entry.getValue();
-            Iterator<Pair<AbstractRandomStonksEvent, Long>> listIterator = events.iterator();
 
-            while (listIterator.hasNext()) {
-                Pair<AbstractRandomStonksEvent, Long> pair = listIterator.next();
-
-                if (pair.getLeft() == event) {
-                    listIterator.remove();
-                }
-            }
+            entry.getValue().removeIf(pair -> pair.getLeft() == event);
 
             if (events.isEmpty()) {
                 mapIterator.remove();
             }
         }
+    }
+
+    public static boolean isEventRunning(StonksEventType event) {
+        for (Map.Entry<Player, List<Pair<AbstractRandomStonksEvent, Long>>> playerListEntry : currentEvents.entrySet()) {
+            for (Pair<AbstractRandomStonksEvent, Long> pair : playerListEntry.getValue()) {
+                if (pair.getLeft() == event.getEvent()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static HashMap<Player, List<Pair<AbstractRandomStonksEvent,Long>>> getCurrentEvents() {

@@ -13,6 +13,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
@@ -60,10 +61,16 @@ public class TimerHandler {
         // Update Overlay
         sendOverlayPacket(player, seconds, account.getBalance(), timer.isOut(uuid));
 
+
         // HP logic
         if (!(TimeUtils.DANGER_TIME < seconds && seconds < TimeUtils.SAFE_TIME)) {
             int hp = TimeUtils.howMuchHP(seconds);
-            if (hp != player.getAttribute(Attributes.MAX_HEALTH).getModifier(TIME_HP).amount()) {
+            if (!player.getAttribute(Attributes.MAX_HEALTH).hasModifier(TIME_HP)) {
+                AttributeModifier timeHPModifier = new AttributeModifier(TIME_HP, 0, AttributeModifier.Operation.ADD_VALUE);
+                player.getAttribute(Attributes.MAX_HEALTH).addPermanentModifier(timeHPModifier);
+            }
+
+            if ((hp != player.getAttribute(Attributes.MAX_HEALTH).getModifier(TIME_HP).amount())) {
                 AttributeModifier timeHPModifier = new AttributeModifier(TIME_HP, hp, AttributeModifier.Operation.ADD_VALUE);
                 player.getAttribute(Attributes.MAX_HEALTH).addOrReplacePermanentModifier(timeHPModifier);
             }
@@ -93,6 +100,17 @@ public class TimerHandler {
             account.setBalance(TimeUtils.BASE_TIME * TimeUtils.TIME_TO_MONEY);
             PlayerOutHandler.setOut(player, false);
         }
+    }
+
+    /**
+    * Penalize death by losing n% of total money
+     **/
+    @SubscribeEvent
+    public static void onPlayerDeath(LivingDeathEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+
+        BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getUUID(), BankAccount.Type.PLAYER);
+        account.deduct((int) (account.getBalance()*TimeUtils.DEATH_LOSS));
     }
 
     public static void sendOverlayPacket(ServerPlayer player, int time, int money,  boolean isOut) {

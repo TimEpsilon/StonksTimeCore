@@ -12,6 +12,7 @@ public class TimeUtils {
     public static final int DT_FOR_LOSE_1HP = STCConfigServer.CONFIG.DT_FOR_LOSE_1HP.getAsInt(); // 3min - time to lose 1 HP below DANGER_TIME
     public static final int MAX_HP = STCConfigServer.CONFIG.MAX_HP.getAsInt();
     public static final int MIN_HP = STCConfigServer.CONFIG.MIN_HP.getAsInt();
+    public static final double DEATH_LOSS = STCConfigServer.CONFIG.DEATH_LOSS.getAsDouble();
 
     public static String secondsToTime(int seconds) {
         int h = seconds / 3600;

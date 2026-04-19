@@ -16,8 +16,7 @@ public class SRESpeedUp extends AbstractRandomStonksEvent {
     }
 
     @Override
-    public void start(Player player) {
-        super.start(player);
+    public void onStart(Player player) {
         MinecraftServer server = player.getServer();
         if (server == null) return;
 
@@ -28,8 +27,7 @@ public class SRESpeedUp extends AbstractRandomStonksEvent {
     }
 
     @Override
-    public void stop(Player player) {
-        super.stop(player);
+    public void onStop(Player player) {
         MinecraftServer server = player.getServer();
         if (server == null) return;
 

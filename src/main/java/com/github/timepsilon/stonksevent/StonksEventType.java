@@ -1,5 +1,6 @@
 package com.github.timepsilon.stonksevent;
 
+import com.github.timepsilon.stonksevent.lifelink.SRELifeLink;
 import com.github.timepsilon.stonksevent.slowdown.SRESlowDown;
 import com.github.timepsilon.stonksevent.speedup.SRESpeedUp;
 import net.minecraft.util.StringRepresentable;
@@ -12,6 +13,7 @@ public enum StonksEventType implements StringRepresentable {
 
     SLOW_DOWN(new SRESlowDown(5, false, "0MC", "slow_down")),
     SPEED_UP(new SRESpeedUp(5, false, "0M7", "speed_up")),
+    LIFELINK(new SRELifeLink(5, false, "M77", "lifelink")),
 
     ;
 
@@ -57,6 +59,10 @@ public enum StonksEventType implements StringRepresentable {
 
     public List<AbstractRandomStonksEvent.Symbol> getCombination() {
         return this.instance.getCombination();
+    }
+
+    public AbstractRandomStonksEvent getEvent() {
+        return this.instance;
     }
 
 

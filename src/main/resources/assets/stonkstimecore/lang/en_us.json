@@ -34,6 +34,10 @@
   "rse.stonkstimecore.speed_up.name" : "Speed Up",
   "rse.stonkstimecore.slow_down.description" : "Time has been slowed down for the next 5mins",
   "rse.stonkstimecore.slow_down.name" : "Slow Down",
+  "rse.stonkstimecore.lifelink.description" : "If someone dies, everyone dies, for the next 60mins",
+  "rse.stonkstimecore.lifelink.name" : "Life Link",
+  "rse.stonkstimecore.lifelink.you_died" : "Since you were the one to die, you lost double money!",
+  "rse.stonkstimecore.lifelink.everyone_dies" : "%s died and ruined it for everybody",
 
   "config.stonkstimecore.timer": "Timer",
   "config.stonkstimecore.minHP": "minHP",
@@ -44,6 +48,7 @@
   "config.stonkstimecore.dtForGain1HP": "dtForGain1HP",
   "config.stonkstimecore.dangerTime": "dangerTime",
   "config.stonkstimecore.dtForLose1HP": "dtForLose1HP",
+  "config.stonkstimecore.deathLoss" : "deathLoss",
 
   "config.stonkstimecore.applyShader": "applyShader",
   "config.stonkstimecore.seeOutAsTranslucent": "seeOutAsTranslucent",

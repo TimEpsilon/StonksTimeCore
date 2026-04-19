@@ -28,7 +28,21 @@ public abstract class AbstractRandomStonksEvent {
         this.name = name;
     }
 
-    public void start(Player player) {
+    public final void start(Player player) {
+        commonStart(player);
+        onStart(player);
+    }
+
+    public final void stop(Player player) {
+        commonStop(player);
+        onStop(player);
+    }
+
+    public abstract void onStart(Player player);
+
+    public abstract void onStop(Player player);
+
+    private void commonStart(Player player) {
         MinecraftServer server = player.getServer();
         if (server == null) return;
 
@@ -47,7 +61,7 @@ public abstract class AbstractRandomStonksEvent {
         Core.LOGGER.info("{} started event {}", player.getName(), name);
     }
 
-    public void stop(Player player) {
+    private void commonStop(Player player) {
         MinecraftServer server = player.getServer();
         if (server == null) return;
 
