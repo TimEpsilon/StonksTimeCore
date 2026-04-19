@@ -39,9 +39,9 @@ public class SRELifeLink extends AbstractRandomStonksEvent {
 
     @SubscribeEvent
     public static void onDeath(LivingDeathEvent event) {
-        if (!isEventRunning(StonksEventType.LIFELINK)) return;
         if (!(event.getEntity() instanceof Player player)) return;
         if (event.getSource().is(DamageTypes.GENERIC_KILL)) return;
+        if (!isEventRunning(StonksEventType.LIFELINK)) return;
 
         player.sendSystemMessage(Component.translatable("rse.stonkstimecore.lifelink.you_died").withStyle(ChatFormatting.RED));
         BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getUUID(), BankAccount.Type.PLAYER);

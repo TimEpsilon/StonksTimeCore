@@ -38,6 +38,8 @@
   "rse.stonkstimecore.lifelink.name" : "Life Link",
   "rse.stonkstimecore.lifelink.you_died" : "Since you were the one to die, you lost double money!",
   "rse.stonkstimecore.lifelink.everyone_dies" : "%s died and ruined it for everybody",
+  "rse.stonkstimecore.spawn_mob.description" : "A random hostile mob has appeared!",
+  "rse.stonkstimecore.spawn_mob.name" : "Spawn Mob",
 
   "config.stonkstimecore.timer": "Timer",
   "config.stonkstimecore.minHP": "minHP",

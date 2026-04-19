@@ -1,0 +1,8 @@
+{
+  "replace" : false,
+  "values" : [
+    "minecraft:creeper",
+    "minecraft:zombie",
+    {"id":  "born_in_chaos_v2:krumpus", "required" :  false}
+  ]
+}
