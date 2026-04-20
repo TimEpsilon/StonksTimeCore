@@ -4,6 +4,7 @@ import com.github.timepsilon.stonksevent.lifelink.SRELifeLink;
 import com.github.timepsilon.stonksevent.slowdown.SRESlowDown;
 import com.github.timepsilon.stonksevent.spawnmob.SRESpawnMob;
 import com.github.timepsilon.stonksevent.speedup.SRESpeedUp;
+import com.github.timepsilon.utils.Scheduler;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.player.Player;
 
@@ -24,7 +25,7 @@ public enum StonksEventType implements StringRepresentable {
         this.instance = instance;
     }
 
-    public static StonksEventType startRandomEvent(Player player) {
+    public static StonksEventType startRandomEvent(Player player, int delay) {
         float totalWeight = 0;
 
         for (StonksEventType eventType : StonksEventType.values()) {
@@ -38,14 +39,19 @@ public enum StonksEventType implements StringRepresentable {
             x += eventType.getWeight();
 
             if (x >= sample) {
-                return startGivenEvent(player, eventType);
+                return startGivenEvent(player, eventType, delay);
             }
         }
         return null;
     }
 
     public static StonksEventType startGivenEvent(Player player, StonksEventType eventType) {
-        eventType.instance.start(player);
+        return startGivenEvent(player, eventType, 0);
+    }
+
+    public static StonksEventType startGivenEvent(Player player, StonksEventType eventType, int delay) {
+        float s = player.getServer().tickRateManager().millisecondsPerTick()/1000;
+        Scheduler.runLater((int)(delay/s), () -> eventType.instance.start(player));
         return eventType;
     }
 

@@ -61,7 +61,8 @@ public class SlotMachine extends Block implements EntityBlock {
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (level.isClientSide) return InteractionResult.SUCCESS;
-        StonksEventType event = StonksEventType.startRandomEvent(player);
+
+        StonksEventType event = StonksEventType.startRandomEvent(player,5);
 
         BlockEntity be = level.getBlockEntity(getMainPos(state, pos));
         if (be instanceof SlotMachineEntity e) {
