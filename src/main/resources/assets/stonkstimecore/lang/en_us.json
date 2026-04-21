@@ -40,6 +40,13 @@
   "rse.stonkstimecore.lifelink.everyone_dies" : "%s died and ruined it for everybody",
   "rse.stonkstimecore.spawn_mob.description" : "A random hostile mob has appeared!",
   "rse.stonkstimecore.spawn_mob.name" : "Spawn Mob",
+  "rse.stonkstimecore.win_money.description" : "Won some money! You should gamble more!",
+  "rse.stonkstimecore.win_money.name" : "Win Money",
+  "rse.stonkstimecore.win_money.amount" : "You won %ss / %s\u9000!",
+  "rse.stonkstimecore.lose_money.name" : "Lose Money",
+  "rse.stonkstimecore.lose_money.amount" : "You lost %ss / %s\u9000!",
+  "rse.stonkstimecore.lose_money.description" : "Lost some money! Better luck next time!",
+  "rse.stonkstimecore.lose_money.isout" : "Lost your life! Better luck next time!",
 
   "config.stonkstimecore.timer": "Timer",
   "config.stonkstimecore.minHP": "minHP",
@@ -51,6 +58,12 @@
   "config.stonkstimecore.dangerTime": "dangerTime",
   "config.stonkstimecore.dtForLose1HP": "dtForLose1HP",
   "config.stonkstimecore.deathLoss" : "deathLoss",
+
+  "config.stonkstimecore.sre" : "Stonks Random Events",
+  "config.stonkstimecore.sre.gainAmount" : "gainAmount",
+  "config.stonkstimecore.sre.gainError" : "gainError",
+  "config.stonkstimecore.sre.lossAmount" : "lossAmount",
+  "config.stonkstimecore.sre.lossError" : "lossError",
 
   "config.stonkstimecore.applyShader": "applyShader",
   "config.stonkstimecore.seeOutAsTranslucent": "seeOutAsTranslucent",

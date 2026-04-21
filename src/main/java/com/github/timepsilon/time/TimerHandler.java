@@ -109,6 +109,10 @@ public class TimerHandler {
     public static void onPlayerDeath(LivingDeathEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
+        PlayerOutData timer = PlayerOutData.getPlayerOutData(player.getServer());
+        boolean isOut = timer.isOut(player.getUUID());
+        if (isOut) return;
+
         BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getUUID(), BankAccount.Type.PLAYER);
         account.deduct((int) (account.getBalance()*TimeUtils.DEATH_LOSS));
     }

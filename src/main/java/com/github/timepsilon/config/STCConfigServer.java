@@ -17,6 +17,10 @@ public class STCConfigServer {
     public final ModConfigSpec.IntValue MAX_HP;
     public final ModConfigSpec.IntValue MIN_HP;
     public final ModConfigSpec.DoubleValue DEATH_LOSS;
+    public final ModConfigSpec.DoubleValue SRE_GAIN_AMOUNT;
+    public final ModConfigSpec.DoubleValue SRE_GAIN_ERROR;
+    public final ModConfigSpec.DoubleValue SRE_LOSS_AMOUNT;
+    public final ModConfigSpec.DoubleValue SRE_LOSS_ERROR;
 
     static {
         Pair<STCConfigServer,ModConfigSpec> pair = new ModConfigSpec.Builder().configure(STCConfigServer::new);
@@ -62,6 +66,26 @@ public class STCConfigServer {
                 .comment("Fraction of money that should be lost on player death.")
                 .translation("config.stonkstimecore.deathLoss")
                 .defineInRange("deathLoss",0.1, 0, 1);
+
+        builder.pop();
+        builder.translation("config.stonkstimecore.sre").push("SRE");
+
+        SRE_GAIN_AMOUNT = builder
+                .comment("Average amount of time (in seconds) gained for event WinMoney.")
+                .translation("config.stonkstimecore.sre.gainAmount")
+                .defineInRange("gainAmount", 3600f, 0, Integer.MAX_VALUE);
+        SRE_GAIN_ERROR = builder
+                .comment("Standard deviation of time (in seconds) gained for event WinMoney.")
+                .translation("config.stonkstimecore.sre.gainError")
+                .defineInRange("gainError", 600f, 0, Integer.MAX_VALUE);
+        SRE_LOSS_AMOUNT = builder
+                .comment("Average amount of time (in seconds) lost for event WinMoney.")
+                .translation("config.stonkstimecore.sre.lossAmount")
+                .defineInRange("lossAmount", 1800f, 0, Integer.MAX_VALUE);
+        SRE_LOSS_ERROR = builder
+                .comment("Standard deviation of time (in seconds) lost for event WinMoney.")
+                .translation("config.stonkstimecore.sre.lossError")
+                .defineInRange("lossError", 300f, 0, Integer.MAX_VALUE);
     }
 
 }

@@ -4,6 +4,7 @@ import com.github.timepsilon.Core;
 import com.github.timepsilon.stonksevent.AbstractRandomStonksEvent;
 import com.github.timepsilon.stonksevent.StonksEventManager;
 import com.github.timepsilon.stonksevent.StonksEventType;
+import com.github.timepsilon.time.PlayerOutData;
 import com.github.timepsilon.utils.TimeUtils;
 import dev.ithundxr.createnumismatics.Numismatics;
 import dev.ithundxr.createnumismatics.content.backend.BankAccount;
@@ -43,9 +44,14 @@ public class SRELifeLink extends AbstractRandomStonksEvent {
         if (event.getSource().is(DamageTypes.GENERIC_KILL)) return;
         if (!isEventRunning(StonksEventType.LIFELINK)) return;
 
+        PlayerOutData timer = PlayerOutData.getPlayerOutData(player.getServer());
+        boolean isOut = timer.isOut(player.getUUID());
+
         player.sendSystemMessage(Component.translatable("rse.stonkstimecore.lifelink.you_died").withStyle(ChatFormatting.RED));
-        BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getUUID(), BankAccount.Type.PLAYER);
-        account.deduct((int) (account.getBalance()* TimeUtils.DEATH_LOSS));
+        if (!isOut) {
+            BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getUUID(), BankAccount.Type.PLAYER);
+            account.deduct((int) (account.getBalance()* TimeUtils.DEATH_LOSS));
+        }
 
         for (Player p : player.getServer().getPlayerList().getPlayers()) {
             p.sendSystemMessage(Component.translatable("rse.stonkstimecore.lifelink.everyone_dies", player.getName().getString()).withStyle(ChatFormatting.DARK_RED));

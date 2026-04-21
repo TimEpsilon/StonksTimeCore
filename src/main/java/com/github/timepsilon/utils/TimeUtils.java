@@ -1,6 +1,13 @@
 package com.github.timepsilon.utils;
 
 import com.github.timepsilon.config.STCConfigServer;
+import dev.ithundxr.createnumismatics.content.backend.Coin;
+import net.createmod.catnip.data.Couple;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class TimeUtils {
 
@@ -44,6 +51,18 @@ public class TimeUtils {
             hp = Math.min(MAX_HP, (seconds-SAFE_TIME)/DT_FOR_GAIN_1HP + 1);
         }
         return hp;
+    }
+
+    public static List<ItemStack> minimumNumberOfCoins(int amount) {
+        List<ItemStack> coins = new ArrayList<>();
+        for (Coin coin : Arrays.stream(Coin.values()).toList().reversed()) {
+            Couple<Integer> coinAmount = coin.convert(amount);
+            amount = coinAmount.getSecond();
+            if (coinAmount.getFirst() > 0) coins.add(coin.asStack(coinAmount.getFirst()));
+        }
+
+        System.out.println(coins);
+        return coins;
     }
 
 }
