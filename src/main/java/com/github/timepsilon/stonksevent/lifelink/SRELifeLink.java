@@ -10,7 +10,6 @@ import dev.ithundxr.createnumismatics.Numismatics;
 import dev.ithundxr.createnumismatics.content.backend.BankAccount;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -22,6 +21,7 @@ import static com.github.timepsilon.stonksevent.StonksEventManager.isEventRunnin
 @EventBusSubscriber(modid = Core.MODID)
 public class SRELifeLink extends AbstractRandomStonksEvent {
 
+    // TODO : Lifelink logo UI
     public SRELifeLink(float weight, boolean isPositive, String combination, String name) {
         super(weight, isPositive, combination, name);
     }

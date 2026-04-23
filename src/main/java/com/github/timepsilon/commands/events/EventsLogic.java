@@ -13,25 +13,26 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class EventsLogic {
 
     public static int listEvents(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        HashMap<Player, List<Pair<AbstractRandomStonksEvent,Long>>> currentEvents = StonksEventManager.getCurrentEvents();
-
-        long currentTime = new Date().getTime()/1000;
+        HashMap<Player, List<Pair<AbstractRandomStonksEvent,Float>>> currentEvents = StonksEventManager.getCurrentEventsTimer();
 
         int count = currentEvents.values().stream().mapToInt(List::size).sum();
         ctx.getSource().sendSuccess(() -> Component.translatable("commands.stonkstimecore.events_list", count), false);
 
-        for (Map.Entry<Player, List<Pair<AbstractRandomStonksEvent,Long>>> entry : currentEvents.entrySet()) {
-            for (Pair<AbstractRandomStonksEvent,Long> pair : entry.getValue()) {
+        for (Map.Entry<Player, List<Pair<AbstractRandomStonksEvent,Float>>> entry : currentEvents.entrySet()) {
+            for (Pair<AbstractRandomStonksEvent,Float> pair : entry.getValue()) {
                 ctx.getSource().sendSuccess(() -> Component.literal(
                         String.format("%s : %s - %ss",
                                 entry.getKey().getName().getString(),
                                 pair.getLeft().getName().toUpperCase(),
-                                (pair.getRight() - currentTime))),
+                                Math.round(pair.getRight()))),
                         false);
             }
         }

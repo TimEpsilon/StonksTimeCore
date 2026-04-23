@@ -6,6 +6,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerTickRateManager;
 import net.minecraft.world.entity.player.Player;
 
+// TODO : saturated shader
 public class SRESpeedUp extends AbstractRandomStonksEvent {
 
     private static final float FACTOR = 4;

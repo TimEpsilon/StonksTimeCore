@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Player;
 
 public class SRESlowDown extends AbstractRandomStonksEvent {
 
+    // TODO : desaturated shader
     public SRESlowDown(float weight, boolean isPositive, String combination, String name) {
         super(weight, isPositive, combination, name);
     }
