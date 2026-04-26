@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Player;
 public class SRESpeedUp extends AbstractRandomStonksEvent {
 
     private static final float FACTOR = 4;
-    private static final int DURATION = 5*60; // in seconds
+    private static final int DURATION = 1*60; // in seconds
 
     public SRESpeedUp(float weight, boolean isPositive, String combination, String name) {
         super(weight, isPositive, combination, name);

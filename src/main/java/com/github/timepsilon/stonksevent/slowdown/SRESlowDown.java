@@ -14,7 +14,7 @@ public class SRESlowDown extends AbstractRandomStonksEvent {
     }
 
     private static final float FACTOR = 5/20f;
-    private static final int DURATION = 5*60; // in seconds
+    private static final int DURATION = 1*60; // in seconds
 
 
     @Override

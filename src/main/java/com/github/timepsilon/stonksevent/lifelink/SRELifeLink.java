@@ -9,19 +9,25 @@ import com.github.timepsilon.utils.TimeUtils;
 import dev.ithundxr.createnumismatics.Numismatics;
 import dev.ithundxr.createnumismatics.content.backend.BankAccount;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.asm.enumextension.EnumProxy;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerHeartTypeEvent;
+
+import java.util.Arrays;
 
 import static com.github.timepsilon.stonksevent.StonksEventManager.isEventRunning;
+import static com.github.timepsilon.stonksevent.lifelink.ModHeartTypes.LIFELINK_HEART;
 
 @EventBusSubscriber(modid = Core.MODID)
 public class SRELifeLink extends AbstractRandomStonksEvent {
 
-    // TODO : Lifelink logo UI
     public SRELifeLink(float weight, boolean isPositive, String combination, String name) {
         super(weight, isPositive, combination, name);
     }
@@ -59,5 +65,10 @@ public class SRELifeLink extends AbstractRandomStonksEvent {
                 p.kill();
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void onRenderHealth(PlayerHeartTypeEvent event) {
+        event.setType(LIFELINK_HEART.getValue());
     }
 }

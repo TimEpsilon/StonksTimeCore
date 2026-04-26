@@ -1,0 +1,13 @@
+{
+  "entries" : [
+    {
+      "enum" : "net/minecraft/client/gui/Gui$HeartType",
+      "name" : "STONKSTIMECORE_LIFELINK_HEART",
+      "constructor": "(Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;)V",
+      "parameters" : {
+        "class" : "com/github/timepsilon/stonksevent/lifelink/ModHeartTypes",
+        "field" : "LIFELINK_HEART"
+      }
+    }
+  ]
+}
