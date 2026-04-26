@@ -21,20 +21,17 @@ import java.util.Map;
 public class EventsLogic {
 
     public static int listEvents(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        HashMap<Player, List<Pair<AbstractRandomStonksEvent,Float>>> currentEvents = StonksEventManager.getCurrentEventsTimer();
+        HashMap<AbstractRandomStonksEvent,Float> currentEvents = StonksEventManager.getCurrentEventsTimer();
 
-        int count = currentEvents.values().stream().mapToInt(List::size).sum();
+        int count = currentEvents.size();
         ctx.getSource().sendSuccess(() -> Component.translatable("commands.stonkstimecore.events_list", count), false);
 
-        for (Map.Entry<Player, List<Pair<AbstractRandomStonksEvent,Float>>> entry : currentEvents.entrySet()) {
-            for (Pair<AbstractRandomStonksEvent,Float> pair : entry.getValue()) {
+        for (Map.Entry<AbstractRandomStonksEvent,Float> entry : currentEvents.entrySet()) {
                 ctx.getSource().sendSuccess(() -> Component.literal(
-                        String.format("%s : %s - %ss",
-                                entry.getKey().getName().getString(),
-                                pair.getLeft().getName().toUpperCase(),
-                                Math.round(pair.getRight()))),
+                        String.format("%s : %ss",
+                                entry.getKey().getName().toUpperCase(),
+                                Math.round(entry.getValue()))),
                         false);
-            }
         }
         return count;
     }

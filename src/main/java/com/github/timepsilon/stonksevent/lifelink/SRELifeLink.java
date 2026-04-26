@@ -1,6 +1,7 @@
 package com.github.timepsilon.stonksevent.lifelink;
 
 import com.github.timepsilon.Core;
+import com.github.timepsilon.mobeffect.ModMobEffects;
 import com.github.timepsilon.stonksevent.AbstractRandomStonksEvent;
 import com.github.timepsilon.stonksevent.StonksEventManager;
 import com.github.timepsilon.stonksevent.StonksEventType;
@@ -13,11 +14,14 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.asm.enumextension.EnumProxy;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerHeartTypeEvent;
 
 import java.util.Arrays;
@@ -36,19 +40,24 @@ public class SRELifeLink extends AbstractRandomStonksEvent {
 
     @Override
     public void onStart(Player player) {
-        StonksEventManager.addEvent(player, this, DURATION);
+        StonksEventManager.addEvent(this, DURATION);
+
+        applyToAll(player);
     }
 
     @Override
     public void onStop(Player player) {
-        StonksEventManager.removeEvent(player, this);
+        StonksEventManager.removeEvent(this);
+        for (Player p : player.getServer().getPlayerList().getPlayers()) {
+            p.removeEffect(ModMobEffects.LIFE_LINK);
+        }
     }
 
     @SubscribeEvent
     public static void onDeath(LivingDeathEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
         if (event.getSource().is(DamageTypes.GENERIC_KILL)) return;
-        if (!isEventRunning(StonksEventType.LIFELINK)) return;
+        if (!event.getEntity().getActiveEffectsMap().containsKey(ModMobEffects.LIFE_LINK)) return;
 
         PlayerOutData timer = PlayerOutData.getPlayerOutData(player.getServer());
         boolean isOut = timer.isOut(player.getUUID());
@@ -68,7 +77,54 @@ public class SRELifeLink extends AbstractRandomStonksEvent {
     }
 
     @SubscribeEvent
+    public static void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        Player player = event.getEntity();
+
+        if (!StonksEventManager.isEventRunning(StonksEventType.LIFELINK)) return;
+        applyToAll(player);
+    }
+
+    @SubscribeEvent
+    public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+        Player player = event.getEntity();
+
+        if (!StonksEventManager.isEventRunning(StonksEventType.LIFELINK)) return;
+        applyToAll(player);
+    }
+
+    @SubscribeEvent
+    public static void onEffectRemove(MobEffectEvent.Remove event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+        if (!StonksEventManager.isEventRunning(StonksEventType.LIFELINK)) return;
+        event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public static void onEffectExpire(MobEffectEvent.Expired event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+        if (!StonksEventManager.isEventRunning(StonksEventType.LIFELINK)) return;
+
+        applyToAll(player);
+    }
+
+    public static void applyToAll(Player player) {
+        for (Player p : player.getServer().getPlayerList().getPlayers()) {
+            p.addEffect(new MobEffectInstance(
+                    ModMobEffects.LIFE_LINK,
+                    (int) (20*StonksEventManager.getCurrentEventsTimer().getOrDefault(StonksEventType.LIFELINK.getEvent(), 0f)),
+                    0,
+                    true,
+                    true,
+                    true
+            ));
+        }
+    }
+
+    // Client only
+    @SubscribeEvent
     public static void onRenderHealth(PlayerHeartTypeEvent event) {
-        event.setType(LIFELINK_HEART.getValue());
+        if (event.getEntity().getActiveEffectsMap().containsKey(ModMobEffects.LIFE_LINK)) {
+            event.setType(LIFELINK_HEART.getValue());
+        }
     }
 }

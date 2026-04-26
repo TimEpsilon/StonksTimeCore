@@ -68,6 +68,8 @@
   "config.stonkstimecore.applyShader": "applyShader",
   "config.stonkstimecore.seeOutAsTranslucent": "seeOutAsTranslucent",
 
-  "attribute.stonkstimecore.time_hp": "Time HP"
+  "attribute.stonkstimecore.time_hp": "Time HP",
+
+  "effect.stonkstimecore.lifelink" : "LifeLink"
 
 }

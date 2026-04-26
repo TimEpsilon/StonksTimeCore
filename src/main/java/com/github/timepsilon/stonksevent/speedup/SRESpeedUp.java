@@ -24,7 +24,7 @@ public class SRESpeedUp extends AbstractRandomStonksEvent {
         ServerTickRateManager tickManager = server.tickRateManager();
         tickManager.setTickRate(tickManager.tickrate()*FACTOR);
 
-        StonksEventManager.addEvent(player, this, DURATION);
+        StonksEventManager.addEvent(this, DURATION);
     }
 
     @Override
@@ -35,6 +35,6 @@ public class SRESpeedUp extends AbstractRandomStonksEvent {
         ServerTickRateManager tickManager = server.tickRateManager();
         tickManager.setTickRate(tickManager.tickrate()/FACTOR);
 
-        StonksEventManager.removeEvent(player, this);
+        StonksEventManager.removeEvent(this);
     }
 }

@@ -8,6 +8,7 @@ import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.entity.ModEntities;
 import com.github.timepsilon.items.ModItems;
 import com.github.timepsilon.loot.ModLoot;
+import com.github.timepsilon.mobeffect.ModMobEffects;
 import com.github.timepsilon.packets.ModPackets;
 import com.github.timepsilon.sounds.ModSounds;
 import com.mojang.logging.LogUtils;
@@ -53,6 +54,7 @@ public class Core {
         ModEntities.register(modEventBus);
         ModSounds.register(modEventBus);
         ModLoot.register(modEventBus);
+        ModMobEffects.register(modEventBus);
 
         // Config register
         modContainer.registerConfig(ModConfig.Type.SERVER, STCConfigServer.CONFIG_SPEC);

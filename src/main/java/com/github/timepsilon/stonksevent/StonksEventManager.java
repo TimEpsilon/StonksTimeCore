@@ -11,10 +11,14 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
 
+/**
+ * This Class manages global events, meaning something that happens to every player / the world.
+ * For individual, player related events, we go through effects
+ */
 @EventBusSubscriber(modid = Core.MODID)
 public class StonksEventManager {
 
-    private static final HashMap<Player, List<Pair<AbstractRandomStonksEvent,Float>>> currentEventsTimer = new HashMap<>();
+    private static final HashMap<AbstractRandomStonksEvent,Float> currentEventsTimer = new HashMap<>();
 
     @SubscribeEvent
     public static void onTick(ServerTickEvent.Post event) {
@@ -23,80 +27,46 @@ public class StonksEventManager {
         ServerTickRateManager tickManager = event.getServer().tickRateManager();
         float toSubtract = tickManager.millisecondsPerTick()/1000f;
 
-        Iterator<Map.Entry<Player, List<Pair<AbstractRandomStonksEvent, Float>>>> mapIterator = currentEventsTimer.entrySet().iterator();
+
+        Iterator<Map.Entry<AbstractRandomStonksEvent, Float>> mapIterator = currentEventsTimer.entrySet().iterator();
 
         while (mapIterator.hasNext()) {
-            Map.Entry<Player, List<Pair<AbstractRandomStonksEvent, Float>>> entry = mapIterator.next();
-            Player player = entry.getKey();
+            Map.Entry<AbstractRandomStonksEvent, Float> entry = mapIterator.next();
+            entry.setValue(entry.getValue() - toSubtract);
 
-            Iterator<Pair<AbstractRandomStonksEvent, Float>> listIterator = entry.getValue().iterator();
-            while (listIterator.hasNext()) {
-                Pair<AbstractRandomStonksEvent, Float> pair = listIterator.next();
-                pair.setValue(pair.getValue() - toSubtract);
-
-                if (pair.getRight() < 0) {
-                    // This directly removes the event from the list and the list from the map when necessary
-                    pair.getLeft().stop(player);
-                }
+            if (entry.getValue() < 0) {
+                // This directly removes the event from the list and the list from the map when necessary
+                entry.getKey().stop(null);
             }
         }
     }
 
-    public static void addEvent(Player player, AbstractRandomStonksEvent event, float duration) {
+    public static void addEvent(AbstractRandomStonksEvent event, float duration) {
         // We assume the event has been started beforehand
         // duration in seconds
 
-        currentEventsTimer
-                .computeIfAbsent(player, k -> new ArrayList<>())
-                .add(MutablePair.of(event, duration));
+        currentEventsTimer.compute(event, (k,v) -> v == null ? duration : v + duration);
     }
 
-    public static void removeEvent(Player player, AbstractRandomStonksEvent event) {
-        // Since we don't really have a way to pinpoint one of two identical events
-        // We will delete every one encountered
+    public static void removeEvent(AbstractRandomStonksEvent event) {
         // We assume that the event has been stopped beforehand
 
-        Iterator<Map.Entry<Player, List<Pair<AbstractRandomStonksEvent, Float>>>> mapIterator = currentEventsTimer.entrySet().iterator();
+        Iterator<Map.Entry<AbstractRandomStonksEvent, Float>> mapIterator = currentEventsTimer.entrySet().iterator();
         while (mapIterator.hasNext()) {
-            Map.Entry<Player, List<Pair<AbstractRandomStonksEvent, Float>>> entry = mapIterator.next();
-            Player p = entry.getKey();
+            Map.Entry<AbstractRandomStonksEvent, Float> entry = mapIterator.next();
 
-            if (!p.equals(player)) continue;
-
-            List<Pair<AbstractRandomStonksEvent, Float>> events = entry.getValue();
-
-            entry.getValue().removeIf(pair -> pair.getLeft() == event);
-
-            if (events.isEmpty()) {
+            if (entry.getKey() == event) {
                 mapIterator.remove();
             }
+
         }
     }
 
     public static boolean isEventRunning(StonksEventType event) {
-        for (Map.Entry<Player, List<Pair<AbstractRandomStonksEvent, Float>>> playerListEntry : currentEventsTimer.entrySet()) {
-            for (Pair<AbstractRandomStonksEvent, Float> pair : playerListEntry.getValue()) {
-                if (pair.getLeft().equals(event.getEvent())) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return currentEventsTimer.containsKey(event.getEvent());
     }
 
-    public static float getEventTimer(StonksEventType event) {
-        float t = 0;
-        for (Map.Entry<Player, List<Pair<AbstractRandomStonksEvent, Float>>> playerListEntry : currentEventsTimer.entrySet()) {
-            for (Pair<AbstractRandomStonksEvent, Float> pair : playerListEntry.getValue()) {
-                if (pair.getLeft() == event.getEvent()) {
-                    t += pair.getRight();
-                }
-            }
-        }
-        return t;
-    }
-
-    public static HashMap<Player, List<Pair<AbstractRandomStonksEvent,Float>>> getCurrentEventsTimer() {
+    public static HashMap<AbstractRandomStonksEvent,Float> getCurrentEventsTimer() {
         return currentEventsTimer;
     }
 
