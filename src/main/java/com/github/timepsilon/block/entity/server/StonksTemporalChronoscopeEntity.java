@@ -142,6 +142,9 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
                 continue;
             }
 
+            // Prevent named items of being converted
+            if (!itemStack.getItem().getName(itemStack).equals(itemStack.getHoverName())) continue;
+
             sctAmount += destroyAndConvert(itemStack);
         }
         coinBag.add(Coin.SPUR, (int) sctAmount);
