@@ -11,6 +11,7 @@ import dev.ithundxr.createnumismatics.content.backend.Coin;
 import dev.ithundxr.createnumismatics.content.coins.MergingCoinBag;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -23,9 +24,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.p3pp3rf1y.sophisticatedbackpacks.backpack.wrapper.BackpackWrapper;
+import net.p3pp3rf1y.sophisticatedbackpacks.backpack.wrapper.IBackpackWrapper;
+import net.p3pp3rf1y.sophisticatedcore.compat.trashslot.SophisticatedContainerLayout;
+import net.p3pp3rf1y.sophisticatedcore.init.ModCoreDataComponents;
+import net.p3pp3rf1y.sophisticatedcore.inventory.StorageWrapperRepository;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implements MenuProvider {
 
@@ -118,13 +126,35 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
         List<ItemStack> itemStacks = inventory.getItemStacks();
         float sctAmount = 0.0F;
         for (ItemStack itemStack : itemStacks) {
-            SCTMap sct = itemStack.getItemHolder().getData(DataMaps.SCT_MAP);
-            if (sct != null) { // Removes the item if it has a SCT value and add it to total
-                sctAmount += sct.SCT() * itemStack.getCount();
-                itemStack.setCount(0);
+
+            // Handles vanilla containers
+            if (itemStack.getComponents().has(DataComponents.CONTAINER)) {
+                boolean isEmpty = true;
+                for (ItemStack subItem : itemStack.getComponents().get(DataComponents.CONTAINER).nonEmptyItems()) {
+                    sctAmount += destroyAndConvert(subItem);
+                    isEmpty = false;
+                }
+                if (!isEmpty) continue;
             }
+
+            // Backpacks and barrels for now are too much of a headache to handle, so we skip them
+            if (itemStack.getComponents().has(ModCoreDataComponents.STORAGE_UUID.get())) {
+                continue;
+            }
+
+            sctAmount += destroyAndConvert(itemStack);
         }
         coinBag.add(Coin.SPUR, (int) sctAmount);
         notifyUpdate();
+    }
+
+    private float destroyAndConvert(ItemStack itemStack) {
+        SCTMap sct = itemStack.getItemHolder().getData(DataMaps.SCT_MAP);
+        if (sct != null) { // Removes the item if it has a SCT value and add it to total
+            float amount = sct.SCT() * itemStack.getCount();
+            itemStack.setCount(0);
+            return amount;
+        }
+        return 0;
     }
 }

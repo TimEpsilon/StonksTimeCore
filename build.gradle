@@ -190,6 +190,9 @@ dependencies {
     // Iron's Spellbooks
     implementation "io.redspace:irons_spellbooks:${irons_spells_version}"
 
+    // Sophisticated core
+    implementation "curse.maven:sophisticated-core-618298:7841769"
+
     implementation fileTree(dir: 'libs', include: '*.jar')
 }
 
@@ -197,22 +200,23 @@ dependencies {
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
     var replaceProperties = [
-            minecraft_version         : minecraft_version,
-            minecraft_version_range   : minecraft_version_range,
-            neo_version               : neo_version,
-            neo_version_range         : neo_version_range,
-            loader_version_range      : loader_version_range,
-            mod_id                    : mod_id,
-            mod_name                  : mod_name,
-            mod_license               : mod_license,
-            mod_version               : mod_version,
-            mod_authors               : mod_authors,
-            mod_description           : mod_description,
-            create_version_range      : create_version_range,
-            randomium_version_range   : randomium_version_range,
-            moonlight_version_range   : moonlight_version_range,
-            numismatics_version_range : numismatics_version_range,
-            irons_spells_version      : irons_spells_version
+            minecraft_version                : minecraft_version,
+            minecraft_version_range          : minecraft_version_range,
+            neo_version                      : neo_version,
+            neo_version_range                : neo_version_range,
+            loader_version_range             : loader_version_range,
+            mod_id                           : mod_id,
+            mod_name                         : mod_name,
+            mod_license                      : mod_license,
+            mod_version                      : mod_version,
+            mod_authors                      : mod_authors,
+            mod_description                  : mod_description,
+            create_version_range             : create_version_range,
+            randomium_version_range          : randomium_version_range,
+            moonlight_version_range          : moonlight_version_range,
+            numismatics_version_range        : numismatics_version_range,
+            irons_spells_version             : irons_spells_version,
+            sophisticated_core_version_range : sophisticated_core_version_range
     ]
     inputs.properties replaceProperties
     expand replaceProperties
