@@ -24,8 +24,8 @@ public record TimerSyncPacket(int seconds, int money, boolean isOut) implements 
 
     @Override
     public void handle(LocalPlayer player) {
-        if (seconds > 0) TimerOverlay.instance.setSeconds(seconds); // allows for a purely "out" packet
-        if (money > 0) TimerOverlay.instance.setMoney(money);
+        if (seconds >= 0) TimerOverlay.instance.setSeconds(seconds); // allows for a purely "out" packet
+        if (money >= 0) TimerOverlay.instance.setMoney(money);
         TimerOverlay.instance.setOut(isOut);
     }
 

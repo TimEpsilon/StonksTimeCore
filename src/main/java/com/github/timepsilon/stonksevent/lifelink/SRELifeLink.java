@@ -65,7 +65,7 @@ public class SRELifeLink extends AbstractRandomStonksEvent {
         player.sendSystemMessage(Component.translatable("rse.stonkstimecore.lifelink.you_died").withStyle(ChatFormatting.RED));
         if (!isOut) {
             BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getUUID(), BankAccount.Type.PLAYER);
-            account.deduct((int) (account.getBalance()* TimeUtils.DEATH_LOSS));
+            TimeUtils.loseAndExplodeOnDeath(account, player, event.getSource().getWeaponItem());
         }
 
         for (Player p : player.getServer().getPlayerList().getPlayers()) {

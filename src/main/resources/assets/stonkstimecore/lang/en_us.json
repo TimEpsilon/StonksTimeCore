@@ -27,6 +27,7 @@
   "info.stonkstimecore.player_is_out" : "[!] %s has run out of time!",
   "info.stonkstimecore.self_is_out" : "You are now out of time. You will no longer be able to interact with your bank account.",
   "info.stonkstimecore.time_gear_found" : "A Time Gear has been discovered!",
+  "info.stonkstimecore.money_lost" : "You lost %s\u9000",
 
   "rse.stonkstimecore.generic.starting" : "%s has gambled for %s!",
   "rse.stonkstimecore.generic.stopping" : "%s is ending...",

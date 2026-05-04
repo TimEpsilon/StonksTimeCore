@@ -1,13 +1,18 @@
 package com.github.timepsilon.utils;
 
 import com.github.timepsilon.config.STCConfigServer;
+import dev.ithundxr.createnumismatics.content.backend.BankAccount;
 import dev.ithundxr.createnumismatics.content.backend.Coin;
+import dev.ithundxr.createnumismatics.registry.NumismaticsItems;
 import net.createmod.catnip.data.Couple;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class TimeUtils {
 
@@ -61,8 +66,74 @@ public class TimeUtils {
             if (coinAmount.getFirst() > 0) coins.add(coin.asStack(coinAmount.getFirst()));
         }
 
-        System.out.println(coins);
         return coins;
+    }
+
+    public static List<ItemStack> givenAmountOfCoins(int amount, int n) {
+        LinkedHashMap<Coin,Integer> coins = new LinkedHashMap<>();
+
+        // Build a map coin - amount
+        int m = 0;
+        for (Coin coin : Arrays.stream(Coin.values()).toList().reversed()) {
+            // 1st value is amount of this coin, 2nd value is remainder
+            Couple<Integer> coinAmount = coin.convert(amount);
+            amount = coinAmount.getSecond();
+            coins.put(coin, coinAmount.getFirst());
+            m += coinAmount.getFirst();
+        }
+
+        while (m < n) {
+            boolean changed = false;
+
+            // Remove 1 of the largest available coin -> Convert to the equivalent amount of the coin below
+            for (Map.Entry<Coin, Integer> entry : coins.entrySet()) {
+                Coin coin = entry.getKey();
+                int count = entry.getValue();
+
+                if (count == 0 || coin == Coin.SPUR) continue;
+
+                Coin smaller = Coin.values()[coin.ordinal() - 1];
+                int ratio = coin.value / smaller.value;
+
+                coins.put(coin, count - 1);
+                coins.put(smaller, coins.getOrDefault(smaller, 0) + ratio);
+
+                m += ratio - 1;
+
+                changed = true;
+                break;
+            }
+
+            if (!changed) break;
+        }
+
+        // Convert map to itemstack list
+        List<ItemStack> items = new ArrayList<>();
+        for (Map.Entry<Coin, Integer> entry : coins.entrySet()) {
+            for (int i = 0; i < entry.getValue(); i++) {
+                items.add(entry.getKey().asStack());
+            }
+        }
+        return items;
+    }
+
+    public static void loseAndExplodeOnDeath(BankAccount account, Player player, ItemStack killerWeapon) {
+        // Lose x% of total amount
+        int amount = (int) (account.getBalance()*TimeUtils.DEATH_LOSS);
+        account.deduct(amount);
+
+        player.sendSystemMessage(Component.translatable("info.stonkstimecore.money_lost",amount).withStyle(ChatFormatting.RED));
+
+        // Only p% of the full amount will be dropped
+        // p depends on the looting level, 25% for level 0 up to 100% for level 3
+        int lootingLevel = (killerWeapon != null) ? killerWeapon.getEnchantmentLevel(player.level().holderOrThrow(Enchantments.LOOTING)) : 0;
+        int n = (int) (amount * Math.clamp((lootingLevel+1)/4f, 0, 1));
+
+        // Drop items
+        List<ItemStack> items = givenAmountOfCoins(n,30);
+        for (ItemStack item : items) {
+            player.drop(item, true, false);
+        }
     }
 
 }

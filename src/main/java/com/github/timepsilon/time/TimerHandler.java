@@ -9,6 +9,7 @@ import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -53,14 +54,8 @@ public class TimerHandler {
         // Convert money to seconds
         int seconds = account.getBalance() / TimeUtils.TIME_TO_MONEY;
 
-        // If time is now 0 -> set as out, preventing timer to update
-        if (account.getBalance() <= 0) {
-            PlayerOutHandler.setOut(player, true);
-        }
-
         // Update Overlay
         sendOverlayPacket(player, seconds, account.getBalance(), timer.isOut(uuid));
-
 
         // HP logic
         if (!(TimeUtils.DANGER_TIME < seconds && seconds < TimeUtils.SAFE_TIME)) {
@@ -75,6 +70,11 @@ public class TimerHandler {
                 player.getAttribute(Attributes.MAX_HEALTH).addOrReplacePermanentModifier(timeHPModifier);
             }
         }
+
+        // Hurt when no time
+        if (account.getBalance() <= 0) player.hurt(player.damageSources().genericKill(), 1);
+
+
     }
 
     /**
@@ -109,12 +109,21 @@ public class TimerHandler {
     public static void onPlayerDeath(LivingDeathEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
+        BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getUUID(), BankAccount.Type.PLAYER);
+
+        // If time is now 0 -> set as out, preventing timer to update
+        if (account.getBalance() <= 0) {
+            PlayerOutHandler.setOut(player, true);
+        }
+
+        // Nothing happens if player is out (no money to lose)
         PlayerOutData timer = PlayerOutData.getPlayerOutData(player.getServer());
         boolean isOut = timer.isOut(player.getUUID());
         if (isOut) return;
 
-        BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getUUID(), BankAccount.Type.PLAYER);
-        account.deduct((int) (account.getBalance()*TimeUtils.DEATH_LOSS));
+        // Lose 10% of player money (leaving a minimum of 10 remaining seconds)
+        TimeUtils.loseAndExplodeOnDeath(account, player, event.getSource().getWeaponItem());
+
     }
 
     public static void sendOverlayPacket(ServerPlayer player, int time, int money,  boolean isOut) {
