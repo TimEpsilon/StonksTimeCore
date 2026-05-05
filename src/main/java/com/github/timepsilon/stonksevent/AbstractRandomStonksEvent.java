@@ -48,13 +48,13 @@ public abstract class AbstractRandomStonksEvent {
 
         for (ServerPlayer p : server.getPlayerList().getPlayers()) {
             p.sendSystemMessage(
-                    Component.translatable("rse.stonkstimecore.generic.starting",
+                    Component.translatable("sre.stonkstimecore.generic.starting",
                                     player.getName(),
-                                    Component.translatable(String.format("rse.stonkstimecore.%s.name",name)))
+                                    Component.translatable(String.format("sre.stonkstimecore.%s.name",name)))
                             .withColor(ChatFormatting.GOLD.getColor())
             );
             p.sendSystemMessage(
-                    Component.translatable("rse.stonkstimecore.%s.description".formatted(name))
+                    Component.translatable("sre.stonkstimecore.%s.description".formatted(name))
                             .withColor(ChatFormatting.GRAY.getColor())
             );
         }
@@ -67,8 +67,8 @@ public abstract class AbstractRandomStonksEvent {
 
         for (ServerPlayer p : server.getPlayerList().getPlayers()) {
             p.sendSystemMessage(
-                    Component.translatable("rse.stonkstimecore.generic.stopping",
-                                    Component.translatable(String.format("rse.stonkstimecore.%s.name",name)))
+                    Component.translatable("sre.stonkstimecore.generic.stopping",
+                                    Component.translatable(String.format("sre.stonkstimecore.%s.name",name)))
                             .withColor(ChatFormatting.GOLD.getColor())
             );
         }

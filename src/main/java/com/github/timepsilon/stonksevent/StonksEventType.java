@@ -5,6 +5,7 @@ import com.github.timepsilon.stonksevent.losemoney.SRELoseMoney;
 import com.github.timepsilon.stonksevent.slowdown.SRESlowDown;
 import com.github.timepsilon.stonksevent.spawnmob.SRESpawnMob;
 import com.github.timepsilon.stonksevent.speedup.SRESpeedUp;
+import com.github.timepsilon.stonksevent.teleport.SRETeleport;
 import com.github.timepsilon.stonksevent.winmoney.SREWinMoney;
 import com.github.timepsilon.utils.Scheduler;
 import net.minecraft.util.StringRepresentable;
@@ -21,6 +22,7 @@ public enum StonksEventType implements StringRepresentable {
     SPAWN_MOB(new SRESpawnMob(5, false, "7CM", "spawn_mob")),
     WIN_MONEY(new SREWinMoney(5, true, "CCC", "win_money")),
     LOSE_MONEY(new SRELoseMoney(5, true, "0CC", "lose_money")),
+    TELEPORT(new SRETeleport(5, true, "MM0", "teleport")),
     ;
 
     private final AbstractRandomStonksEvent instance;

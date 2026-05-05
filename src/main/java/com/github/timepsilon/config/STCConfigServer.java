@@ -21,6 +21,7 @@ public class STCConfigServer {
     public final ModConfigSpec.DoubleValue SRE_GAIN_ERROR;
     public final ModConfigSpec.DoubleValue SRE_LOSS_AMOUNT;
     public final ModConfigSpec.DoubleValue SRE_LOSS_ERROR;
+    public final ModConfigSpec.DoubleValue SRE_TP_DISTANCE;
 
     static {
         Pair<STCConfigServer,ModConfigSpec> pair = new ModConfigSpec.Builder().configure(STCConfigServer::new);
@@ -86,6 +87,10 @@ public class STCConfigServer {
                 .comment("Standard deviation of time (in seconds) lost for event WinMoney.")
                 .translation("config.stonkstimecore.sre.lossError")
                 .defineInRange("lossError", 300f, 0, Integer.MAX_VALUE);
+        SRE_TP_DISTANCE = builder
+                .comment("Radius in which the player will be teleported")
+                .translation("config.stonkstimecore.sre.tpDistance")
+                .defineInRange("tpDistance", 1000f, 0, 10000);
     }
 
 }

@@ -36,14 +36,14 @@ public class SRELoseMoney extends AbstractRandomStonksEvent {
         if (isOut) {
             player.kill();
             player.sendSystemMessage(
-                    Component.translatable("rse.stonkstimecore.lose_money.isout")
+                    Component.translatable("sre.stonkstimecore.lose_money.isout")
                             .withStyle(ChatFormatting.RED)
             );
         } else {
             account.deduct(amount * TimeUtils.TIME_TO_MONEY);
 
             player.sendSystemMessage(
-                    Component.translatable("rse.stonkstimecore.lose_money.amount", TimeUtils.secondsToTime(amount), amount * TimeUtils.TIME_TO_MONEY)
+                    Component.translatable("sre.stonkstimecore.lose_money.amount", TimeUtils.secondsToTime(amount), amount * TimeUtils.TIME_TO_MONEY)
                             .withStyle(ChatFormatting.RED)
             );
         }
