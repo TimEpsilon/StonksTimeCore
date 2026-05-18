@@ -1,19 +1,16 @@
 package com.github.timepsilon.stonksevent.hotpotato;
 
 import com.github.timepsilon.Core;
+import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.mobeffect.ModMobEffects;
 import com.github.timepsilon.stonksevent.AbstractRandomStonksEvent;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.EffectCure;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 
@@ -25,8 +22,6 @@ public class SREHotPotato extends AbstractRandomStonksEvent {
     public SREHotPotato(float weight, boolean isPositive, String combination, String name) {
         super(weight, isPositive, combination, name);
     }
-
-    public static final int DURATION = 10*60; // 10min
 
     @Override
     public void onStart(Player player) {
@@ -70,8 +65,7 @@ public class SREHotPotato extends AbstractRandomStonksEvent {
     }
 
     public static void playerTagsPlayer(Player prevPlayer, Player newPlayer) {
-
-        int duration = DURATION;
+        int duration = STCConfigServer.CONFIG.SRE_HOT_POTATO_DURATION.get(); // Events are subscribed before config finishes loading
         if ((prevPlayer != null) && prevPlayer.getEffect(ModMobEffects.HOT_POTATO) != null) {
             duration = prevPlayer.getEffect(ModMobEffects.HOT_POTATO).getDuration()/20;
             prevPlayer.removeEffect(ModMobEffects.HOT_POTATO);

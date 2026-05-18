@@ -1,5 +1,6 @@
 package com.github.timepsilon.stonksevent.speedup;
 
+import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.stonksevent.AbstractRandomStonksEvent;
 import com.github.timepsilon.stonksevent.StonksEventManager;
 import net.minecraft.server.MinecraftServer;
@@ -9,8 +10,8 @@ import net.minecraft.world.entity.player.Player;
 // TODO : saturated shader
 public class SRESpeedUp extends AbstractRandomStonksEvent {
 
-    private static final float FACTOR = 4;
-    private static final int DURATION = 1*60; // in seconds
+    private static final float FACTOR = (float) STCConfigServer.CONFIG.SRE_SPEED_UP_FACTOR.getAsDouble();
+    private static final int DURATION = STCConfigServer.CONFIG.SRE_SPEED_UP_DURATION.getAsInt(); // in seconds
 
     public SRESpeedUp(float weight, boolean isPositive, String combination, String name) {
         super(weight, isPositive, combination, name);

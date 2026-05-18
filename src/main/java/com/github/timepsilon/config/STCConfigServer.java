@@ -22,6 +22,12 @@ public class STCConfigServer {
     public final ModConfigSpec.DoubleValue SRE_LOSS_AMOUNT;
     public final ModConfigSpec.DoubleValue SRE_LOSS_ERROR;
     public final ModConfigSpec.DoubleValue SRE_TP_DISTANCE;
+    public final ModConfigSpec.IntValue SRE_LIFELINK_DURATION;
+    public final ModConfigSpec.IntValue SRE_HOT_POTATO_DURATION;
+    public final ModConfigSpec.DoubleValue SRE_SLOW_DOWN_FACTOR;
+    public final ModConfigSpec.IntValue SRE_SLOW_DOWN_DURATION;
+    public final ModConfigSpec.DoubleValue SRE_SPEED_UP_FACTOR;
+    public final ModConfigSpec.IntValue SRE_SPEED_UP_DURATION;
 
     static {
         Pair<STCConfigServer,ModConfigSpec> pair = new ModConfigSpec.Builder().configure(STCConfigServer::new);
@@ -88,9 +94,34 @@ public class STCConfigServer {
                 .translation("config.stonkstimecore.sre.lossError")
                 .defineInRange("lossError", 300f, 0, Integer.MAX_VALUE);
         SRE_TP_DISTANCE = builder
-                .comment("Radius in which the player will be teleported")
+                .comment("Radius in which the player will be teleported.")
                 .translation("config.stonkstimecore.sre.tpDistance")
                 .defineInRange("tpDistance", 1000f, 0, 10000);
+        SRE_LIFELINK_DURATION = builder
+                .comment("Duration (in seconds) for the lifelink effect.")
+                .translation("config.stonkstimecore.sre.lifelinkDuration")
+                .defineInRange("lifelinkDuration", 3600, 1, Integer.MAX_VALUE);
+        SRE_HOT_POTATO_DURATION = builder
+                .comment("Duration (in seconds) until the hot potato kills the player.")
+                .translation("config.stonkstimecore.sre.hotPotatoDuration")
+                .defineInRange("hotPotatoDuration", 600, 1, Integer.MAX_VALUE);
+        SRE_SLOW_DOWN_FACTOR = builder
+                .comment("Factor by which to slow down time. 1 is 20tps, 0 freezes time completely.")
+                .translation("config.stonkstimecore.sre.slowDownFactor")
+                .defineInRange("slowDownFactor", 0.25, 0, 1);
+        SRE_SLOW_DOWN_DURATION = builder
+                .comment("Duration (in seconds, absolute time) during which time will be slowed down.")
+                .translation("config.stonkstimecore.sre.slowDownDuration")
+                .defineInRange("slowDownDuration", 60, 1, Integer.MAX_VALUE);
+        SRE_SPEED_UP_FACTOR = builder
+                .comment("Factor by which to speed up time. 1 is 20tps.")
+                .translation("config.stonkstimecore.sre.speedUpFactor")
+                .defineInRange("speedUpFactor", 4f, 1, 100);
+        SRE_SPEED_UP_DURATION = builder
+                .comment("Duration (in seconds, absolute time) during which time will be sped up.")
+                .translation("config.stonkstimecore.sre.speedUpDuration")
+                .defineInRange("speedUpDuration", 60, 1, Integer.MAX_VALUE);
+
     }
 
 }

@@ -69,6 +69,12 @@
   "config.stonkstimecore.sre.gainError" : "gainError",
   "config.stonkstimecore.sre.lossAmount" : "lossAmount",
   "config.stonkstimecore.sre.lossError" : "lossError",
+  "config.stonkstimecore.sre.lifelinkDuration" : "lifelinkDuration",
+  "config.stonkstimecore.sre.hotPotatoDuration" : "hotPotatoDuration",
+  "config.stonkstimecore.sre.slowDownFactor" : "slowDownFactor",
+  "config.stonkstimecore.sre.slowDownDuration" : "slowDownDuration",
+  "config.stonkstimecore.sre.speedUpFactor" : "speedUpFactor",
+  "config.stonkstimecore.sre.speedUpDuration" : "speedUpDuration",
 
   "config.stonkstimecore.applyShader": "applyShader",
   "config.stonkstimecore.seeOutAsTranslucent": "seeOutAsTranslucent",

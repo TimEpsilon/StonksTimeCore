@@ -1,6 +1,7 @@
 package com.github.timepsilon.stonksevent.lifelink;
 
 import com.github.timepsilon.Core;
+import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.mobeffect.ModMobEffects;
 import com.github.timepsilon.stonksevent.AbstractRandomStonksEvent;
 import com.github.timepsilon.stonksevent.StonksEventManager;
@@ -12,10 +13,7 @@ import dev.ithundxr.createnumismatics.content.backend.BankAccount;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
@@ -26,7 +24,6 @@ import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerHeartTypeEvent;
 
-import static com.github.timepsilon.stonksevent.hotpotato.HotPotatoEffect.HOT_POTATO_DAMAGE;
 import static com.github.timepsilon.stonksevent.lifelink.LifeLinkEffect.LIFELINK_DAMAGE;
 import static com.github.timepsilon.stonksevent.lifelink.ModHeartTypes.LIFELINK_HEART;
 
@@ -37,11 +34,9 @@ public class SRELifeLink extends AbstractRandomStonksEvent {
         super(weight, isPositive, combination, name);
     }
 
-    private static final int DURATION = 60*60; // 1h
-
     @Override
     public void onStart(Player player) {
-        StonksEventManager.addEvent(this, DURATION);
+        StonksEventManager.addEvent(this, STCConfigServer.CONFIG.SRE_LIFELINK_DURATION.get());
 
         applyToAll(player);
     }

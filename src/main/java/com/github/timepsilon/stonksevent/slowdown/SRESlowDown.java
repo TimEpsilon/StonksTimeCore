@@ -1,5 +1,6 @@
 package com.github.timepsilon.stonksevent.slowdown;
 
+import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.stonksevent.AbstractRandomStonksEvent;
 import com.github.timepsilon.stonksevent.StonksEventManager;
 import net.minecraft.server.MinecraftServer;
@@ -13,8 +14,8 @@ public class SRESlowDown extends AbstractRandomStonksEvent {
         super(weight, isPositive, combination, name);
     }
 
-    private static final float FACTOR = 5/20f;
-    private static final int DURATION = 1*60; // in seconds
+    private static final float FACTOR = (float) STCConfigServer.CONFIG.SRE_SLOW_DOWN_FACTOR.getAsDouble();
+    private static final int DURATION = STCConfigServer.CONFIG.SRE_SLOW_DOWN_DURATION.get(); // in seconds
 
 
     @Override
