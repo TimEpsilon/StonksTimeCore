@@ -2,10 +2,7 @@ package com.github.timepsilon.stonksevent.teleport;
 
 import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.stonksevent.AbstractRandomStonksEvent;
-import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.trains.GlobalRailwayManager;
-import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.trains.entity.Train;
 import com.simibubi.create.content.trains.entity.TravellingPoint;
 import com.simibubi.create.content.trains.graph.TrackGraph;
@@ -14,12 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
@@ -37,7 +29,7 @@ public class SRETeleport extends AbstractRandomStonksEvent {
     @Override
     public void onStart(Player player) {
 
-        if (player.level().random.nextFloat() < 0.6) {
+        if (player.level().random.nextFloat() < 0.8) {
             boolean didFind = funnyTeleport(player);
             if (didFind) return;
         }

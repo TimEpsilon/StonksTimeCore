@@ -50,6 +50,8 @@
   "sre.stonkstimecore.lose_money.isout" : "Lost your life! Better luck next time!",
   "sre.stonkstimecore.teleport.description" : "Got teleported away",
   "sre.stonkstimecore.teleport.name" : "Teleportation",
+  "sre.stonkstimecore.hot_potato.description" : "Tag someone before the times runs out!",
+  "sre.stonkstimecore.hot_potato.name" : "Hot Potato!",
 
   "config.stonkstimecore.timer": "Timer",
   "config.stonkstimecore.minHP": "minHP",
@@ -73,6 +75,10 @@
 
   "attribute.stonkstimecore.time_hp": "Time HP",
 
-  "effect.stonkstimecore.lifelink" : "LifeLink"
+  "effect.stonkstimecore.lifelink" : "LifeLink",
+  "effect.stonkstimecore.hot_potato" : "Hot Potato!",
+
+  "death.attack.stonkstimecore.hot_potato" : "%s didn't pass the potato in time",
+  "death.attack.stonkstimecore.lifelink" : "%s died from a lifelink!"
 
 }

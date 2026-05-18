@@ -1,0 +1,7 @@
+{
+  "message_id" : "stonkstimecore.lifelink",
+  "scaling" : "never",
+  "exhaustion" : 0,
+  "effects" : "thorns",
+  "death_message_type" : "default"
+}

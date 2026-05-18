@@ -1,19 +1,16 @@
 package com.github.timepsilon.mobeffect;
 
 import com.github.timepsilon.Core;
-import com.github.timepsilon.entity.custom.TimeGearEntity;
 import com.github.timepsilon.stonksevent.lifelink.LifeLinkEffect;
+import com.github.timepsilon.stonksevent.hotpotato.HotPotatoEffect;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobCategory;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.awt.*;
-import java.util.function.Supplier;
 
 public class ModMobEffects {
 
@@ -31,6 +28,14 @@ public class ModMobEffects {
                             Color.decode("#912323").getRGB()
                     )
 
+            );
+
+    public static final Holder<MobEffect> HOT_POTATO =
+            MOB_EFFECTS.register(
+                    "hot_potato", () -> new HotPotatoEffect(
+                            MobEffectCategory.HARMFUL,
+                            Color.decode("#fabc2a").getRGB()
+                    )
             );
 
 }

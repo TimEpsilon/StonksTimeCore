@@ -2,14 +2,13 @@ package com.github.timepsilon.stonksevent;
 
 import com.github.timepsilon.Core;
 import net.minecraft.server.ServerTickRateManager;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * This Class manages global events, meaning something that happens to every player / the world.

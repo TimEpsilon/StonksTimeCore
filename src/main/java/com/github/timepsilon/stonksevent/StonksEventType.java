@@ -1,5 +1,6 @@
 package com.github.timepsilon.stonksevent;
 
+import com.github.timepsilon.stonksevent.hotpotato.SREHotPotato;
 import com.github.timepsilon.stonksevent.lifelink.SRELifeLink;
 import com.github.timepsilon.stonksevent.losemoney.SRELoseMoney;
 import com.github.timepsilon.stonksevent.slowdown.SRESlowDown;
@@ -16,13 +17,14 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public enum StonksEventType implements StringRepresentable {
 
+    WIN_MONEY(new SREWinMoney(5, true, "CCC", "win_money")),
     SLOW_DOWN(new SRESlowDown(5, false, "0MC", "slow_down")),
     SPEED_UP(new SRESpeedUp(5, false, "0M7", "speed_up")),
     LIFELINK(new SRELifeLink(5, false, "M77", "lifelink")),
     SPAWN_MOB(new SRESpawnMob(5, false, "7CM", "spawn_mob")),
-    WIN_MONEY(new SREWinMoney(5, true, "CCC", "win_money")),
-    LOSE_MONEY(new SRELoseMoney(5, true, "0CC", "lose_money")),
-    TELEPORT(new SRETeleport(5, true, "MM0", "teleport")),
+    LOSE_MONEY(new SRELoseMoney(5, false, "0CC", "lose_money")),
+    TELEPORT(new SRETeleport(5, false, "MM0", "teleport")),
+    HOT_POTATO(new SREHotPotato(5, false, "CM7",  "hot_potato")),
     ;
 
     private final AbstractRandomStonksEvent instance;

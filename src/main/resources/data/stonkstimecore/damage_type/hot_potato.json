@@ -1,0 +1,7 @@
+{
+  "message_id" : "stonkstimecore.hot_potato",
+  "scaling" : "never",
+  "exhaustion" : 0,
+  "effects" : "burning",
+  "death_message_type" : "default"
+}

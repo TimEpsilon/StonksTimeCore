@@ -10,23 +10,24 @@ import com.github.timepsilon.utils.TimeUtils;
 import dev.ithundxr.createnumismatics.Numismatics;
 import dev.ithundxr.createnumismatics.content.backend.BankAccount;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.asm.enumextension.EnumProxy;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerHeartTypeEvent;
 
-import java.util.Arrays;
-
-import static com.github.timepsilon.stonksevent.StonksEventManager.isEventRunning;
+import static com.github.timepsilon.stonksevent.hotpotato.HotPotatoEffect.HOT_POTATO_DAMAGE;
+import static com.github.timepsilon.stonksevent.lifelink.LifeLinkEffect.LIFELINK_DAMAGE;
 import static com.github.timepsilon.stonksevent.lifelink.ModHeartTypes.LIFELINK_HEART;
 
 @EventBusSubscriber(modid = Core.MODID)
@@ -36,7 +37,7 @@ public class SRELifeLink extends AbstractRandomStonksEvent {
         super(weight, isPositive, combination, name);
     }
 
-    private static final int DURATION = 60*60; // 1h in seconds
+    private static final int DURATION = 60*60; // 1h
 
     @Override
     public void onStart(Player player) {
@@ -56,7 +57,7 @@ public class SRELifeLink extends AbstractRandomStonksEvent {
     @SubscribeEvent
     public static void onDeath(LivingDeathEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
-        if (event.getSource().is(DamageTypes.GENERIC_KILL)) return;
+        if (event.getSource().is(LIFELINK_DAMAGE) || event.getSource().is(DamageTypes.GENERIC_KILL)) return;
         if (!event.getEntity().getActiveEffectsMap().containsKey(ModMobEffects.LIFE_LINK)) return;
 
         PlayerOutData timer = PlayerOutData.getPlayerOutData(player.getServer());
@@ -68,10 +69,13 @@ public class SRELifeLink extends AbstractRandomStonksEvent {
             TimeUtils.loseAndExplodeOnDeath(account, player, event.getSource().getWeaponItem());
         }
 
+        DamageSource source = new DamageSource(
+                player.level().registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(LIFELINK_DAMAGE)
+        );
         for (Player p : player.getServer().getPlayerList().getPlayers()) {
             p.sendSystemMessage(Component.translatable("sre.stonkstimecore.lifelink.everyone_dies", player.getName().getString()).withStyle(ChatFormatting.DARK_RED));
             if (!p.isDeadOrDying()) {
-                p.kill();
+                p.hurt(source, Float.MAX_VALUE);
             }
         }
     }
