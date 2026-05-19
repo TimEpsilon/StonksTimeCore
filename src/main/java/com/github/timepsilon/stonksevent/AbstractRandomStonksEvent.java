@@ -6,7 +6,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,13 +36,13 @@ public abstract class AbstractRandomStonksEvent {
     }
 
     public final void stop(Player player) {
-        commonStop(player);
+        commonStop();
         onStop(player);
     }
 
     public abstract void onStart(Player player);
 
-    public abstract void onStop(Player player);
+    public abstract void onStop(@Nullable Player player);
 
     private void commonStart(Player player) {
         MinecraftServer server = player.getServer();
@@ -61,8 +63,8 @@ public abstract class AbstractRandomStonksEvent {
         Core.LOGGER.info("{} started event {}", player.getName(), name);
     }
 
-    private void commonStop(Player player) {
-        MinecraftServer server = player.getServer();
+    private void commonStop() {
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         if (server == null) return;
 
         for (ServerPlayer p : server.getPlayerList().getPlayers()) {

@@ -1,6 +1,7 @@
 package com.github.timepsilon.stonksevent;
 
 import com.github.timepsilon.Core;
+import com.github.timepsilon.stonksevent.slowdown.SlowDownClient;
 import net.minecraft.server.ServerTickRateManager;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -32,6 +33,10 @@ public class StonksEventManager {
         while (mapIterator.hasNext()) {
             Map.Entry<AbstractRandomStonksEvent, Float> entry = mapIterator.next();
             entry.setValue(entry.getValue() - toSubtract);
+
+            if (entry.getKey() instanceof TickableSRE) {
+                ((TickableSRE) entry.getKey()).tick();
+            }
 
             if (entry.getValue() < 0) {
                 // This directly removes the event from the list and the list from the map when necessary
