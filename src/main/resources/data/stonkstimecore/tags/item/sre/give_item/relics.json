@@ -1,0 +1,7 @@
+{
+  "replace" : false,
+  "values" : [
+    {"id" :  "#relics:relic", "required" :  false},
+    {"id" :  "#artifacts:artifacts", "required" :  false}
+  ]
+}

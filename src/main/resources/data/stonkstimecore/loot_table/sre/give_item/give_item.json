@@ -1,0 +1,212 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:beacon",
+          "weight": 100,
+          "quality": 0
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:dragon_egg",
+          "weight": 60,
+          "quality": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:elytra",
+          "weight": 80,
+          "quality": 0
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:music_disc_stal",
+          "weight": 10,
+          "quality": -1,
+          "functions": [
+            {
+              "function": "minecraft:set_name",
+              "name": "The Disc"
+            },
+            {
+              "function": "minecraft:set_enchantments",
+              "enchantments": {
+                "minecraft:binding_curse": 1
+              },
+              "add": true
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:mace",
+          "weight": 80,
+          "quality": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:enchanted_golden_apple",
+          "weight": 100,
+          "quality": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 6
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:netherite_ingot",
+          "weight": 100,
+          "quality": 0,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 6
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond",
+          "weight": 100,
+          "quality": -1,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 18,
+                "max": 32
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:nether_star",
+          "weight": 100,
+          "quality": 0
+        },
+        {
+          "type": "minecraft:tag",
+          "name": "minecraft:trim_templates",
+          "expand": true,
+          "weight": 5,
+          "quality": -1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:totem_of_undying",
+          "weight": 100,
+          "quality": 0,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:tag",
+          "name": "stonkstimecore:sre/give_item/randomium",
+          "expand" : true,
+          "weight": 80,
+          "quality": 2,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 5
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:tag",
+          "name": "stonkstimecore:sre/give_item/betterarcheology_totem",
+          "expand" : true,
+          "weight": 60,
+          "quality": 2
+        },
+        {
+          "type": "minecraft:tag",
+          "name": "stonkstimecore:sre/give_item/born_in_chaos_rareloot",
+          "expand": true,
+          "weight": 10,
+          "quality": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:legendary_ink",
+          "expand" : true,
+          "weight": 80,
+          "quality": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 8,
+                "max": 16
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:tag",
+          "name": "stonkstimecore:sre/give_item/irons_spellbooks_divine_soulshard",
+          "expand" : true,
+          "weight": 60,
+          "quality": 2
+        },
+        {
+          "type": "minecraft:tag",
+          "name": "stonkstimecore:sre/give_item/relics",
+          "expand": true,
+          "weight": 5,
+          "quality": 0
+        },
+        {
+          "type": "minecraft:tag",
+          "name": "stonkstimecore:sre/give_item/irons_spellbooks_eldritch_manuscript",
+          "expand" : true,
+          "weight": 40,
+          "quality": 2
+        },
+        {
+          "type": "minecraft:tag",
+          "name": "stonkstimecore:sre/give_item/rarest",
+          "expand" : true,
+          "weight": 20,
+          "quality": 3
+        },
+        {
+          "type": "minecraft:tag",
+          "name": "stonkstimecore:sre/give_item/paraglider_heart_container",
+          "expand" : true,
+          "weight": 100,
+          "quality": 1
+        }
+      ]
+    }
+  ]
+}

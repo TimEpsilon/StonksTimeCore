@@ -17,6 +17,8 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 import java.util.Random;
 
+import static com.github.timepsilon.utils.TimeUtils.givePlayer;
+
 public class SREWinMoney extends AbstractRandomStonksEvent {
 
     private final static double MEAN = STCConfigServer.CONFIG.SRE_GAIN_AMOUNT.get(); // in seconds
@@ -56,24 +58,5 @@ public class SREWinMoney extends AbstractRandomStonksEvent {
     @Override
     public void onStop(Player player) {
 
-    }
-
-    public static void givePlayer(Player player, ItemStack item) {
-        boolean didGet = player.getInventory().add(item);
-        if (didGet && item.isEmpty()) {
-            ItemEntity itementity = player.drop(item, false);
-            if (itementity != null) {
-                itementity.makeFakeItem();
-            }
-
-            player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
-            player.containerMenu.broadcastChanges();
-        } else {
-            ItemEntity itementity = player.drop(item, false);
-            if (itementity != null) {
-                itementity.setNoPickUpDelay();
-                itementity.setTarget(player.getUUID());
-            }
-        }
     }
 }

@@ -52,6 +52,8 @@
   "sre.stonkstimecore.teleport.name" : "Teleportation",
   "sre.stonkstimecore.hot_potato.description" : "Tag someone before the times runs out!",
   "sre.stonkstimecore.hot_potato.name" : "Hot Potato!",
+  "sre.stonkstimecore.give_item.description" : "Get a random item!",
+  "sre.stonkstimecore.give_item.name" : "Win Item",
 
   "config.stonkstimecore.timer": "Timer",
   "config.stonkstimecore.minHP": "minHP",

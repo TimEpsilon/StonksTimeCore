@@ -1,0 +1,6 @@
+{
+  "replace" : false,
+  "values" : [
+    {"id" :  "paraglider:heart_container", "required" :  false}
+  ]
+}

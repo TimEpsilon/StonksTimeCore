@@ -6,6 +6,9 @@ import dev.ithundxr.createnumismatics.content.backend.Coin;
 import net.createmod.catnip.data.Couple;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -131,6 +134,25 @@ public class TimeUtils {
         List<ItemStack> items = givenAmountOfCoins(n,30);
         for (ItemStack item : items) {
             player.drop(item, true, false);
+        }
+    }
+
+    public static void givePlayer(Player player, ItemStack item) {
+        boolean didGet = player.getInventory().add(item);
+        if (didGet && item.isEmpty()) {
+            ItemEntity itementity = player.drop(item, false);
+            if (itementity != null) {
+                itementity.makeFakeItem();
+            }
+
+            player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+            player.containerMenu.broadcastChanges();
+        } else {
+            ItemEntity itementity = player.drop(item, false);
+            if (itementity != null) {
+                itementity.setNoPickUpDelay();
+                itementity.setTarget(player.getUUID());
+            }
         }
     }
 

@@ -1,0 +1,8 @@
+{
+  "replace" : false,
+  "values" : [
+    "stonkstimecore:time_gear",
+    {"id" :  "tiab:time_in_a_bottle", "required" :  false},
+    {"id" :  "travelerscompass:travelerscompass", "required" :  false}
+  ]
+}

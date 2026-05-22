@@ -1,0 +1,9 @@
+{
+  "replace" : false,
+  "values" : [
+    {"id" :  "betterarcheology:torrent_totem", "required" :  false},
+    {"id" :  "betterarcheology:soul_totem", "required" :  false},
+    {"id" :  "betterarcheology:growth_totem", "required" :  false},
+    {"id" :  "betterarcheology:radiance_totem", "required" :  false}
+  ]
+}
