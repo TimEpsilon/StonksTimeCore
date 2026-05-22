@@ -84,6 +84,7 @@
   "config.stonkstimecore.seeOutAsTranslucent": "seeOutAsTranslucent",
 
   "attribute.stonkstimecore.time_hp": "Time HP",
+  "attribute.stonkstimecore.sct_factor" : "SCT Factor",
 
   "effect.stonkstimecore.lifelink" : "LifeLink",
   "effect.stonkstimecore.hot_potato" : "Hot Potato!",

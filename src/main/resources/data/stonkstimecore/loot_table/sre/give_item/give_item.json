@@ -123,9 +123,8 @@
           ]
         },
         {
-          "type": "minecraft:tag",
-          "name": "stonkstimecore:sre/give_item/randomium",
-          "expand" : true,
+          "type": "minecraft:item",
+          "name": "randomium:randomium",
           "weight": 80,
           "quality": 2,
           "functions": [

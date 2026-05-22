@@ -28,7 +28,7 @@ public record StonksTemporalChronoscopeMoneyPacket(BlockPos STCPos) implements S
         BlockEntity be = world.getBlockEntity(STCPos);
 
         if (be instanceof StonksTemporalChronoscopeEntity stcBE) {
-            stcBE.computeSCTAmount();
+            stcBE.computeSCTAmount(player);
         }
     }
 }

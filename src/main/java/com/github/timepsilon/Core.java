@@ -1,5 +1,6 @@
 package com.github.timepsilon;
 
+import com.github.timepsilon.attributes.ModAttributes;
 import com.github.timepsilon.block.ModBlocks;
 import com.github.timepsilon.block.entity.ModBlockEntities;
 import com.github.timepsilon.client.gui.ModMenu;
@@ -55,6 +56,7 @@ public class Core {
         ModSounds.register(modEventBus);
         ModLoot.register(modEventBus);
         ModMobEffects.register(modEventBus);
+        ModAttributes.register(modEventBus);
 
         // Config register
         modContainer.registerConfig(ModConfig.Type.SERVER, STCConfigServer.CONFIG_SPEC);

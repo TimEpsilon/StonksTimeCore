@@ -104,6 +104,14 @@ config="${mod_id}.mixins.json"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
+    modId="geckolib"
+    type="required"
+    versionRange="${geckolib_version_range}"
+    ordering="AFTER"
+    side="BOTH"
+
+
+[[dependencies.${mod_id}]]
     modId="numismatics"
     type="required"
     versionRange="${numismatics_version_range}"
@@ -111,8 +119,8 @@ config="${mod_id}.mixins.json"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
-    modId="sophisticatedcore"
+    modId="pehkui"
     type="required"
-    versionRange="${sophisticated_core_version_range}"
+    versionRange="${pehkui_version_range}"
     ordering="AFTER"
     side="BOTH"

@@ -17,6 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -28,6 +29,8 @@ import net.p3pp3rf1y.sophisticatedcore.init.ModCoreDataComponents;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+
+import static com.github.timepsilon.attributes.ModAttributes.SCT_FACTOR;
 
 public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implements MenuProvider {
 
@@ -112,12 +115,15 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
         }
     }
 
-    public void computeSCTAmount() {
+    public void computeSCTAmount(Player player) {
         if (!isActive()) {
             return;
         }
 
         List<ItemStack> itemStacks = inventory.getItemStacks();
+
+        AttributeInstance SCTAttribute = player.getAttribute(SCT_FACTOR);
+        float factor = (SCTAttribute == null) ? 1 : (float) SCTAttribute.getValue();
         float sctAmount = 0.0F;
         for (ItemStack itemStack : itemStacks) {
 
@@ -141,7 +147,7 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
 
             sctAmount += destroyAndConvert(itemStack);
         }
-        coinBag.add(Coin.SPUR, (int) sctAmount);
+        coinBag.add(Coin.SPUR, (int) (sctAmount *  factor));
         notifyUpdate();
     }
 
