@@ -54,6 +54,8 @@
   "sre.stonkstimecore.hot_potato.name" : "Hot Potato!",
   "sre.stonkstimecore.give_item.description" : "Get a random item!",
   "sre.stonkstimecore.give_item.name" : "Win Item",
+  "sre.stonkstimecore.oops_all_ones.description" : "Set every durability to 1!",
+  "sre.stonkstimecore.oops_all_ones.name" : "Oops All 1s!",
 
   "config.stonkstimecore.timer": "Timer",
   "config.stonkstimecore.minHP": "minHP",

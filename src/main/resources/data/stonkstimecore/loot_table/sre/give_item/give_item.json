@@ -35,8 +35,7 @@
               "function": "minecraft:set_enchantments",
               "enchantments": {
                 "minecraft:binding_curse": 1
-              },
-              "add": true
+              }
             }
           ]
         },
@@ -157,7 +156,6 @@
         {
           "type": "minecraft:item",
           "name": "irons_spellbooks:legendary_ink",
-          "expand" : true,
           "weight": 80,
           "quality": 1,
           "functions": [
@@ -172,9 +170,8 @@
           ]
         },
         {
-          "type": "minecraft:tag",
-          "name": "stonkstimecore:sre/give_item/irons_spellbooks_divine_soulshard",
-          "expand" : true,
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:divine_soulshard",
           "weight": 60,
           "quality": 2
         },
@@ -186,9 +183,8 @@
           "quality": 0
         },
         {
-          "type": "minecraft:tag",
-          "name": "stonkstimecore:sre/give_item/irons_spellbooks_eldritch_manuscript",
-          "expand" : true,
+          "type": "minecraft:item",
+          "name": "irons_spellbooks:eldritch_manuscript",
           "weight": 40,
           "quality": 2
         },

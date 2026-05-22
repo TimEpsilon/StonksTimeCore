@@ -4,6 +4,7 @@ import com.github.timepsilon.stonksevent.giveitem.SREGiveItem;
 import com.github.timepsilon.stonksevent.hotpotato.SREHotPotato;
 import com.github.timepsilon.stonksevent.lifelink.SRELifeLink;
 import com.github.timepsilon.stonksevent.losemoney.SRELoseMoney;
+import com.github.timepsilon.stonksevent.oopsallones.SREOopsAllOnes;
 import com.github.timepsilon.stonksevent.slowdown.SRESlowDown;
 import com.github.timepsilon.stonksevent.spawnmob.SRESpawnMob;
 import com.github.timepsilon.stonksevent.speedup.SRESpeedUp;
@@ -26,7 +27,8 @@ public enum StonksEventType implements StringRepresentable {
     SPAWN_MOB(new SRESpawnMob(5, false, "7CM", "spawn_mob")),
     LOSE_MONEY(new SRELoseMoney(5, false, "0CC", "lose_money")),
     TELEPORT(new SRETeleport(5, false, "MM0", "teleport")),
-    HOT_POTATO(new SREHotPotato(5, false, "CM7",  "hot_potato"))
+    HOT_POTATO(new SREHotPotato(5, false, "CM7",  "hot_potato")),
+    OOPS_ALL_ONES(new SREOopsAllOnes(5, false, "7MM", "oops_all_ones")),
     ;
 
     private final AbstractRandomStonksEvent instance;
