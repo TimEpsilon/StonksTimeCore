@@ -22,12 +22,14 @@ public class STCConfigServer {
     public final ModConfigSpec.DoubleValue SRE_LOSS_AMOUNT;
     public final ModConfigSpec.DoubleValue SRE_LOSS_ERROR;
     public final ModConfigSpec.DoubleValue SRE_TP_DISTANCE;
+    public final ModConfigSpec.DoubleValue SRE_TP_PROBABILITY;
     public final ModConfigSpec.IntValue SRE_LIFELINK_DURATION;
     public final ModConfigSpec.IntValue SRE_HOT_POTATO_DURATION;
     public final ModConfigSpec.DoubleValue SRE_SLOW_DOWN_FACTOR;
     public final ModConfigSpec.IntValue SRE_SLOW_DOWN_DURATION;
     public final ModConfigSpec.DoubleValue SRE_SPEED_UP_FACTOR;
     public final ModConfigSpec.IntValue SRE_SPEED_UP_DURATION;
+    public final ModConfigSpec.IntValue SRE_LUCKY_SCT_DURATION;
 
     static {
         Pair<STCConfigServer,ModConfigSpec> pair = new ModConfigSpec.Builder().configure(STCConfigServer::new);
@@ -97,6 +99,10 @@ public class STCConfigServer {
                 .comment("Radius in which the player will be teleported.")
                 .translation("config.stonkstimecore.sre.tpDistance")
                 .defineInRange("tpDistance", 1000f, 0, 10000);
+        SRE_TP_PROBABILITY = builder
+                .comment("Probability for the player to be teleported in front of a moving train.")
+                .translation("config.stonkstimecore.sre.tpProbability")
+                .defineInRange("tpProbability", 0.8f, 0, 1);
         SRE_LIFELINK_DURATION = builder
                 .comment("Duration (in seconds) for the lifelink effect.")
                 .translation("config.stonkstimecore.sre.lifelinkDuration")
@@ -121,6 +127,10 @@ public class STCConfigServer {
                 .comment("Duration (in seconds, absolute time) during which time will be sped up.")
                 .translation("config.stonkstimecore.sre.speedUpDuration")
                 .defineInRange("speedUpDuration", 60, 1, Integer.MAX_VALUE);
+        SRE_LUCKY_SCT_DURATION = builder
+                .comment("Duration (in seconds) during which SCT generation is multiplied.")
+                .translation("config.stonkstimecore.sre.luckySCTDuration")
+                .defineInRange("luckySCTDuration", 900, 1, Integer.MAX_VALUE);
 
     }
 

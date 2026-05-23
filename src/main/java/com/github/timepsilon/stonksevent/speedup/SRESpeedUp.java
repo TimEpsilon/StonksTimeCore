@@ -15,9 +15,6 @@ import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 public class SRESpeedUp extends AbstractRandomStonksEvent implements TickableSRE {
 
-    private static final float FACTOR = (float) STCConfigServer.CONFIG.SRE_SPEED_UP_FACTOR.getAsDouble();
-    private static final int DURATION = STCConfigServer.CONFIG.SRE_SPEED_UP_DURATION.getAsInt(); // in seconds
-
     public SRESpeedUp(float weight, boolean isPositive, String combination, String name) {
         super(weight, isPositive, combination, name);
     }
@@ -28,9 +25,9 @@ public class SRESpeedUp extends AbstractRandomStonksEvent implements TickableSRE
         if (server == null) return;
 
         ServerTickRateManager tickManager = server.tickRateManager();
-        tickManager.setTickRate(tickManager.tickrate()*FACTOR);
+        tickManager.setTickRate((float)(tickManager.tickrate()*getFactor()));
 
-        StonksEventManager.addEvent(this, DURATION);
+        StonksEventManager.addEvent(this, getDuration());
     }
 
     @Override
@@ -39,7 +36,7 @@ public class SRESpeedUp extends AbstractRandomStonksEvent implements TickableSRE
         if (server == null) return;
 
         ServerTickRateManager tickManager = server.tickRateManager();
-        tickManager.setTickRate(tickManager.tickrate()/FACTOR);
+        tickManager.setTickRate((float) (tickManager.tickrate()/getFactor()));
 
         StonksEventManager.removeEvent(this);
 
@@ -53,5 +50,13 @@ public class SRESpeedUp extends AbstractRandomStonksEvent implements TickableSRE
         for (ServerPlayer p : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
             CatnipServices.NETWORK.sendToClient(p, new SpeedUpSREPacket(true));
         }
+    }
+
+    public static double getFactor() {
+        return STCConfigServer.CONFIG.SRE_SPEED_UP_FACTOR.getAsDouble();
+    }
+
+    public static int getDuration() {
+        return STCConfigServer.CONFIG.SRE_SPEED_UP_DURATION.getAsInt();
     }
 }

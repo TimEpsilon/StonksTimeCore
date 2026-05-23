@@ -21,8 +21,6 @@ import static com.github.timepsilon.utils.TimeUtils.givePlayer;
 
 public class SREWinMoney extends AbstractRandomStonksEvent {
 
-    private final static double MEAN = STCConfigServer.CONFIG.SRE_GAIN_AMOUNT.get(); // in seconds
-    private final static double STD = STCConfigServer.CONFIG.SRE_GAIN_ERROR.get();
     private static final Random RANDOM = new Random();
 
     public SREWinMoney(float weight, boolean isPositive, String combination, String name) {
@@ -31,7 +29,7 @@ public class SREWinMoney extends AbstractRandomStonksEvent {
 
     @Override
     public void onStart(Player player) {
-        int amount = (int) Math.max(0,RANDOM.nextGaussian(MEAN, STD)); // We always gain > 0s
+        int amount = (int) Math.max(0,RANDOM.nextGaussian(getMean(), getStd())); // We always gain > 0s
         BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getUUID(), BankAccount.Type.PLAYER);
 
         PlayerOutData timer = PlayerOutData.getPlayerOutData(player.getServer());
@@ -58,5 +56,13 @@ public class SREWinMoney extends AbstractRandomStonksEvent {
     @Override
     public void onStop(Player player) {
 
+    }
+
+    public static double getMean() {
+        return STCConfigServer.CONFIG.SRE_GAIN_AMOUNT.get();
+    }
+
+    public static double getStd() {
+        return STCConfigServer.CONFIG.SRE_GAIN_ERROR.get();
     }
 }

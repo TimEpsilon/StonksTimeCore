@@ -14,8 +14,6 @@ import java.util.Random;
 
 public class SRELoseMoney extends AbstractRandomStonksEvent {
 
-    private final static double MEAN = STCConfigServer.CONFIG.SRE_LOSS_AMOUNT.get(); // in seconds
-    private final static double STD = STCConfigServer.CONFIG.SRE_LOSS_ERROR.get();
     private static final Random RANDOM = new Random();
 
     public SRELoseMoney(float weight, boolean isPositive, String combination, String name) {
@@ -27,7 +25,7 @@ public class SRELoseMoney extends AbstractRandomStonksEvent {
 
         BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getUUID(), BankAccount.Type.PLAYER);
         int amount = account.getBalance() > 600
-                    ? (int) Math.clamp(RANDOM.nextGaussian(MEAN, STD), 0, account.getBalance() - 600)
+                    ? (int) Math.clamp(RANDOM.nextGaussian(getMean(), getStd()), 0, account.getBalance() - 600)
                     : 0; // We always lose (playerBalance - 600s > x > 0s)
 
         PlayerOutData timer = PlayerOutData.getPlayerOutData(player.getServer());
@@ -52,5 +50,13 @@ public class SRELoseMoney extends AbstractRandomStonksEvent {
     @Override
     public void onStop(Player player) {
 
+    }
+
+    public static double getMean() {
+        return STCConfigServer.CONFIG.SRE_LOSS_AMOUNT.get();
+    }
+
+    public static double getStd() {
+        return STCConfigServer.CONFIG.SRE_LOSS_ERROR.get();
     }
 }

@@ -1,9 +1,11 @@
 package com.github.timepsilon.stonksevent;
 
+import com.github.timepsilon.stonksevent.boost.SREBoost;
 import com.github.timepsilon.stonksevent.giveitem.SREGiveItem;
 import com.github.timepsilon.stonksevent.hotpotato.SREHotPotato;
 import com.github.timepsilon.stonksevent.lifelink.SRELifeLink;
 import com.github.timepsilon.stonksevent.losemoney.SRELoseMoney;
+import com.github.timepsilon.stonksevent.luckysct.SRELuckySCT;
 import com.github.timepsilon.stonksevent.oopsallones.SREOopsAllOnes;
 import com.github.timepsilon.stonksevent.slowdown.SRESlowDown;
 import com.github.timepsilon.stonksevent.spawnmob.SRESpawnMob;
@@ -21,6 +23,7 @@ public enum StonksEventType implements StringRepresentable {
 
     WIN_MONEY(new SREWinMoney(5, true, "CCC", "win_money")),
     GIVE_ITEM(new SREGiveItem(5, true, "777",  "give_item")),
+    LUCKY_SCT(new SRELuckySCT(5, true, "MMM", "lucky_sct")),
     SLOW_DOWN(new SRESlowDown(5, false, "0MC", "slow_down")),
     SPEED_UP(new SRESpeedUp(5, false, "0M7", "speed_up")),
     LIFELINK(new SRELifeLink(5, false, "M77", "lifelink")),
@@ -29,6 +32,8 @@ public enum StonksEventType implements StringRepresentable {
     TELEPORT(new SRETeleport(5, false, "MM0", "teleport")),
     HOT_POTATO(new SREHotPotato(5, false, "CM7",  "hot_potato")),
     OOPS_ALL_ONES(new SREOopsAllOnes(5, false, "7MM", "oops_all_ones")),
+    BOOST(new SREBoost(5, false, "C0C", "boost")),
+
     ;
 
     private final AbstractRandomStonksEvent instance;

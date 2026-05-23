@@ -18,18 +18,15 @@ public class SRESlowDown extends AbstractRandomStonksEvent implements TickableSR
         super(weight, isPositive, combination, name);
     }
 
-    private static final float FACTOR = (float) STCConfigServer.CONFIG.SRE_SLOW_DOWN_FACTOR.getAsDouble();
-    private static final int DURATION = STCConfigServer.CONFIG.SRE_SLOW_DOWN_DURATION.get(); // in seconds
-
     @Override
     public void onStart(Player player) {
         MinecraftServer server = player.getServer();
         if (server == null) return;
 
         ServerTickRateManager tickManager = server.tickRateManager();
-        tickManager.setTickRate(tickManager.tickrate()*FACTOR);
+        tickManager.setTickRate((float)(tickManager.tickrate()*getFactor()));
 
-        StonksEventManager.addEvent(this, DURATION);
+        StonksEventManager.addEvent(this, getDuration());
     }
 
     @Override
@@ -38,7 +35,7 @@ public class SRESlowDown extends AbstractRandomStonksEvent implements TickableSR
         if (server == null) return;
 
         ServerTickRateManager tickManager = server.tickRateManager();
-        tickManager.setTickRate(tickManager.tickrate()/FACTOR);
+        tickManager.setTickRate((float)(tickManager.tickrate()/getFactor()));
 
         StonksEventManager.removeEvent(this);
 
@@ -54,4 +51,11 @@ public class SRESlowDown extends AbstractRandomStonksEvent implements TickableSR
         }
     }
 
+    public static double getFactor() {
+        return STCConfigServer.CONFIG.SRE_SLOW_DOWN_FACTOR.getAsDouble();
+    }
+
+    public static int getDuration() {
+        return STCConfigServer.CONFIG.SRE_SLOW_DOWN_DURATION.get();
+    }
 }

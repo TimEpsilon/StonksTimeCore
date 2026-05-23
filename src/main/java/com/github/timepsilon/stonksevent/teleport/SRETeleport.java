@@ -20,7 +20,6 @@ import java.util.Set;
 
 public class SRETeleport extends AbstractRandomStonksEvent {
 
-    private static final double MAX_DISTANCE = STCConfigServer.CONFIG.SRE_TP_DISTANCE.get();
 
     public SRETeleport(float weight, boolean isPositive, String combination, String name) {
         super(weight, isPositive, combination, name);
@@ -29,11 +28,13 @@ public class SRETeleport extends AbstractRandomStonksEvent {
     @Override
     public void onStart(Player player) {
 
-        if (player.level().random.nextFloat() < 0.8) {
+        // 90% of the time, this tries to teleport the player in front of a moving train
+        if (player.level().random.nextFloat() < getFunnyProbability()) {
             boolean didFind = funnyTeleport(player);
             if (didFind) return;
         }
 
+        // if it fails, just do a random teleport
         standardTeleport(player);
     }
 
@@ -48,10 +49,10 @@ public class SRETeleport extends AbstractRandomStonksEvent {
         double centerZ = player.getZ();
 
         RandomSource random = player.getRandom();
-        double minX = centerX - MAX_DISTANCE;
-        double maxX = centerX + MAX_DISTANCE;
-        double minZ = centerZ - MAX_DISTANCE;
-        double maxZ = centerZ + MAX_DISTANCE;
+        double minX = centerX - getMaxDistance();
+        double maxX = centerX + getMaxDistance();
+        double minZ = centerZ - getMaxDistance();
+        double maxZ = centerZ + getMaxDistance();
 
         double x = random.nextDouble() * (maxX - minX) + minX;
         double z = random.nextDouble() * (maxZ - minZ) + minZ;
@@ -119,5 +120,12 @@ public class SRETeleport extends AbstractRandomStonksEvent {
         return true;
     }
 
+    public static double getMaxDistance() {
+        return STCConfigServer.CONFIG.SRE_TP_DISTANCE.get();
+    }
+
+    public static double getFunnyProbability() {
+        return STCConfigServer.CONFIG.SRE_TP_PROBABILITY.get();
+    }
 
 }

@@ -56,6 +56,10 @@
   "sre.stonkstimecore.give_item.name" : "Win Item",
   "sre.stonkstimecore.oops_all_ones.description" : "Set every durability to 1!",
   "sre.stonkstimecore.oops_all_ones.name" : "Oops All 1s!",
+  "sre.stonkstimecore.lucky_sct.description" : "Gain 50% more money per conversion",
+  "sre.stonkstimecore.lucky_sct.name" : "Lucky SCT",
+  "sre.stonkstimecore.boost.description" : "Get thrown in the air.",
+  "sre.stonkstimecore.boost.name" : "Boost",
 
   "config.stonkstimecore.timer": "Timer",
   "config.stonkstimecore.minHP": "minHP",
@@ -79,6 +83,9 @@
   "config.stonkstimecore.sre.slowDownDuration" : "slowDownDuration",
   "config.stonkstimecore.sre.speedUpFactor" : "speedUpFactor",
   "config.stonkstimecore.sre.speedUpDuration" : "speedUpDuration",
+  "config.stonkstimecore.sre.tpDistance" : "tpDistance",
+  "config.stonkstimecore.sre.tpProbability" : "tpProbability",
+  "config.stonkstimecore.sre.luckySCTDuration" : "luckySCTDuration",
 
   "config.stonkstimecore.applyShader": "applyShader",
   "config.stonkstimecore.seeOutAsTranslucent": "seeOutAsTranslucent",
@@ -88,6 +95,7 @@
 
   "effect.stonkstimecore.lifelink" : "LifeLink",
   "effect.stonkstimecore.hot_potato" : "Hot Potato!",
+  "effect.stonkstimecore.lucky_sct" : "Lucky SCT",
 
   "death.attack.stonkstimecore.hot_potato" : "%s didn't pass the potato in time",
   "death.attack.stonkstimecore.lifelink" : "%s died from a lifelink!"
