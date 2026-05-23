@@ -5,6 +5,7 @@ import com.github.timepsilon.attributes.ModAttributes;
 import com.github.timepsilon.stonksevent.lifelink.LifeLinkEffect;
 import com.github.timepsilon.stonksevent.hotpotato.HotPotatoEffect;
 import com.github.timepsilon.stonksevent.luckysct.LuckySCTEffect;
+import com.github.timepsilon.stonksevent.timeless.TimelessEffect;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -52,6 +53,15 @@ public class ModMobEffects {
                             ResourceLocation.fromNamespaceAndPath(Core.MODID, "effect.lucky_sct"),
                             0.5,
                             AttributeModifier.Operation.ADD_VALUE
+                    )
+            );
+
+    public static final Holder<MobEffect> TIMELESS =
+            MOB_EFFECTS.register(
+                    "timeless", () -> new TimelessEffect(
+                            MobEffectCategory.HARMFUL,
+                            Color.decode("#859ba1").getRGB()
+
                     )
             );
 

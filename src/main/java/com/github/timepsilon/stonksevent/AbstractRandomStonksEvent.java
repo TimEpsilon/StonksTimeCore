@@ -3,6 +3,7 @@ package com.github.timepsilon.stonksevent;
 import com.github.timepsilon.Core;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -54,10 +55,12 @@ public abstract class AbstractRandomStonksEvent {
                                     player.getName(),
                                     Component.translatable(String.format("sre.stonkstimecore.%s.name",name)))
                             .withColor(ChatFormatting.GOLD.getColor())
-            );
-            p.sendSystemMessage(
-                    Component.translatable("sre.stonkstimecore.%s.description".formatted(name))
-                            .withColor(ChatFormatting.GRAY.getColor())
+                            .withStyle(style -> style
+                                    .withColor(ChatFormatting.GRAY.getColor())
+                                    .withHoverEvent(new HoverEvent(
+                                            HoverEvent.Action.SHOW_TEXT,
+                                            Component.translatable("sre.stonkstimecore.%s.description".formatted(name))
+                                    )))
             );
         }
         Core.LOGGER.info("{} started event {}", player.getName(), name);

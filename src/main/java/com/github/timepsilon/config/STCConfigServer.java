@@ -30,6 +30,8 @@ public class STCConfigServer {
     public final ModConfigSpec.DoubleValue SRE_SPEED_UP_FACTOR;
     public final ModConfigSpec.IntValue SRE_SPEED_UP_DURATION;
     public final ModConfigSpec.IntValue SRE_LUCKY_SCT_DURATION;
+    public final ModConfigSpec.IntValue SRE_TIMELESS_DURATION;
+    public final ModConfigSpec.IntValue SRE_TIMELESS_LOSS;
 
     static {
         Pair<STCConfigServer,ModConfigSpec> pair = new ModConfigSpec.Builder().configure(STCConfigServer::new);
@@ -131,6 +133,14 @@ public class STCConfigServer {
                 .comment("Duration (in seconds) during which SCT generation is multiplied.")
                 .translation("config.stonkstimecore.sre.luckySCTDuration")
                 .defineInRange("luckySCTDuration", 900, 1, Integer.MAX_VALUE);
+        SRE_TIMELESS_DURATION = builder
+                .comment("Duration (in seconds) during which incoming damage drops money.")
+                .translation("config.stonkstimecore.sre.timelessDuration")
+                .defineInRange("timelessDuration", 600, 1, Integer.MAX_VALUE);
+        SRE_TIMELESS_LOSS = builder
+                .comment("Amount of money to lose on incoming damage.")
+                .translation("config.stonkstimecore.sre.timelessLoss")
+                .defineInRange("timelessLoss", 60, 0, Integer.MAX_VALUE);
 
     }
 

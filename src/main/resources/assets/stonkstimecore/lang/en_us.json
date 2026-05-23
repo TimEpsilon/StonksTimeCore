@@ -60,6 +60,8 @@
   "sre.stonkstimecore.lucky_sct.name" : "Lucky SCT",
   "sre.stonkstimecore.boost.description" : "Get thrown in the air.",
   "sre.stonkstimecore.boost.name" : "Boost",
+  "sre.stonkstimecore.timeless.description" : "Lose money every time you get hit",
+  "sre.stonkstimecore.timeless.name" : "Timeless",
 
   "config.stonkstimecore.timer": "Timer",
   "config.stonkstimecore.minHP": "minHP",
@@ -86,6 +88,8 @@
   "config.stonkstimecore.sre.tpDistance" : "tpDistance",
   "config.stonkstimecore.sre.tpProbability" : "tpProbability",
   "config.stonkstimecore.sre.luckySCTDuration" : "luckySCTDuration",
+  "config.stonkstimecore.sre.timelessDuration" : "timelessDuration",
+  "config.stonkstimecore.sre.timelessLoss" : "timelessLoss",
 
   "config.stonkstimecore.applyShader": "applyShader",
   "config.stonkstimecore.seeOutAsTranslucent": "seeOutAsTranslucent",
