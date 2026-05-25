@@ -36,6 +36,7 @@ public class STCConfigServer {
     public final ModConfigSpec.DoubleValue SRE_GROWTH_SPURT_FACTOR;
     public final ModConfigSpec.IntValue SRE_SHRINKFLATION_DURATION;
     public final ModConfigSpec.DoubleValue SRE_SHRINKFLATION_FACTOR;
+    public final ModConfigSpec.IntValue SRE_MIRROR_DURATION;
 
     static {
         Pair<STCConfigServer,ModConfigSpec> pair = new ModConfigSpec.Builder().configure(STCConfigServer::new);
@@ -161,6 +162,10 @@ public class STCConfigServer {
                 .comment("Factor by which to divide the size of the entity, so at 2, a 2m tall player will be 1m at level 1, 0.5m at level 2, etc.")
                 .translation("config.stonkstimecore.sre.shrinkflationFactor")
                 .defineInRange("shrinkflationFactor",2f, 1, Integer.MAX_VALUE);
+        SRE_MIRROR_DURATION = builder
+                .comment("Duration (in seconds) during which the camera will be flipped.")
+                .translation("config.stonkstimecore.sre.mirrorDuration")
+                .defineInRange("mirrorDuration",180, 1, Integer.MAX_VALUE);
 
     }
 

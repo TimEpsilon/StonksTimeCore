@@ -6,6 +6,7 @@ import com.github.timepsilon.stonksevent.growthspurt.GrowthSpurtEffect;
 import com.github.timepsilon.stonksevent.lifelink.LifeLinkEffect;
 import com.github.timepsilon.stonksevent.hotpotato.HotPotatoEffect;
 import com.github.timepsilon.stonksevent.luckysct.LuckySCTEffect;
+import com.github.timepsilon.stonksevent.mirror.MirrorEffect;
 import com.github.timepsilon.stonksevent.shrinkflation.ShrinkflationEffect;
 import com.github.timepsilon.stonksevent.timeless.TimelessEffect;
 import net.minecraft.core.Holder;
@@ -79,6 +80,14 @@ public class ModMobEffects {
                     "shrinkflation", () -> new ShrinkflationEffect(
                             MobEffectCategory.NEUTRAL,
                             Color.decode("#6e6e6e").getRGB()
+                    )
+            );
+
+    public static final Holder<MobEffect> MIRROR =
+            MOB_EFFECTS.register(
+                    "mirror", () -> new MirrorEffect(
+                            MobEffectCategory.HARMFUL,
+                            Color.decode("#b6e3e0").getRGB()
                     )
             );
 

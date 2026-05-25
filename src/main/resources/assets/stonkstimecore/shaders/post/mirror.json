@@ -4,15 +4,9 @@
   ],
   "passes" : [
     {
-      "name" : "color_convolve",
+      "name" : "stonkstimecore:mirror",
       "intarget" : "minecraft:main",
-      "outtarget" : "swap",
-      "uniforms" : [
-        {
-          "name" : "Saturation",
-          "values" : [ 0.3 ]
-        }
-      ]
+      "outtarget" : "swap"
     },
     {
       "name" : "blit",

@@ -66,6 +66,8 @@
   "sre.stonkstimecore.growth_spurt.name" : "Growth Spurt",
   "sre.stonkstimecore.shrinkflation.description" : "Get smaller",
   "sre.stonkstimecore.shrinkflation.name" : "Shrinkflation",
+  "sre.stonkstimecore.mirror.description" : "Enter the mirror world",
+  "sre.stonkstimecore.mirror.name" : "Mirror",
 
   "config.stonkstimecore.timer": "Timer",
   "config.stonkstimecore.minHP": "minHP",
@@ -98,6 +100,7 @@
   "config.stonkstimecore.sre.growthSpurtFactor" : "growthSpurtFactor",
   "config.stonkstimecore.sre.shrinkflationDuration" : "shrinkflationDuration",
   "config.stonkstimecore.sre.shrinkflationFactor" : "shrinkflationFactor",
+  "config.stonkstimecore.sre.mirrorDuration" : "mirrorDuration",
 
   "config.stonkstimecore.applyShader": "applyShader",
   "config.stonkstimecore.seeOutAsTranslucent": "seeOutAsTranslucent",
@@ -111,6 +114,7 @@
   "effect.stonkstimecore.timeless" : "Timeless",
   "effect.stonkstimecore.growth_spurt" : "Growth Spurt",
   "effect.stonkstimecore.shrinkflation" : "Shrinkflation",
+  "effect.stonkstimecore.mirror" : "Mirror",
 
   "death.attack.stonkstimecore.hot_potato" : "%s didn't pass the potato in time",
   "death.attack.stonkstimecore.lifelink" : "%s died from a lifelink!"
