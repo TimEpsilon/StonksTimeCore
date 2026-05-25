@@ -124,3 +124,10 @@ config="${mod_id}.mixins.json"
     versionRange="${pehkui_version_range}"
     ordering="AFTER"
     side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="sophisticatedcore"
+    type="required"
+    versionRange="${sophisticated_core_version_range}"
+    ordering="AFTER"
+    side="BOTH"

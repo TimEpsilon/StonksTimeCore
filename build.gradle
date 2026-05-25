@@ -196,6 +196,9 @@ dependencies {
     // Pehkui
     implementation "com.github.Virtuoel:Pehkui:${pehkui_version}"
 
+    // Sophisticated core
+    implementation "curse.maven:sophisticated-core-618298:7841769"
+
     // Local
     implementation fileTree(dir: 'libs', include: '*.jar')
 }
@@ -220,7 +223,8 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             moonlight_version_range          : moonlight_version_range,
             numismatics_version_range        : numismatics_version_range,
             geckolib_version_range           : geckolib_version_range,
-            pehkui_version_range             : pehkui_version_range
+            pehkui_version_range             : pehkui_version_range,
+            sophisticated_core_version_range : sophisticated_core_version_range
     ]
     inputs.properties replaceProperties
     expand replaceProperties
