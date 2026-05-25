@@ -5,8 +5,17 @@
       "name" : "STONKSTIMECORE_LIFELINK_HEART",
       "constructor": "(Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;)V",
       "parameters" : {
-        "class" : "com/github/timepsilon/stonksevent/lifelink/ModHeartTypes",
+        "class" : "com/github/timepsilon/enumextensions/ModHeartTypes",
         "field" : "LIFELINK_HEART"
+      }
+    },
+    {
+      "enum" : "net/minecraft/client/gui/Gui$HeartType",
+      "name" : "STONKSTIMECORE_TIMELESS_HEART",
+      "constructor": "(Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;)V",
+      "parameters" : {
+        "class" : "com/github/timepsilon/enumextensions/ModHeartTypes",
+        "field" : "TIMELESS_HEART"
       }
     }
   ]

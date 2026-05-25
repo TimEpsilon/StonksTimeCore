@@ -1,4 +1,4 @@
-package com.github.timepsilon.stonksevent.lifelink;
+package com.github.timepsilon.enumextensions;
 
 import com.github.timepsilon.Core;
 import net.minecraft.client.gui.Gui;
@@ -17,6 +17,18 @@ public class ModHeartTypes {
             ResourceLocation.fromNamespaceAndPath(Core.MODID, "hud/heart/lifelink_full_blinking"),
             ResourceLocation.fromNamespaceAndPath(Core.MODID, "hud/heart/lifelink_half"),
             ResourceLocation.fromNamespaceAndPath(Core.MODID, "hud/heart/lifelink_half_blinking")
+    );
+
+    public static final EnumProxy<Gui.HeartType> TIMELESS_HEART = new EnumProxy<>(
+            Gui.HeartType.class,
+            ResourceLocation.fromNamespaceAndPath(Core.MODID, "hud/heart/timeless_full"),
+            ResourceLocation.fromNamespaceAndPath(Core.MODID, "hud/heart/timeless_full_blinking"),
+            ResourceLocation.fromNamespaceAndPath(Core.MODID, "hud/heart/timeless_half"),
+            ResourceLocation.fromNamespaceAndPath(Core.MODID, "hud/heart/timeless_half_blinking"),
+            ResourceLocation.fromNamespaceAndPath(Core.MODID, "hud/heart/timeless_full"),
+            ResourceLocation.fromNamespaceAndPath(Core.MODID, "hud/heart/timeless_full_blinking"),
+            ResourceLocation.fromNamespaceAndPath(Core.MODID, "hud/heart/timeless_half"),
+            ResourceLocation.fromNamespaceAndPath(Core.MODID, "hud/heart/timeless_half_blinking")
     );
 
 

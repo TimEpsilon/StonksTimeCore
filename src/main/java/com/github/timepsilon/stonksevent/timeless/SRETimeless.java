@@ -15,10 +15,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerHeartTypeEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static com.github.timepsilon.enumextensions.ModHeartTypes.LIFELINK_HEART;
+import static com.github.timepsilon.enumextensions.ModHeartTypes.TIMELESS_HEART;
 import static com.github.timepsilon.utils.TimeUtils.givenAmountOfCoins;
 
 @EventBusSubscriber(modid = Core.MODID)
@@ -77,5 +80,13 @@ public class SRETimeless extends AbstractRandomStonksEvent {
         if (event.getEffect() != ModMobEffects.TIMELESS) return;
         if (event.getCure() == null) return;
         event.setCanceled(true);
+    }
+
+    // Client only
+    @SubscribeEvent
+    public static void onRenderHealth(PlayerHeartTypeEvent event) {
+        if (event.getEntity().getActiveEffectsMap().containsKey(ModMobEffects.TIMELESS)) {
+            event.setType(TIMELESS_HEART.getValue());
+        }
     }
 }
