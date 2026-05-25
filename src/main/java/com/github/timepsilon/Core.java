@@ -11,6 +11,7 @@ import com.github.timepsilon.items.ModItems;
 import com.github.timepsilon.loot.ModLoot;
 import com.github.timepsilon.mobeffect.ModMobEffects;
 import com.github.timepsilon.packets.ModPackets;
+import com.github.timepsilon.pehkui.ModPehkuiModifier;
 import com.github.timepsilon.sounds.ModSounds;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.foundation.data.CreateRegistrate;
@@ -52,6 +53,7 @@ public class Core {
         ModMenu.register();
         ModPackets.register();
         ModBlockEntities.register();
+        ModPehkuiModifier.register();
         ModEntities.register(modEventBus);
         ModSounds.register(modEventBus);
         ModLoot.register(modEventBus);
