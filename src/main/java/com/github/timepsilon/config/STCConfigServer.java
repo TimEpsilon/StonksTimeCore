@@ -32,6 +32,8 @@ public class STCConfigServer {
     public final ModConfigSpec.IntValue SRE_LUCKY_SCT_DURATION;
     public final ModConfigSpec.IntValue SRE_TIMELESS_DURATION;
     public final ModConfigSpec.IntValue SRE_TIMELESS_LOSS;
+    public final ModConfigSpec.IntValue SRE_GROWTH_SPURT_DURATION;
+    public final ModConfigSpec.DoubleValue SRE_GROWTH_SPURT_FACTOR;
 
     static {
         Pair<STCConfigServer,ModConfigSpec> pair = new ModConfigSpec.Builder().configure(STCConfigServer::new);
@@ -141,6 +143,14 @@ public class STCConfigServer {
                 .comment("Amount of money to lose on incoming damage.")
                 .translation("config.stonkstimecore.sre.timelessLoss")
                 .defineInRange("timelessLoss", 60, 0, Integer.MAX_VALUE);
+        SRE_GROWTH_SPURT_DURATION = builder
+                .comment("Duration (in seconds) during which the entity will be taller.")
+                .translation("config.stonkstimecore.sre.growthSpurtDuration")
+                .defineInRange("growthSpurtDuration",120, 1, Integer.MAX_VALUE);
+        SRE_GROWTH_SPURT_FACTOR = builder
+                .comment("Factor by which to increment the size of the entity, so a 2m tall player will be 4m at level 1, 8m at level 2, etc.")
+                .translation("config.stonkstimecore.sre.growthSpurtFactor")
+                .defineInRange("growthSpurtFactor",1f, 0, Integer.MAX_VALUE);
 
     }
 

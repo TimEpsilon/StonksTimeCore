@@ -62,6 +62,8 @@
   "sre.stonkstimecore.boost.name" : "Boost",
   "sre.stonkstimecore.timeless.description" : "Lose money every time you get hit",
   "sre.stonkstimecore.timeless.name" : "Timeless",
+  "sre.stonkstimecore.growth_spurt.description" : "Get taller",
+  "sre.stonkstimecore.growth_spurt.name" : "Growth Spurt",
 
   "config.stonkstimecore.timer": "Timer",
   "config.stonkstimecore.minHP": "minHP",
@@ -90,6 +92,8 @@
   "config.stonkstimecore.sre.luckySCTDuration" : "luckySCTDuration",
   "config.stonkstimecore.sre.timelessDuration" : "timelessDuration",
   "config.stonkstimecore.sre.timelessLoss" : "timelessLoss",
+  "config.stonkstimecore.sre.growthSpurtDuration" : "growthSpurtDuration",
+  "config.stonkstimecore.sre.growthSpurtFactor" : "growthSpurtFactor",
 
   "config.stonkstimecore.applyShader": "applyShader",
   "config.stonkstimecore.seeOutAsTranslucent": "seeOutAsTranslucent",
@@ -100,6 +104,7 @@
   "effect.stonkstimecore.lifelink" : "LifeLink",
   "effect.stonkstimecore.hot_potato" : "Hot Potato!",
   "effect.stonkstimecore.lucky_sct" : "Lucky SCT",
+  "effect.stonkstimecore.timeless" : "Timeless",
 
   "death.attack.stonkstimecore.hot_potato" : "%s didn't pass the potato in time",
   "death.attack.stonkstimecore.lifelink" : "%s died from a lifelink!"

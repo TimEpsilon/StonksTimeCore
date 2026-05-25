@@ -2,6 +2,7 @@ package com.github.timepsilon.stonksevent;
 
 import com.github.timepsilon.stonksevent.boost.SREBoost;
 import com.github.timepsilon.stonksevent.giveitem.SREGiveItem;
+import com.github.timepsilon.stonksevent.growthspurt.SREGrowthSpurt;
 import com.github.timepsilon.stonksevent.hotpotato.SREHotPotato;
 import com.github.timepsilon.stonksevent.lifelink.SRELifeLink;
 import com.github.timepsilon.stonksevent.losemoney.SRELoseMoney;
@@ -11,6 +12,7 @@ import com.github.timepsilon.stonksevent.slowdown.SRESlowDown;
 import com.github.timepsilon.stonksevent.spawnmob.SRESpawnMob;
 import com.github.timepsilon.stonksevent.speedup.SRESpeedUp;
 import com.github.timepsilon.stonksevent.teleport.SRETeleport;
+import com.github.timepsilon.stonksevent.timeless.SRETimeless;
 import com.github.timepsilon.stonksevent.winmoney.SREWinMoney;
 import com.github.timepsilon.utils.Scheduler;
 import net.minecraft.util.StringRepresentable;
@@ -33,7 +35,8 @@ public enum StonksEventType implements StringRepresentable {
     HOT_POTATO(new SREHotPotato(5, false, "CM7",  "hot_potato")),
     OOPS_ALL_ONES(new SREOopsAllOnes(5, false, "7MM", "oops_all_ones")),
     BOOST(new SREBoost(5, false, "C0C", "boost")),
-
+    TIMELESS(new SRETimeless(5, false, "077", "timeless")),
+    GROWTH_SPURT(new SREGrowthSpurt(5, false, "CC7", "growth_spurt")),
     ;
 
     private final AbstractRandomStonksEvent instance;

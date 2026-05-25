@@ -2,6 +2,7 @@ package com.github.timepsilon.mobeffect;
 
 import com.github.timepsilon.Core;
 import com.github.timepsilon.attributes.ModAttributes;
+import com.github.timepsilon.stonksevent.growthspurt.GrowthSpurtEffect;
 import com.github.timepsilon.stonksevent.lifelink.LifeLinkEffect;
 import com.github.timepsilon.stonksevent.hotpotato.HotPotatoEffect;
 import com.github.timepsilon.stonksevent.luckysct.LuckySCTEffect;
@@ -61,7 +62,14 @@ public class ModMobEffects {
                     "timeless", () -> new TimelessEffect(
                             MobEffectCategory.HARMFUL,
                             Color.decode("#859ba1").getRGB()
+                    )
+            );
 
+    public static final Holder<MobEffect> GROWTH_SPURT =
+            MOB_EFFECTS.register(
+                    "growth_spurt", () -> new GrowthSpurtEffect(
+                            MobEffectCategory.NEUTRAL,
+                            Color.decode("#d4d4d4").getRGB()
                     )
             );
 
