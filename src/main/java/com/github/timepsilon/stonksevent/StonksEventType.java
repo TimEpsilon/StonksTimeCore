@@ -8,6 +8,7 @@ import com.github.timepsilon.stonksevent.lifelink.SRELifeLink;
 import com.github.timepsilon.stonksevent.losemoney.SRELoseMoney;
 import com.github.timepsilon.stonksevent.luckysct.SRELuckySCT;
 import com.github.timepsilon.stonksevent.oopsallones.SREOopsAllOnes;
+import com.github.timepsilon.stonksevent.shrinkflation.SREShrinkflation;
 import com.github.timepsilon.stonksevent.slowdown.SRESlowDown;
 import com.github.timepsilon.stonksevent.spawnmob.SRESpawnMob;
 import com.github.timepsilon.stonksevent.speedup.SRESpeedUp;
@@ -36,7 +37,8 @@ public enum StonksEventType implements StringRepresentable {
     OOPS_ALL_ONES(new SREOopsAllOnes(5, false, "7MM", "oops_all_ones")),
     BOOST(new SREBoost(5, false, "C0C", "boost")),
     TIMELESS(new SRETimeless(5, false, "077", "timeless")),
-    GROWTH_SPURT(new SREGrowthSpurt(5, false, "CC7", "growth_spurt")),
+    GROWTH_SPURT(new SREGrowthSpurt(5, false, "7CC", "growth_spurt")),
+    SHRINKFLATION(new SREShrinkflation(5, false, "MCC", "shrinkflation")),
     ;
 
     private final AbstractRandomStonksEvent instance;

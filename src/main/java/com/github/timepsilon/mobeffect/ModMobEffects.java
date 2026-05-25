@@ -6,6 +6,7 @@ import com.github.timepsilon.stonksevent.growthspurt.GrowthSpurtEffect;
 import com.github.timepsilon.stonksevent.lifelink.LifeLinkEffect;
 import com.github.timepsilon.stonksevent.hotpotato.HotPotatoEffect;
 import com.github.timepsilon.stonksevent.luckysct.LuckySCTEffect;
+import com.github.timepsilon.stonksevent.shrinkflation.ShrinkflationEffect;
 import com.github.timepsilon.stonksevent.timeless.TimelessEffect;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -70,6 +71,14 @@ public class ModMobEffects {
                     "growth_spurt", () -> new GrowthSpurtEffect(
                             MobEffectCategory.NEUTRAL,
                             Color.decode("#d4d4d4").getRGB()
+                    )
+            );
+
+    public static final Holder<MobEffect> SHRINKFLATION =
+            MOB_EFFECTS.register(
+                    "shrinkflation", () -> new ShrinkflationEffect(
+                            MobEffectCategory.NEUTRAL,
+                            Color.decode("#6e6e6e").getRGB()
                     )
             );
 

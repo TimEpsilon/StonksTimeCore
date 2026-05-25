@@ -14,5 +14,11 @@ public class ModPehkuiModifier {
             new GrowthSpurtScaleModifier()
     );
 
+    public static final ScaleModifier SHRINKFLATION = ScaleRegistries.register(
+            ScaleRegistries.SCALE_MODIFIERS,
+            ResourceLocation.fromNamespaceAndPath(Core.MODID, "shrinkflation"),
+            new ShrinkflationScaleModifier()
+    );
+
     public static void register() {};
 }
