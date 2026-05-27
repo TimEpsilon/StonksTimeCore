@@ -166,7 +166,7 @@ public class STCConfigServer {
         SRE_SHRINKFLATION_FACTOR = builder
                 .comment("Factor by which to divide the size of the entity, so at 2, a 2m tall player will be 1m at level 1, 0.5m at level 2, etc.")
                 .translation("config.stonkstimecore.sre.shrinkflationFactor")
-                .defineInRange("shrinkflationFactor",2f, 1, Integer.MAX_VALUE);
+                .defineInRange("shrinkflationFactor",1.5f, 1, Integer.MAX_VALUE);
         SRE_MIRROR_DURATION = builder
                 .comment("Duration (in seconds) during which the camera will be flipped.")
                 .translation("config.stonkstimecore.sre.mirrorDuration")

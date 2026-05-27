@@ -11,6 +11,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import org.jetbrains.annotations.Nullable;
 
+import static com.github.timepsilon.utils.TimeUtils.stackEffect;
+
 @EventBusSubscriber(modid = Core.MODID)
 public class SREMirror extends AbstractRandomStonksEvent {
 
@@ -20,7 +22,7 @@ public class SREMirror extends AbstractRandomStonksEvent {
 
     @Override
     public void onStart(Player player) {
-        player.addEffect(new MobEffectInstance(
+        stackEffect(player, new MobEffectInstance(
                 ModMobEffects.MIRROR,
                 STCConfigServer.CONFIG.SRE_MIRROR_DURATION.getAsInt()*20
         ));

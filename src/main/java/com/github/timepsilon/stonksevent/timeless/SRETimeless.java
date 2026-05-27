@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerHeartTypeEvent;
@@ -23,6 +24,7 @@ import java.util.List;
 import static com.github.timepsilon.enumextensions.ModHeartTypes.LIFELINK_HEART;
 import static com.github.timepsilon.enumextensions.ModHeartTypes.TIMELESS_HEART;
 import static com.github.timepsilon.utils.TimeUtils.givenAmountOfCoins;
+import static com.github.timepsilon.utils.TimeUtils.stackEffect;
 
 @EventBusSubscriber(modid = Core.MODID)
 public class SRETimeless extends AbstractRandomStonksEvent {
@@ -33,11 +35,11 @@ public class SRETimeless extends AbstractRandomStonksEvent {
 
     @Override
     public void onStart(Player player) {
-        player.addEffect(new MobEffectInstance(
+        stackEffect(player, new MobEffectInstance(
                 ModMobEffects.TIMELESS,
-                STCConfigServer.CONFIG.SRE_TIMELESS_DURATION.getAsInt(),
+                STCConfigServer.CONFIG.SRE_TIMELESS_DURATION.getAsInt() * 20,
                 0
-        ));
+        ), true);
     }
 
     @Override
@@ -46,16 +48,16 @@ public class SRETimeless extends AbstractRandomStonksEvent {
     }
 
     @SubscribeEvent
-    public static void onHit(LivingIncomingDamageEvent event) {
+    public static void onHit(LivingDamageEvent.Post event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (!player.hasEffect(ModMobEffects.TIMELESS)) return;
-        // When a timeless player is hit, lose money
 
-        int maxAmountToLose = STCConfigServer.CONFIG.SRE_TIMELESS_LOSS.getAsInt() * (player.getEffect(ModMobEffects.TIMELESS).getAmplifier() +1);
+        // When a timeless player is hit, lose money
+        int maxAmountToLose = (int) (STCConfigServer.CONFIG.SRE_TIMELESS_LOSS.getAsInt() * (player.getEffect(ModMobEffects.TIMELESS).getAmplifier() +1) * event.getNewDamage());
         BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getUUID(), BankAccount.Type.PLAYER);
         maxAmountToLose = Math.min(maxAmountToLose, account.getBalance());
 
-        // Lose at most 60s
+        // Lose at most 60s per lost hp
         account.deduct(maxAmountToLose);
 
         int lootingLevel = 0;
@@ -67,7 +69,7 @@ public class SRETimeless extends AbstractRandomStonksEvent {
 
         // Drop some money like Sonic
         int amountToDrop = (int) (maxAmountToLose * Math.clamp((lootingLevel+1)/4f, 0, 1));
-        List<ItemStack> items = givenAmountOfCoins(amountToDrop,20);
+        List<ItemStack> items = givenAmountOfCoins(amountToDrop,(int)(20 * event.getNewDamage()));
         for (ItemStack item : items) {
             player.drop(item, true, false);
         }

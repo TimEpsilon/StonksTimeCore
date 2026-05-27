@@ -13,6 +13,8 @@ import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import org.jetbrains.annotations.Nullable;
 import virtuoel.pehkui.api.ScaleTypes;
 
+import static com.github.timepsilon.utils.TimeUtils.stackEffect;
+
 @EventBusSubscriber(modid = Core.MODID)
 public class SREGrowthSpurt extends AbstractRandomStonksEvent {
 
@@ -22,10 +24,11 @@ public class SREGrowthSpurt extends AbstractRandomStonksEvent {
 
     @Override
     public void onStart(Player player) {
-        player.addEffect(new MobEffectInstance(
+        stackEffect(player, new MobEffectInstance(
                 ModMobEffects.GROWTH_SPURT,
                 STCConfigServer.CONFIG.SRE_GROWTH_SPURT_DURATION.getAsInt() * 20
-        ));
+        ), true);
+        ScaleTypes.BASE.getScaleData(player).onUpdate();
     }
 
     @Override

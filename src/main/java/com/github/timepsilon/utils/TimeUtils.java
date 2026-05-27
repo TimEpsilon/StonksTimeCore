@@ -8,6 +8,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -155,6 +156,25 @@ public class TimeUtils {
                 itementity.setTarget(player.getUUID());
             }
         }
+    }
+
+    public static void stackEffect(Player player, MobEffectInstance instance) {stackEffect(player,instance,false);}
+
+    public static void stackEffect(Player player, MobEffectInstance effect, boolean shouldStackAmplifier) {
+        int duration = effect.getDuration();
+        int amplifier = effect.getAmplifier();
+        if (player.hasEffect(effect.getEffect())) {
+            duration += player.getEffect(effect.getEffect()).getDuration();
+            amplifier += player.getEffect(effect.getEffect()).getAmplifier() + 1;
+        }
+        player.addEffect(new MobEffectInstance(
+                effect.getEffect(),
+                duration,
+                shouldStackAmplifier ? amplifier : effect.getAmplifier(),
+                effect.isAmbient(),
+                effect.isVisible(),
+                effect.showIcon()
+        ));
     }
 
 }

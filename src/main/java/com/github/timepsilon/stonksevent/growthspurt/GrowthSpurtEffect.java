@@ -25,8 +25,8 @@ public class GrowthSpurtEffect extends MobEffect {
     }
 
     @Override
-    public void onEffectStarted(LivingEntity livingEntity, int amplifier) {
-        super.onEffectStarted(livingEntity, amplifier);
+    public void onEffectAdded(LivingEntity livingEntity, int amplifier) {
+        super.onEffectAdded(livingEntity, amplifier);
         ScaleTypes.BASE.getScaleData(livingEntity).getBaseValueModifiers().add(ModPehkuiModifier.GROWTH_SPURT);
     }
 }

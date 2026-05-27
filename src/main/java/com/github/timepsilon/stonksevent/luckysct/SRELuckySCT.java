@@ -7,6 +7,8 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
+import static com.github.timepsilon.utils.TimeUtils.stackEffect;
+
 public class SRELuckySCT extends AbstractRandomStonksEvent {
 
     public SRELuckySCT(float weight, boolean isPositive, String combination, String name) {
@@ -15,7 +17,7 @@ public class SRELuckySCT extends AbstractRandomStonksEvent {
 
     @Override
     public void onStart(Player player) {
-        player.addEffect(new MobEffectInstance(
+        stackEffect(player, new MobEffectInstance(
                 ModMobEffects.LUCKY_SCT,
                 20* STCConfigServer.CONFIG.SRE_LUCKY_SCT_DURATION.get(),
                 0,

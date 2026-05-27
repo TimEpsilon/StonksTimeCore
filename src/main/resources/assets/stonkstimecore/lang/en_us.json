@@ -4,7 +4,7 @@
   "item.stonkstimecore.golden_ticket.tooltip.summary" : "Can be used on a _Slot Machine_ to get some goodies... or not.",
 
   "block.stonkstimecore.slot_machine" : "Slot Machine",
-  "block.stonkstimecore.tooltip.summary" : "Use a _Golden Ticket_ and try to win a price!",
+  "block.stonkstimecore.slot_machine.tooltip.summary" : "Use a _Golden Ticket_ and try to win a price!",
   "block.stonkstimecore.stonks_temporal_chronoscope" : "Stonks Temporal Chronoscope",
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.behaviour1" : "Starts spinning.",
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.condition1" : "When Powered by Kinetics ≥ 30 RPM",
