@@ -1,14 +1,20 @@
 {
-  "item.stonkstimecore.time_gear": "Time Gear",
+  "item.stonkstimecore.time_gear" : "Time Gear",
+  "item.stonkstimecore.golden_ticket" : "Golden Ticket",
+  "item.stonkstimecore.golden_ticket.tooltip.summary" : "Can be used on a _Slot Machine_ to get some goodies... or not.",
 
-  "block.stonkstimecore.slot_machine": "Slot Machine",
-
+  "block.stonkstimecore.slot_machine" : "Slot Machine",
+  "block.stonkstimecore.tooltip.summary" : "Use a _Golden Ticket_ and try to win a price!",
   "block.stonkstimecore.stonks_temporal_chronoscope" : "Stonks Temporal Chronoscope",
-  "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.behaviour1": "Starts spinning.",
-  "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.condition1": "When Powered by Kinetics ≥ 30 RPM",
-  "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.summary": "Converts any item into its corresponding _SCT_ amount",
+  "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.behaviour1" : "Starts spinning.",
+  "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.condition1" : "When Powered by Kinetics ≥ 30 RPM",
+  "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.summary" : "Converts any item into its corresponding _SCT_ amount",
 
   "sounds.stonkstimecore.time_out" : "Time Out Bell",
+  "sounds.stonkstimecore.slot_machine.losing" : "Slot Machine Losing",
+  "sounds.stonkstimecore.slot_machine.winning" : "Slot Machine Winning",
+  "sounds.stonkstimecore.slot_machine.pulling" : "Slot Machine Pulling",
+  "sounds.stonkstimecore.slot_machine.spinning" : "Slot Machine Spinning",
 
   "error.stonkstimecore.banking_while_out" : "Bank is unavailable to out players",
 
@@ -79,6 +85,7 @@
   "config.stonkstimecore.dangerTime": "dangerTime",
   "config.stonkstimecore.dtForLose1HP": "dtForLose1HP",
   "config.stonkstimecore.deathLoss" : "deathLoss",
+  "config.stonkstimecore.goldenTicketProbability" : "goldenTicketProbability",
 
   "config.stonkstimecore.sre" : "Stonks Random Events",
   "config.stonkstimecore.sre.gainAmount" : "gainAmount",

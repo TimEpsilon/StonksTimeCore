@@ -40,7 +40,7 @@
         },
         "score": {
             "loop": "hold_on_last_frame",
-            "animation_length": 5,
+            "animation_length": 3.38,
             "bones": {
                 "wheel1": {
                     "rotation": {
@@ -51,13 +51,13 @@
                                 0
                             ]
                         },
-                        "5.0": {
+                        "3.38": {
                             "vector": [
                                 "-10*360+query.stc_wheel1",
                                 0,
                                 0
                             ],
-                            "easing": "easeOutCubic"
+                            "easing": "linear"
                         }
                     }
                 },
@@ -70,13 +70,13 @@
                                 0
                             ]
                         },
-                        "4.25": {
+                        "2.96": {
                             "vector": [
                                 "-8*360+query.stc_wheel2",
                                 0,
                                 0
                             ],
-                            "easing": "easeOutCubic"
+                            "easing": "linear"
                         }
                     }
                 },
@@ -89,13 +89,13 @@
                                 0
                             ]
                         },
-                        "3.5": {
+                        "2.63": {
                             "vector": [
                                 "-4*360+query.stc_wheel3",
                                 0,
                                 0
                             ],
-                            "easing": "easeOutCubic"
+                            "easing": "linear"
                         }
                     }
                 }

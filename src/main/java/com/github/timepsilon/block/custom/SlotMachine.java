@@ -2,10 +2,13 @@ package com.github.timepsilon.block.custom;
 
 import com.github.timepsilon.block.entity.ModBlockEntities;
 import com.github.timepsilon.block.entity.server.SlotMachineEntity;
+import com.github.timepsilon.items.ModItems;
 import com.github.timepsilon.stonksevent.StonksEventType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -59,16 +62,19 @@ public class SlotMachine extends Block implements EntityBlock {
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (level.isClientSide) return InteractionResult.SUCCESS;
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (level.isClientSide) return ItemInteractionResult.SUCCESS;
+        if (!(level.getBlockEntity(getMainPos(state, pos)) instanceof SlotMachineEntity be)) return ItemInteractionResult.FAIL;
+        if (be.isActive()) return ItemInteractionResult.FAIL;
 
-        StonksEventType event = StonksEventType.startRandomEvent(player,5);
+        if (stack.is(ModItems.GOLDEN_TICKET)) {
+            StonksEventType event = StonksEventType.startRandomEvent(player,4f, be);
+            if (event != null) be.interact(event);
 
-        BlockEntity be = level.getBlockEntity(getMainPos(state, pos));
-        if (be instanceof SlotMachineEntity e) {
-            e.interact(event);
+            if (!player.isCreative()) stack.shrink(1);
+            return ItemInteractionResult.CONSUME;
         }
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override

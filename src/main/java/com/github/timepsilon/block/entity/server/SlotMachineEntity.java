@@ -1,5 +1,6 @@
 package com.github.timepsilon.block.entity.server;
 
+import com.github.timepsilon.sounds.ModSounds;
 import com.github.timepsilon.stonksevent.AbstractRandomStonksEvent;
 import com.github.timepsilon.stonksevent.StonksEventType;
 import net.minecraft.core.BlockPos;
@@ -8,6 +9,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -33,11 +38,25 @@ public class SlotMachineEntity extends BlockEntity implements GeoBlockEntity {
     private final static String ANGLE_WHEEL2 = "angle_wheel2";
     private final static String ANGLE_WHEEL3 = "angle_wheel3";
 
+    private boolean isActive = false;
     private float angleWheel1, angleWheel2, angleWheel3;
 
     public SlotMachineEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
+    }
+
+    private static void onSpin(Level level, BlockPos pos) {
+        level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), ModSounds.SLOT_MACHINE_PULLING.get(), SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F);
+        level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), ModSounds.SLOT_MACHINE_SPINNING.get(), SoundSource.BLOCKS, 0.5F, 1F);
+    }
+
+    private static void onScore(Level level, BlockPos pos, boolean isPositive) {
+        if (isPositive) {
+            level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), ModSounds.SLOT_MACHINE_WINNING.get(), SoundSource.BLOCKS, 0.5F, 1F);
+        } else {
+            level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), ModSounds.SLOT_MACHINE_LOSING.get(), SoundSource.BLOCKS, 0.5F, 1F);
+        }
     }
 
     public void interact(StonksEventType event) {
@@ -52,11 +71,23 @@ public class SlotMachineEntity extends BlockEntity implements GeoBlockEntity {
 
         triggerAnim("spinController","spinning");
         triggerAnim("scoreController","score");
+
+        onSpin(this.getLevel(),getBlockPos());
+        isActive = true;
     }
 
     public float getAngleWheel1() {return angleWheel1;}
+
     public float getAngleWheel2() {return angleWheel2;}
+
     public float getAngleWheel3() {return angleWheel3;}
+
+    public boolean isActive() {return isActive;}
+
+    public void score(boolean isPositive) {
+        isActive = false;
+        onScore(this.getLevel(),this.getBlockPos(),isPositive);
+    }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controller) {

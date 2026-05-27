@@ -4,5 +4,29 @@
     "sounds" : [
       "stonkstimecore:time_out"
     ]
+  },
+  "slot_machine.losing" : {
+    "subtitle" : "sounds.stonkstimecore.slot_machine.losing",
+    "sounds" : [
+      "stonkstimecore:slot_machine/losing"
+    ]
+  },
+  "slot_machine.winning" : {
+    "subtitle" : "sounds.stonkstimecore.slot_machine.winning",
+    "sounds" : [
+      "stonkstimecore:slot_machine/winning"
+    ]
+  },
+  "slot_machine.spinning" : {
+    "subtitle" : "sounds.stonkstimecore.slot_machine.spinning",
+    "sounds" : [
+      "stonkstimecore:slot_machine/spinning"
+    ]
+  },
+  "slot_machine.pulling" : {
+    "subtitle" : "sounds.stonkstimecore.slot_machine.pulling",
+    "sounds" : [
+      "stonkstimecore:slot_machine/pulling"
+    ]
   }
 }

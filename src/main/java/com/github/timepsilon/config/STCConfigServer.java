@@ -37,6 +37,7 @@ public class STCConfigServer {
     public final ModConfigSpec.IntValue SRE_SHRINKFLATION_DURATION;
     public final ModConfigSpec.DoubleValue SRE_SHRINKFLATION_FACTOR;
     public final ModConfigSpec.IntValue SRE_MIRROR_DURATION;
+    public final ModConfigSpec.DoubleValue SCT_GOLDEN_TICKET_PROBABILITY;
 
     static {
         Pair<STCConfigServer,ModConfigSpec> pair = new ModConfigSpec.Builder().configure(STCConfigServer::new);
@@ -82,6 +83,10 @@ public class STCConfigServer {
                 .comment("Fraction of money that should be lost on player death.")
                 .translation("config.stonkstimecore.deathLoss")
                 .defineInRange("deathLoss",0.1, 0, 1);
+        SCT_GOLDEN_TICKET_PROBABILITY = builder
+                .comment("Probability for a single item to turn into a golden ticket upon deconstruction.")
+                .translation("config.stonkstimecore.goldenTicketProbability")
+                .defineInRange("goldenTicketProbability", 1/5000f, 0, 1);
 
         builder.pop();
         builder.translation("config.stonkstimecore.sre").push("SRE");

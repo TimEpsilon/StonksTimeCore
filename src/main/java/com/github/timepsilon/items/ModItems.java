@@ -7,6 +7,7 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 import dev.ithundxr.createnumismatics.registry.NumismaticsCreativeModeTabs;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 
 public class ModItems {
@@ -23,7 +24,12 @@ public class ModItems {
             .tab(NumismaticsCreativeModeTabs.getBaseTabKey())
             .register();
 
-    public static void register() {
-    }
+    public static final ItemEntry<Item> GOLDEN_TICKET = Core.REGISTRATE.item("golden_ticket", Item::new)
+            .properties(p -> p.stacksTo(64))
+            .properties(p -> p.rarity(Rarity.EPIC))
+            .tab(NumismaticsCreativeModeTabs.getBaseTabKey())
+            .register();
+
+    public static void register() {}
 
 }

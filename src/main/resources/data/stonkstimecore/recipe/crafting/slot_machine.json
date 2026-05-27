@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B" : {
+      "item" : "create:brass_sheet"
+    },
+    "E" : {
+      "item" : "create:electron_tube"
+    },
+    "M" : {
+      "item" : "create:precision_mechanism"
+    },
+    "F" : {
+      "item" : "create:flywheel"
+    },
+    "T" : {
+      "item" : "stonkstimecore:time_gear"
+    }
+  },
+  "pattern": [
+    "BBE",
+    "BMF",
+    "BTB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "stonkstimecore:slot_machine"
+  }
+}

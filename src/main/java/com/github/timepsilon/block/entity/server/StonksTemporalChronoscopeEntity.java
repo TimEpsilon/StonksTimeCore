@@ -2,8 +2,10 @@ package com.github.timepsilon.block.entity.server;
 
 import com.github.timepsilon.client.gui.StonksTemporalChronoscopeMenu;
 import com.github.timepsilon.client.gui.inventory.StonksTemporalChronoscopeInventory;
+import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.datamaps.DataMaps;
 import com.github.timepsilon.datamaps.SCTMap;
+import com.github.timepsilon.items.ModItems;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.sound.SoundScapes;
@@ -21,6 +23,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -28,7 +31,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.p3pp3rf1y.sophisticatedcore.init.ModCoreDataComponents;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.github.timepsilon.attributes.ModAttributes.SCT_FACTOR;
 
@@ -38,6 +43,7 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
     public MergingCoinBag coinBag;
 
     public static final int MIN_SPEED = 30;
+    private static final List<Item> COIN_LIST = Arrays.stream(Coin.values()).map(coin -> coin.asStack().getItem()).toList();
 
     public StonksTemporalChronoscopeEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
@@ -125,6 +131,8 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
         AttributeInstance SCTAttribute = player.getAttribute(SCT_FACTOR);
         float factor = (SCTAttribute == null) ? 1 : (float) SCTAttribute.getValue();
         float sctAmount = 0.0F;
+        int totalQuantity = 0;
+
         for (ItemStack itemStack : itemStacks) {
 
             // Handles vanilla containers
@@ -132,6 +140,7 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
                 boolean isEmpty = true;
                 for (ItemStack subItem : itemStack.getComponents().get(DataComponents.CONTAINER).nonEmptyItems()) {
                     sctAmount += destroyAndConvert(subItem);
+                    totalQuantity += subItem.getCount();
                     isEmpty = false;
                 }
                 if (!isEmpty) continue;
@@ -145,9 +154,27 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
             // Prevent named items of being converted
             if (!itemStack.getItem().getName(itemStack).equals(itemStack.getHoverName())) continue;
 
+            // Prevent money itself from being converted
+            if (COIN_LIST.contains(itemStack.getItem())) continue;
+
+            // Prevent golden ticket conversion
+            if (itemStack.getItem() == ModItems.GOLDEN_TICKET.get()) continue;
+
+            // Convert to money
+            totalQuantity += itemStack.getCount();
             sctAmount += destroyAndConvert(itemStack);
         }
         coinBag.add(Coin.SPUR, (int) (sctAmount *  factor));
+
+        // Generate golden tickets
+        while (totalQuantity > 0) {
+            if (player.getRandom().nextFloat() < STCConfigServer.CONFIG.SCT_GOLDEN_TICKET_PROBABILITY.get()) {
+                inventory.insertItem((int)(Math.random() * inventory.getSlots()), new ItemStack(ModItems.GOLDEN_TICKET.get(), 1), false);
+            }
+            totalQuantity -= 1;
+        }
+
+
         notifyUpdate();
     }
 
