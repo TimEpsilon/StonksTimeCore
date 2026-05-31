@@ -5,8 +5,12 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
+import net.minecraft.world.level.Level;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class TimerOverlay implements LayeredDraw.Layer {
     public static final TimerOverlay instance = new TimerOverlay();
@@ -16,9 +20,13 @@ public class TimerOverlay implements LayeredDraw.Layer {
     private boolean isOut;
     private static final float textX = 0.9f;
     private static final float textY = 0.9f;
+    private static final float deltaY = -0.1f;
+    private static final int infoTime = 20*3;
+    private static final HashMap<String, Long> timeInfo = new HashMap<>();
 
     @Override
     public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+        if (Minecraft.getInstance().player == null || Minecraft.getInstance().level == null) return;
         if (Minecraft.getInstance().options.hideGui || Minecraft.getInstance().player.isSpectator()) return; // Hide timer if F1 or spectator
         if (isOut) return ; // Being out =>  no more render
 
@@ -27,6 +35,8 @@ public class TimerOverlay implements LayeredDraw.Layer {
 
         guiGraphics.drawString(Minecraft.getInstance().font, TimeUtils.secondsToTime(seconds), width*textX, height*textY, getColor(), true);
         guiGraphics.drawString(Minecraft.getInstance().font, money+"\u9000", width*textX, height*(textY-0.03f), Color.WHITE.getRGB(), true);
+
+        if (!timeInfo.isEmpty()) manageNotifications(guiGraphics, width, height);
     }
 
     public void setSeconds(int seconds) {
@@ -43,6 +53,47 @@ public class TimerOverlay implements LayeredDraw.Layer {
 
     public boolean isOut() {
         return this.isOut;
+    }
+
+    public void addInfo(String info) {
+        timeInfo.put(info, Minecraft.getInstance().level.getGameTime());
+    }
+
+    private void manageNotifications(GuiGraphics guiGraphics, int width, int height) {
+        Iterator<Map.Entry<String,Long>> iterator = timeInfo.entrySet().iterator();
+        Level level = Minecraft.getInstance().level;
+        while (iterator.hasNext()) {
+            Map.Entry<String,Long> entry = iterator.next();
+            long currentDeltaTime = level.getGameTime() - entry.getValue();
+            if (currentDeltaTime > infoTime) {
+                iterator.remove();
+                break;
+            }
+
+            float x = (float) currentDeltaTime / infoTime;
+            guiGraphics.drawString(Minecraft.getInstance().font, entry.getKey(), width*textX, height*interpolateCubic(x, textY-0.06f, deltaY), getTransparentWhite(x), true);
+        }
+    }
+
+    private float interpolateCubic(float x, float x0, float dx) {
+        return (float) (1-Math.pow(1-x,3))*dx + x0;
+    }
+
+    private int getTransparentWhite(float x) {
+        // 100% opacity for 0-0.75
+        // linear descent between 0.75 and 1
+        float alphaF;
+
+        if (x < 0.75f) {
+            alphaF = 1.0f;
+        } else {
+            alphaF = 1.0f - ((x - 0.75f) / 0.25f);
+        }
+
+        alphaF = Math.clamp(alphaF, 0.1f, 1.0f);
+
+        int alpha = (int)(alphaF * 255.0f);
+        return (alpha << 24) | 0xFFFFFF;
     }
 
     private int getColor() {

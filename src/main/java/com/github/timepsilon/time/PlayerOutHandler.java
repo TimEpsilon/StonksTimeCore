@@ -71,7 +71,7 @@ public class PlayerOutHandler {
 
                 // Global sound
                 server.overworld().playSound(null, 0,0,0, SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.PLAYERS, 10000.0f, 0.6f);
-                server.overworld().playSound(null, 0,0,0, ModSounds.TIME_OUT.get(), SoundSource.PLAYERS, 10000.0f, 0.8f);
+                server.overworld().playSound(null, 0,0,0, ModSounds.TIME_OUT.value(), SoundSource.PLAYERS, 10000.0f, 0.8f);
             }
         } else {
             Core.LOGGER.error("Player status couldn't be set to out : server is null");

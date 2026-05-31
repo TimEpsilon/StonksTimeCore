@@ -19,6 +19,7 @@ public enum ModPackets implements BasePacketPayload.PacketTypeProvider {
 
     // Server -> Client
     SYNC_TIMER(TimerSyncPacket.class, TimerSyncPacket.STREAM_CODEC),
+    TIMER_INFO(TimerInfoPacket.class, TimerInfoPacket.STREAM_CODEC),
     IS_OUT(IsOutPacket.class, IsOutPacket.STREAM_CODEC),
     PLAYERS_OUT_SET(PlayersAreOutPacket.class, PlayersAreOutPacket.STREAM_CODEC),
     SLOW_DOWN_SRE(SlowDownSREPacket.class, SlowDownSREPacket.STREAM_CODEC),

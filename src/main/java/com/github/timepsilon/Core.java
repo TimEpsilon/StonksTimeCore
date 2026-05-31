@@ -7,12 +7,14 @@ import com.github.timepsilon.client.gui.ModMenu;
 import com.github.timepsilon.config.STCConfigClient;
 import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.entity.ModEntities;
+import com.github.timepsilon.ironsspellbooks.ModSchoolRegistry;
 import com.github.timepsilon.items.ModItems;
 import com.github.timepsilon.loot.ModLoot;
 import com.github.timepsilon.mobeffect.ModMobEffects;
 import com.github.timepsilon.packets.ModPackets;
 import com.github.timepsilon.pehkui.ModPehkuiModifier;
 import com.github.timepsilon.sounds.ModSounds;
+import com.github.timepsilon.ironsspellbooks.ModSpellRegistry;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.ItemDescription;
@@ -59,6 +61,8 @@ public class Core {
         ModLoot.register(modEventBus);
         ModMobEffects.register(modEventBus);
         ModAttributes.register(modEventBus);
+        ModSpellRegistry.register(modEventBus);
+        ModSchoolRegistry.register(modEventBus);
 
         // Config register
         modContainer.registerConfig(ModConfig.Type.SERVER, STCConfigServer.CONFIG_SPEC);

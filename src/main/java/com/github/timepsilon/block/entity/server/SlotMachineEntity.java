@@ -47,15 +47,15 @@ public class SlotMachineEntity extends BlockEntity implements GeoBlockEntity {
     }
 
     private static void onSpin(Level level, BlockPos pos) {
-        level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), ModSounds.SLOT_MACHINE_PULLING.get(), SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F);
-        level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), ModSounds.SLOT_MACHINE_SPINNING.get(), SoundSource.BLOCKS, 0.5F, 1F);
+        level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), ModSounds.SLOT_MACHINE_PULLING.value(), SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F);
+        level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), ModSounds.SLOT_MACHINE_SPINNING.value(), SoundSource.BLOCKS, 0.5F, 1F);
     }
 
     private static void onScore(Level level, BlockPos pos, boolean isPositive) {
         if (isPositive) {
-            level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), ModSounds.SLOT_MACHINE_WINNING.get(), SoundSource.BLOCKS, 0.5F, 1F);
+            level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), ModSounds.SLOT_MACHINE_WINNING.value(), SoundSource.BLOCKS, 0.5F, 1F);
         } else {
-            level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), ModSounds.SLOT_MACHINE_LOSING.get(), SoundSource.BLOCKS, 0.5F, 1F);
+            level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), ModSounds.SLOT_MACHINE_LOSING.value(), SoundSource.BLOCKS, 0.5F, 1F);
         }
     }
 

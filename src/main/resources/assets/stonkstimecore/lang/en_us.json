@@ -124,5 +124,13 @@
   "effect.stonkstimecore.mirror" : "Mirror",
 
   "death.attack.stonkstimecore.hot_potato" : "%s didn't pass the potato in time",
-  "death.attack.stonkstimecore.lifelink" : "%s died from a lifelink!"
+  "death.attack.stonkstimecore.lifelink" : "%s died from a lifelink!",
+  "death.attack.stonkstimecore.time" : "%s has succumbed to the flow of time",
+
+  "school.stonkstimecore.time" : "Time",
+
+  "spell.stonkstimecore.lose_money" : "Time Stealing",
+  "spell.stonkstimecore.lose_money.guide" : "Cast on a player to steal their time.",
+  "ui.stonkstimecore.lose_money" : "%s\u9000 stolen"
+
 }

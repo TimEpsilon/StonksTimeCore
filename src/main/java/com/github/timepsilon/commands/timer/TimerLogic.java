@@ -1,5 +1,6 @@
 package com.github.timepsilon.commands.timer;
 
+import com.github.timepsilon.time.TimerHandler;
 import com.github.timepsilon.utils.TimeUtils;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -10,8 +11,11 @@ import dev.ithundxr.createnumismatics.content.backend.BankAccount;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.GameProfileArgument;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Collection;
+
+import static com.github.timepsilon.commands.isout.OutLogic.tryGettingPlayer;
 
 public class TimerLogic {
 
@@ -44,10 +48,13 @@ public class TimerLogic {
 
         for (GameProfile player : players) {
             BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getId(), BankAccount.Type.PLAYER);
+            ServerPlayer sPlayer = tryGettingPlayer(ctx.getSource().getServer(), player.getId());
             if (seconds > 0) {
                 account.deposit(seconds* TimeUtils.TIME_TO_MONEY);
+                TimerHandler.sendInfoPacket(sPlayer, "+"+(seconds*TimeUtils.TIME_TO_MONEY)+"\u9000");
             } else {
                 account.deduct(-seconds* TimeUtils.TIME_TO_MONEY);
+                TimerHandler.sendInfoPacket(sPlayer, (seconds*TimeUtils.TIME_TO_MONEY)+"\u9000");
             }
             ctx.getSource().sendSuccess(() -> Component.translatable("commands.stonkstimecore.add_time",seconds,player.getName()), false);
         }

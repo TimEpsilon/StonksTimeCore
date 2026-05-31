@@ -3,11 +3,13 @@ package com.github.timepsilon.stonksevent.winmoney;
 import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.stonksevent.AbstractRandomStonksEvent;
 import com.github.timepsilon.time.PlayerOutData;
+import com.github.timepsilon.time.TimerHandler;
 import com.github.timepsilon.utils.TimeUtils;
 import dev.ithundxr.createnumismatics.Numismatics;
 import dev.ithundxr.createnumismatics.content.backend.BankAccount;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -45,6 +47,7 @@ public class SREWinMoney extends AbstractRandomStonksEvent {
             }
         } else {
             account.deposit(amount * TimeUtils.TIME_TO_MONEY);
+            TimerHandler.sendInfoPacket((ServerPlayer) player, "+"+(amount*TimeUtils.TIME_TO_MONEY)+"\u9000");
         }
 
         player.sendSystemMessage(

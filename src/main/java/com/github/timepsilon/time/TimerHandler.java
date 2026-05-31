@@ -1,6 +1,7 @@
 package com.github.timepsilon.time;
 
 import com.github.timepsilon.Core;
+import com.github.timepsilon.packets.server.TimerInfoPacket;
 import com.github.timepsilon.packets.server.TimerSyncPacket;
 import com.github.timepsilon.utils.TimeUtils;
 import dev.ithundxr.createnumismatics.Numismatics;
@@ -127,5 +128,9 @@ public class TimerHandler {
 
     public static void sendOverlayPacket(ServerPlayer player, int time, int money,  boolean isOut) {
         CatnipServices.NETWORK.sendToClient(player, new TimerSyncPacket(time, money, isOut));
+    }
+
+    public static void sendInfoPacket(ServerPlayer player, String message) {
+        CatnipServices.NETWORK.sendToClient(player, new TimerInfoPacket(message));
     }
 }

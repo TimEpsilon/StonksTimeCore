@@ -3,11 +3,13 @@ package com.github.timepsilon.stonksevent.losemoney;
 import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.stonksevent.AbstractRandomStonksEvent;
 import com.github.timepsilon.time.PlayerOutData;
+import com.github.timepsilon.time.TimerHandler;
 import com.github.timepsilon.utils.TimeUtils;
 import dev.ithundxr.createnumismatics.Numismatics;
 import dev.ithundxr.createnumismatics.content.backend.BankAccount;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.Random;
@@ -39,6 +41,7 @@ public class SRELoseMoney extends AbstractRandomStonksEvent {
             );
         } else {
             account.deduct(amount * TimeUtils.TIME_TO_MONEY);
+            TimerHandler.sendInfoPacket((ServerPlayer) player, "-"+(amount*TimeUtils.TIME_TO_MONEY)+"\u9000");
 
             player.sendSystemMessage(
                     Component.translatable("sre.stonkstimecore.lose_money.amount", TimeUtils.secondsToTime(amount), amount * TimeUtils.TIME_TO_MONEY)
