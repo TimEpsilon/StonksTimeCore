@@ -131,6 +131,10 @@
 
   "spell.stonkstimecore.lose_money" : "Time Stealing",
   "spell.stonkstimecore.lose_money.guide" : "Cast on a player to steal their time.",
-  "ui.stonkstimecore.lose_money" : "%s\u9000 stolen"
+  "ui.stonkstimecore.lose_money" : "stolen",
+  "spell.stonkstimecore.slow_down" : "Slow Down",
+  "spell.stonkstimecore.slow_down.guide" : "On cast, slow down time for a few minutes.",
+  "spell.stonkstimecore.speed_up" : "Speed Up",
+  "spell.stonkstimecore.speed_up.guide" : "On cast, speed up time for a few minutes."
 
 }

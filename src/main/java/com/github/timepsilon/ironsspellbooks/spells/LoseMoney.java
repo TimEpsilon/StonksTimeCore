@@ -1,8 +1,8 @@
-package com.github.timepsilon.ironsspellbooks.spells.losemoney;
+package com.github.timepsilon.ironsspellbooks.spells;
 
 import com.github.timepsilon.Core;
 import com.github.timepsilon.ironsspellbooks.ModSchoolRegistry;
-import com.github.timepsilon.time.PlayerOutData;
+import com.github.timepsilon.particle.ModParticles;
 import com.github.timepsilon.time.TimerHandler;
 import com.github.timepsilon.utils.TimeUtils;
 import dev.ithundxr.createnumismatics.Numismatics;
@@ -22,7 +22,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -43,8 +42,9 @@ public class LoseMoney extends AbstractSpell {
     @Override
     public List<MutableComponent> getUniqueInfo(int spellLevel, LivingEntity caster) {
         return List.of(
-                Component.translatable("ui.stonkstimecore.lose_money", Utils.stringTruncation(getSpellPower(spellLevel, caster)*60*TimeUtils.TIME_TO_MONEY, 1))
-                        .withStyle(ChatFormatting.WHITE)
+                Component.literal(Utils.stringTruncation(getSpellPower(spellLevel, caster)*60*TimeUtils.TIME_TO_MONEY, 1)).withStyle(ChatFormatting.DARK_GREEN)
+                        .append(Component.literal("\u9000 ").withStyle(ChatFormatting.WHITE))
+                        .append(Component.translatable("ui.stonkstimecore.lose_money").withStyle(ChatFormatting.DARK_GREEN))
         );
     }
 
@@ -88,7 +88,7 @@ public class LoseMoney extends AbstractSpell {
     private void rayStealing(Vec3 start, Vec3 end, ServerLevel level) {
         for (float i = 0; i < 1; i += 0.01f) {
             Vec3 pos = start.lerp(end, i);
-            level.sendParticles(ParticleTypes.SCULK_SOUL, pos.x, pos.y, pos.z, 1, 0.1, 0.1, 0.1, 0);
+            level.sendParticles(ModParticles.TIME_PARTICLES.get(), pos.x, pos.y, pos.z, 1, 0.1, 0.1, 0.1, 0);
         }
     }
 

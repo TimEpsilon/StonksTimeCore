@@ -12,6 +12,7 @@ import com.github.timepsilon.items.ModItems;
 import com.github.timepsilon.loot.ModLoot;
 import com.github.timepsilon.mobeffect.ModMobEffects;
 import com.github.timepsilon.packets.ModPackets;
+import com.github.timepsilon.particle.ModParticles;
 import com.github.timepsilon.pehkui.ModPehkuiModifier;
 import com.github.timepsilon.sounds.ModSounds;
 import com.github.timepsilon.ironsspellbooks.ModSpellRegistry;
@@ -61,6 +62,7 @@ public class Core {
         ModLoot.register(modEventBus);
         ModMobEffects.register(modEventBus);
         ModAttributes.register(modEventBus);
+        ModParticles.register(modEventBus);
         ModSpellRegistry.register(modEventBus);
         ModSchoolRegistry.register(modEventBus);
 

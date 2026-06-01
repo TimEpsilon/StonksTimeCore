@@ -9,6 +9,8 @@ import com.github.timepsilon.create.STCPartialModels;
 import com.github.timepsilon.entity.ModEntities;
 import com.github.timepsilon.entity.client.TimeGearRenderer;
 import com.github.timepsilon.entity.custom.TimeGearEntity;
+import com.github.timepsilon.particle.ModParticles;
+import com.github.timepsilon.particle.client.TimeParticleProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -22,6 +24,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.event.RenderNameTagEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.util.TriState;
@@ -48,6 +51,11 @@ public class ClientEventsManager {
     @SubscribeEvent
     public static void onRegisterOverlay(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.TITLE, ResourceLocation.fromNamespaceAndPath(Core.MODID,"timer_overlay"), TimerOverlay.instance);
+    }
+
+    @SubscribeEvent
+    public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
+        event.registerSpriteSet(ModParticles.TIME_PARTICLES.get(), TimeParticleProvider::new);
     }
 
     /**
