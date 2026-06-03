@@ -33,7 +33,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.github.timepsilon.attributes.ModAttributes.SCT_FACTOR;
 

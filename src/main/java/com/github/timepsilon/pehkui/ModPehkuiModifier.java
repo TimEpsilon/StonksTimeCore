@@ -2,7 +2,6 @@ package com.github.timepsilon.pehkui;
 
 import com.github.timepsilon.Core;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.bus.api.IEventBus;
 import virtuoel.pehkui.api.ScaleModifier;
 import virtuoel.pehkui.api.ScaleRegistries;
 

@@ -1,7 +1,6 @@
 package com.github.timepsilon.stonksevent.speedup;
 
 import com.github.timepsilon.config.STCConfigServer;
-import com.github.timepsilon.packets.server.SlowDownSREPacket;
 import com.github.timepsilon.packets.server.SpeedUpSREPacket;
 import com.github.timepsilon.stonksevent.AbstractRandomStonksEvent;
 import com.github.timepsilon.stonksevent.StonksEventManager;

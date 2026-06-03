@@ -2,15 +2,9 @@ package com.github.timepsilon.ironsspellbooks;
 
 import com.github.timepsilon.Core;
 import com.github.timepsilon.attributes.ModAttributes;
-import com.github.timepsilon.items.ModItems;
 import com.github.timepsilon.sounds.ModSounds;
-import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
 import io.redspace.ironsspellbooks.api.registry.SchoolRegistry;
 import io.redspace.ironsspellbooks.api.spells.SchoolType;
-import io.redspace.ironsspellbooks.damage.ISSDamageTypes;
-import io.redspace.ironsspellbooks.registries.SoundRegistry;
-import io.redspace.ironsspellbooks.util.ModTags;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;

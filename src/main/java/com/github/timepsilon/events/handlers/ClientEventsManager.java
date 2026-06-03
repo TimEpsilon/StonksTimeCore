@@ -7,6 +7,7 @@ import com.github.timepsilon.block.entity.server.SlotMachineEntity;
 import com.github.timepsilon.client.gui.overlay.TimerOverlay;
 import com.github.timepsilon.create.STCPartialModels;
 import com.github.timepsilon.entity.ModEntities;
+import com.github.timepsilon.entity.client.PotionMagicProjectileRenderer;
 import com.github.timepsilon.entity.client.TimeGearRenderer;
 import com.github.timepsilon.entity.custom.TimeGearEntity;
 import com.github.timepsilon.particle.ModParticles;
@@ -23,6 +24,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.event.RenderNameTagEvent;
@@ -45,6 +47,8 @@ public class ClientEventsManager {
         MolangQueries.<SlotMachineEntity>setActorVariable("query.stc_wheel3", actor -> actor.animatable().getAngleWheel3());
 
         EntityRenderers.register(ModEntities.TIME_GEAR.get(), TimeGearRenderer::new);
+        EntityRenderers.register(ModEntities.POTION_MAGIC_PROJECTILE.get(), PotionMagicProjectileRenderer::new);
+
         BlockEntityRenderers.register(ModBlockEntities.SLOT_MACHINE_ENTITY.get(), SlotMachineRenderer::new);
     }
 

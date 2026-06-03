@@ -1,7 +1,6 @@
 package com.github.timepsilon.stonksevent;
 
 import com.github.timepsilon.Core;
-import com.github.timepsilon.stonksevent.slowdown.SlowDownClient;
 import net.minecraft.server.ServerTickRateManager;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;

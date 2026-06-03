@@ -14,14 +14,12 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
-import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerHeartTypeEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-import static com.github.timepsilon.enumextensions.ModHeartTypes.LIFELINK_HEART;
 import static com.github.timepsilon.enumextensions.ModHeartTypes.TIMELESS_HEART;
 import static com.github.timepsilon.utils.TimeUtils.givenAmountOfCoins;
 import static com.github.timepsilon.utils.TimeUtils.stackEffect;

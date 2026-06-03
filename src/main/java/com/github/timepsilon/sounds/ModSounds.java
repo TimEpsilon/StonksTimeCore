@@ -8,8 +8,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.function.Supplier;
-
 public class ModSounds {
 
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS =

@@ -2,16 +2,12 @@ package com.github.timepsilon.stonksevent.mirror;
 
 import com.github.timepsilon.Core;
 import com.github.timepsilon.mobeffect.ModMobEffects;
-import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.PostChain;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
-import org.lwjgl.glfw.GLFW;
 
 @EventBusSubscriber(modid = Core.MODID, value = Dist.CLIENT)
 public class MirrorClient {

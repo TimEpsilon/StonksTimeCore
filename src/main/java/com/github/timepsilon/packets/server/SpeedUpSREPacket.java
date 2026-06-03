@@ -1,7 +1,6 @@
 package com.github.timepsilon.packets.server;
 
 import com.github.timepsilon.packets.ModPackets;
-import com.github.timepsilon.stonksevent.slowdown.SlowDownClient;
 import com.github.timepsilon.stonksevent.speedup.SpeedUpClient;
 import io.netty.buffer.ByteBuf;
 import net.createmod.catnip.net.base.ClientboundPacketPayload;

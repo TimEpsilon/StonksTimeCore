@@ -24,8 +24,8 @@ import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerHeartTypeEvent;
 
-import static com.github.timepsilon.stonksevent.lifelink.LifeLinkEffect.LIFELINK_DAMAGE;
 import static com.github.timepsilon.enumextensions.ModHeartTypes.LIFELINK_HEART;
+import static com.github.timepsilon.stonksevent.lifelink.LifeLinkEffect.LIFELINK_DAMAGE;
 
 @EventBusSubscriber(modid = Core.MODID)
 public class SRELifeLink extends AbstractRandomStonksEvent {
