@@ -5,8 +5,12 @@ import com.github.timepsilon.particle.ModParticles;
 import io.redspace.ironsspellbooks.api.util.Utils;
 import io.redspace.ironsspellbooks.entity.spells.AbstractMagicProjectile;
 import io.redspace.ironsspellbooks.registries.MobEffectRegistry;
+import net.createmod.catnip.theme.Color;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -18,6 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class PotionMagicProjectile extends AbstractMagicProjectile {
@@ -26,12 +31,19 @@ public class PotionMagicProjectile extends AbstractMagicProjectile {
         super(pEntityType, pLevel);
     }
 
+    protected static final EntityDataAccessor<Integer> DATA_COLOR;
     MobEffectInstance effect;
 
-    public PotionMagicProjectile(Level level, LivingEntity shooter, MobEffectInstance potionEffect) {
+    static {
+        DATA_COLOR = SynchedEntityData.defineId(PotionMagicProjectile.class, EntityDataSerializers.INT);
+    }
+
+
+    public PotionMagicProjectile(Level level, LivingEntity shooter, @Nullable MobEffectInstance potionEffect) {
         this(ModEntities.POTION_MAGIC_PROJECTILE.get(), level);
         this.effect = potionEffect;
         setOwner(shooter);
+        setColor((effect != null) ? effect.getEffect().value().getColor() : Color.WHITE.getRGB());
     }
 
     @Override
@@ -82,6 +94,14 @@ public class PotionMagicProjectile extends AbstractMagicProjectile {
         }
     }
 
+    public int getColor() {
+        return entityData.get(DATA_COLOR);
+    }
+
+    private void setColor(int color) {
+        entityData.set(DATA_COLOR, color);
+    }
+
     @Override
     public float getSpeed() {
         return 1f;
@@ -94,7 +114,9 @@ public class PotionMagicProjectile extends AbstractMagicProjectile {
 
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
-        tag.put("effect",effect.save());
+        if (effect != null) {
+            tag.put("effect",effect.save());
+        }
     }
 
     @Override
@@ -107,5 +129,11 @@ public class PotionMagicProjectile extends AbstractMagicProjectile {
                 this.effect = mobeffectinstance;
             }
         }
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_COLOR,Color.WHITE.getRGB());
     }
 }
