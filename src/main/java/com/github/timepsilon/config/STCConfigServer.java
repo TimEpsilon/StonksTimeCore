@@ -156,9 +156,9 @@ public class STCConfigServer {
                 .translation("config.stonkstimecore.sre.growthSpurtDuration")
                 .defineInRange("growthSpurtDuration",120, 1, Integer.MAX_VALUE);
         SRE_GROWTH_SPURT_FACTOR = builder
-                .comment("Factor by which to increment the size of the entity, so at 1, a 2m tall player will be 3m at level 1, 4m at level 2, etc.")
+                .comment("Percent by which to increment the size of the entity, so at 0.5, a 2m tall player will be 3m at level 1, 4m at level 2, etc.")
                 .translation("config.stonkstimecore.sre.growthSpurtFactor")
-                .defineInRange("growthSpurtFactor",1f, 0, Integer.MAX_VALUE);
+                .defineInRange("growthSpurtFactor",0.5f, 0, 10);
         SRE_SHRINKFLATION_DURATION = builder
                 .comment("Duration (in seconds) during which the entity will be shorter.")
                 .translation("config.stonkstimecore.sre.shrinkflationtDuration")
@@ -166,11 +166,11 @@ public class STCConfigServer {
         SRE_SHRINKFLATION_FACTOR = builder
                 .comment("Factor by which to divide the size of the entity, so at 2, a 2m tall player will be 1m at level 1, 0.5m at level 2, etc.")
                 .translation("config.stonkstimecore.sre.shrinkflationFactor")
-                .defineInRange("shrinkflationFactor",1.5f, 1, Integer.MAX_VALUE);
+                .defineInRange("shrinkflationFactor",1.25f, 1, Integer.MAX_VALUE);
         SRE_MIRROR_DURATION = builder
                 .comment("Duration (in seconds) during which the camera will be flipped.")
                 .translation("config.stonkstimecore.sre.mirrorDuration")
-                .defineInRange("mirrorDuration",180, 1, Integer.MAX_VALUE);
+                .defineInRange("mirrorDuration",180, 0, Integer.MAX_VALUE);
 
     }
 

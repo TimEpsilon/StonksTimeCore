@@ -137,8 +137,18 @@
   "spell.stonkstimecore.speed_up.guide" : "On cast, speed up time for a few minutes.",
   "spell.stonkstimecore.boost" : "Boost",
   "spell.stonkstimecore.boost.guide" : "Targets nearby entities and projects them away from you.",
+  "spell.stonkstimecore.mirror" : "Mirror",
+  "spell.stonkstimecore.mirror.guide" : "Cast an orb which, on impact, flips the screen of nearby players.",
+  "spell.stonkstimecore.growth_spurt" : "Growth Spurt",
+  "spell.stonkstimecore.growth_spurt.guide" : "Cast an orb which, on impact, makes nearby entities taller.",
+  "spell.stonkstimecore.shrinkflation" : "Shrinkflation",
+  "spell.stonkstimecore.shrinkflation.guide" : "Cast an orb which, on impact, makes nearby entities smaller.",
+  "spell.stonkstimecore.timeless" : "Timeless",
+  "spell.stonkstimecore.timeless.guide" : "Cast an orb which, on impact, makes nearby players lose money when receiving damage.",
 
-  "ui.stonkstimecore.lose_money" : "stolen",
-  "ui.stonkstimecore.power" : "%d power"
+  "ui.stonkstimecore.lose_money" : "Stolen",
+  "ui.stonkstimecore.timeless" : "Lost Per Damage",
+  "ui.stonkstimecore.power" : "%d Power",
+  "ui.stonkstimecore.size" : "%d Blocks Tall"
 
 }

@@ -15,7 +15,7 @@ public class ShrinkflationEffect extends MobEffect {
 
     @Override
     public boolean applyEffectTick(LivingEntity livingEntity, int amplifier) {
-        return livingEntity instanceof Player p;
+        return true;
     }
 
     @Override

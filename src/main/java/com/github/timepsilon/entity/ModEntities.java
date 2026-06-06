@@ -1,12 +1,11 @@
 package com.github.timepsilon.entity;
 
 import com.github.timepsilon.Core;
-import com.github.timepsilon.entity.custom.TimeGearEntity;
 import com.github.timepsilon.entity.custom.PotionMagicProjectile;
+import com.github.timepsilon.entity.custom.TimeGearEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 

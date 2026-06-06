@@ -18,6 +18,9 @@ public class ModSpellRegistry {
     public static final Holder<AbstractSpell> SPEED_UP = registerSpell(new SpeedUp());
     public static final Holder<AbstractSpell> BOOST = registerSpell(new Boost());
     public static final Holder<AbstractSpell> MIRROR = registerSpell(new Mirror());
+    public static final Holder<AbstractSpell> GROWTH_SPURT = registerSpell(new GrowthSpurt());
+    public static final Holder<AbstractSpell> SHRINKFLATION = registerSpell(new Shrinkflation());
+    public static final Holder<AbstractSpell> TIMELESS = registerSpell(new Timeless());
 
     public static void register(IEventBus eventBus) {
         SPELLS.register(eventBus);
