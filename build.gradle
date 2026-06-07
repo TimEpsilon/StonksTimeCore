@@ -199,6 +199,12 @@ dependencies {
     // Sophisticated core
     implementation "curse.maven:sophisticated-core-618298:7841769"
 
+    // Player animator
+    implementation "curse.maven:player-animator-658587:7389814"
+
+    // Curios
+    implementation "curse.maven:curios-309927:6529130"
+
     // Local
     implementation fileTree(dir: 'libs', include: '*.jar')
 }
