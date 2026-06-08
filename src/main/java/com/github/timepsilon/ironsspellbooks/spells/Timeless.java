@@ -29,6 +29,7 @@ public class Timeless extends AbstractPotionSpell {
     public List<MutableComponent> getUniqueInfo(int spellLevel, LivingEntity caster) {
         return List.of(
                 Component.translatable("ui.irons_spellbooks.radius", 3.5f),
+                Component.translatable("ui.irons_spellbooks.effect_length", Utils.timeFromTicks(180 * 20, 1)),
                 Component.literal(Utils.stringTruncation(getAmountPerDamage(spellLevel,caster), 1)).withStyle(ChatFormatting.DARK_GREEN)
                         .append(Component.literal("\u9000 ").withStyle(ChatFormatting.WHITE))
                         .append(Component.translatable("ui.stonkstimecore.timeless").withStyle(ChatFormatting.DARK_GREEN))

@@ -5,6 +5,7 @@ import com.github.timepsilon.ironsspellbooks.ModSchoolRegistry;
 import com.github.timepsilon.mobeffect.ModMobEffects;
 import io.redspace.ironsspellbooks.api.config.DefaultConfig;
 import io.redspace.ironsspellbooks.api.spells.*;
+import io.redspace.ironsspellbooks.api.util.Utils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -24,7 +25,8 @@ public class Mirror extends AbstractPotionSpell {
     @Override
     public List<MutableComponent> getUniqueInfo(int spellLevel, LivingEntity caster) {
         return List.of(
-                Component.translatable("ui.irons_spellbooks.radius", 3.5f)
+                Component.translatable("ui.irons_spellbooks.radius", 3.5f),
+                Component.translatable("ui.irons_spellbooks.effect_length", Utils.timeFromTicks(60 * 20, 1))
         );
     }
 

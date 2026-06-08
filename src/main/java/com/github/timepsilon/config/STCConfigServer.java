@@ -164,7 +164,7 @@ public class STCConfigServer {
                 .translation("config.stonkstimecore.sre.shrinkflationtDuration")
                 .defineInRange("shrinkflationDuration",120, 1, Integer.MAX_VALUE);
         SRE_SHRINKFLATION_FACTOR = builder
-                .comment("Factor by which to divide the size of the entity, so at 2, a 2m tall player will be 1m at level 1, 0.5m at level 2, etc.")
+                .comment("Factor by which to divide the base size of the entity, multiplied by the level, so at 1.25, a 2m tall player will be 1.6m at level 1, 0.8m at level 2, etc.")
                 .translation("config.stonkstimecore.sre.shrinkflationFactor")
                 .defineInRange("shrinkflationFactor",1.25f, 1, Integer.MAX_VALUE);
         SRE_MIRROR_DURATION = builder

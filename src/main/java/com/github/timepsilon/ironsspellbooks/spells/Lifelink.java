@@ -3,6 +3,7 @@ package com.github.timepsilon.ironsspellbooks.spells;
 import com.github.timepsilon.Core;
 import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.ironsspellbooks.ModSchoolRegistry;
+import com.github.timepsilon.mobeffect.ModMobEffects;
 import com.github.timepsilon.particle.ModParticles;
 import com.github.timepsilon.stonksevent.StonksEventType;
 import io.redspace.ironsspellbooks.api.config.DefaultConfig;
@@ -17,6 +18,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
@@ -34,7 +36,7 @@ public class Lifelink extends AbstractSpell {
     @Override
     public List<MutableComponent> getUniqueInfo(int spellLevel, LivingEntity caster) {
         return List.of(
-                Component.translatable("ui.irons_spellbooks.effect_length", Utils.timeFromTicks(900 * 20, 1))
+                Component.translatable("ui.irons_spellbooks.effect_length", Utils.timeFromTicks(600 * 20, 1))
         );
     }
 
@@ -51,7 +53,9 @@ public class Lifelink extends AbstractSpell {
     @Override
     public void onCast(Level level, int spellLevel, LivingEntity entity, CastSource castSource, MagicData playerMagicData) {
         if (entity instanceof ServerPlayer serverPlayer) {
-            StonksEventType.startGivenEvent(serverPlayer, StonksEventType.LIFELINK);
+            for (ServerPlayer sp : serverPlayer.getServer().getPlayerList().getPlayers()) {
+                sp.addEffect(new MobEffectInstance(ModMobEffects.LIFE_LINK, 600*20));
+            }
             ((ServerLevel)serverPlayer.level()).sendParticles(ModParticles.TIME_PARTICLES.get(),
                     serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(),
                     2000, 16.0F, 5.0F, 16.0F, 0);

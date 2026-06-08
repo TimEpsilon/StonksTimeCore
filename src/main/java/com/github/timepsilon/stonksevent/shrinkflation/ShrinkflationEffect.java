@@ -27,5 +27,7 @@ public class ShrinkflationEffect extends MobEffect {
     public void onEffectStarted(LivingEntity livingEntity, int amplifier) {
         super.onEffectStarted(livingEntity, amplifier);
         ScaleTypes.BASE.getScaleData(livingEntity).getBaseValueModifiers().add(ModPehkuiModifier.SHRINKFLATION);
+        ScaleTypes.BASE.getScaleData(livingEntity).onUpdate();
+        System.out.println(livingEntity.getEyeHeight());
     }
 }

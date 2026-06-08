@@ -27,7 +27,8 @@ public class GrowthSpurt extends AbstractPotionSpell {
     public List<MutableComponent> getUniqueInfo(int spellLevel, LivingEntity caster) {
         return List.of(
                 Component.translatable("ui.irons_spellbooks.radius", 3.5f),
-                Component.translatable("ui.stonkstimecore.size", Utils.stringTruncation(getSize(spellLevel, caster), 1))
+                Component.translatable("ui.stonkstimecore.size", Utils.stringTruncation(getSize(spellLevel, caster), 1)),
+                Component.translatable("ui.irons_spellbooks.effect_length", Utils.timeFromTicks(30 * 20, 1))
         );
     }
 

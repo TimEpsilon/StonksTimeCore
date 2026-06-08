@@ -27,8 +27,8 @@ public class Shrinkflation extends AbstractPotionSpell {
     public List<MutableComponent> getUniqueInfo(int spellLevel, LivingEntity caster) {
         return List.of(
                 Component.translatable("ui.irons_spellbooks.radius", 3.5f),
-                Component.translatable("ui.stonkstimecore.size", Utils.stringTruncation(getSize(spellLevel, caster), 1))
-                //TODO : Add effect duration
+                Component.translatable("ui.stonkstimecore.size", Utils.stringTruncation(getSize(spellLevel, caster), 1)),
+                Component.translatable("ui.irons_spellbooks.effect_length", Utils.timeFromTicks(30 * 20, 1))
         );
     }
 
@@ -51,9 +51,8 @@ public class Shrinkflation extends AbstractPotionSpell {
         return defaultConfig;
     }
 
-    // TODO : fix wrong size info
     public float getSize(int spellLevel, LivingEntity caster) {
-        return 2f / (float) (STCConfigServer.CONFIG.SRE_SHRINKFLATION_FACTOR.get() * (spellLevel+1));
+        return 2f / (float) (STCConfigServer.CONFIG.SRE_SHRINKFLATION_FACTOR.get() * spellLevel);
     }
 
 }

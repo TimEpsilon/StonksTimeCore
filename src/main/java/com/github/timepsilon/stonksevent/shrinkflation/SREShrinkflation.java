@@ -28,7 +28,6 @@ public class SREShrinkflation extends AbstractRandomStonksEvent {
                 ModMobEffects.SHRINKFLATION,
                 STCConfigServer.CONFIG.SRE_SHRINKFLATION_DURATION.getAsInt() * 20
         ), true);
-        ScaleTypes.BASE.getScaleData(player).onUpdate();
     }
 
     @Override

@@ -28,7 +28,6 @@ public class SREGrowthSpurt extends AbstractRandomStonksEvent {
                 ModMobEffects.GROWTH_SPURT,
                 STCConfigServer.CONFIG.SRE_GROWTH_SPURT_DURATION.getAsInt() * 20
         ), true);
-        ScaleTypes.BASE.getScaleData(player).onUpdate();
     }
 
     @Override
