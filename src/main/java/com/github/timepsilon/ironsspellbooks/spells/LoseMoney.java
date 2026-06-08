@@ -25,6 +25,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.List;
@@ -104,6 +105,11 @@ public class LoseMoney extends AbstractSpell {
     @Override
     public CastType getCastType() {
         return CastType.LONG;
+    }
+
+    @Override
+    public boolean canBeInterrupted(@Nullable Player player) {
+        return true;
     }
 
     @Override

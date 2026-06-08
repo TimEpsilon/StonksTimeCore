@@ -21,6 +21,8 @@ public class ModSpellRegistry {
     public static final Holder<AbstractSpell> GROWTH_SPURT = registerSpell(new GrowthSpurt());
     public static final Holder<AbstractSpell> SHRINKFLATION = registerSpell(new Shrinkflation());
     public static final Holder<AbstractSpell> TIMELESS = registerSpell(new Timeless());
+    public static final Holder<AbstractSpell> LIFELINK = registerSpell(new Lifelink());
+    public static final Holder<AbstractSpell> HOT_POTATO = registerSpell(new HotPotato());
 
     public static void register(IEventBus eventBus) {
         SPELLS.register(eventBus);
