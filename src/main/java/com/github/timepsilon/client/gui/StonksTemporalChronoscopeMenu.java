@@ -11,6 +11,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -81,7 +82,6 @@ public class StonksTemporalChronoscopeMenu extends MenuBase<StonksTemporalChrono
 
     @Override
     public @NotNull ItemStack quickMoveStack(Player player, int i) {
-        // Salut Zelytra c'est probablement ici que tu vas chercher à casser un truc
         Slot slot = this.slots.get(i);
 
         if (!slot.hasItem()) {
@@ -115,7 +115,6 @@ public class StonksTemporalChronoscopeMenu extends MenuBase<StonksTemporalChrono
 
         return success ? slotStack : ItemStack.EMPTY;
     }
-
 
 
 

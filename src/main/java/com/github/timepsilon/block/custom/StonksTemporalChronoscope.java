@@ -71,7 +71,10 @@ public class StonksTemporalChronoscope extends KineticBlock implements IBE<Stonk
         if (level.isClientSide)
             return InteractionResult.SUCCESS;
         withBlockEntityDo(level, pos,
-                be -> player.openMenu(be, be::sendToMenu));
+                be -> {
+            player.openMenu(be, be::sendToMenu);
+            be.notifyUpdate();
+                });
         return InteractionResult.SUCCESS;
     }
 

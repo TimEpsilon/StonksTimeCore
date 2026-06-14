@@ -107,6 +107,12 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
         }
     }
 
+    @Override
+    public void lazyTick() {
+        super.lazyTick();
+        notifyUpdate(); // There probably is a better way to update the coin amount on every player's screen but I haven't found it
+    }
+
     public void dropContents(Level level, BlockPos pos) {
         ItemHelper.dropContents(level, pos, inventory);
         for (int i = Coin.values().length - 1; i >= 0; i--) {
@@ -186,4 +192,6 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
         }
         return 0;
     }
+
+
 }
