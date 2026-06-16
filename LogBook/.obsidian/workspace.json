@@ -4,24 +4,37 @@
     "type": "split",
     "children": [
       {
-        "id": "14da415bfab2764e",
+        "id": "6390eaa7d8d8e32a",
         "type": "tabs",
         "children": [
           {
-            "id": "a6d7dc79baa635bb",
+            "id": "c6ca3b036e2ae600",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "StonksTimeCore/Shader Rendering.md",
+                "file": "StonksTimeCore/SCT.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Shader Rendering"
+              "title": "SCT"
+            }
+          },
+          {
+            "id": "18c64614cb57dd94",
+            "type": "leaf",
+            "state": {
+              "type": "image",
+              "state": {
+                "file": "StonksTimeCore/Coins/M-Doubloon/300px-Gold_Pile_Single_Icon.png"
+              },
+              "icon": "lucide-image",
+              "title": "300px-Gold_Pile_Single_Icon"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -142,13 +155,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "StonksTimeCore/Shader Rendering.md",
+                "file": "StonksTimeCore/Coins/M-Doubloon/300px-Gold_Pile_Single_Icon.png",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Plan de Shader Rendering"
+              "title": "Plan de 300px-Gold_Pile_Single_Icon"
             }
           }
         ],
@@ -170,8 +183,11 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "a6d7dc79baa635bb",
+  "active": "18c64614cb57dd94",
   "lastOpenFiles": [
+    "StonksTimeCore/SCT.md",
+    "StonksTimeCore/Coins/M-Drachm/Iron_Ingot_JE3_BE2.webp",
+    "StonksTimeCore/Shader Rendering.md",
     "Idées Principales.md",
     "Mods/Liste de Mods.md",
     "Mods/Mods.md",
@@ -181,9 +197,7 @@
     "ModLogs/2025-04-25.md",
     "ModLogs/2025-04-28.md",
     "StonksTimeCore/Node Types/Recipe.md",
-    "StonksTimeCore/Shader Rendering.md",
     "Untitled.md",
-    "StonksTimeCore/SCT.md",
     "StonksTimeCore/Inputs.md",
     "StonksTimeCore/StonksTimeCore.md",
     "StonksTimeCore/Coins/M-Crown/Raw-Gold-Item-Site.webp",
@@ -202,7 +216,6 @@
     "StonksTimeCore/Coins/M-Crown",
     "StonksTimeCore/Coins/M-Doubloon/637636537067139131.png",
     "StonksTimeCore/Coins/M-Doubloon/Brass_Ingot.webp",
-    "Brass_Ingot 1.webp",
     "StonksTimeCore/Coins/M-Doubloon",
     "StonksTimeCore/Coins/M-Drachm",
     "StonksTimeCore/Coins/M-Dime",
@@ -215,7 +228,6 @@
     "StonksTimeCore/Node Types/Item.md",
     "Excalidraw/cycle_propagating.md",
     "Excalidraw/BasicCraftSetup.md",
-    "Imgs/cycle_propagating.md",
     "Imgs",
     "StonksTimeCore/Node Types",
     "Untitled.canvas"
