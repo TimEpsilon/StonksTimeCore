@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IAI",
+    "IRI",
+    "ITI"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "R": {
+      "item": "minecraft:recovery_compass"
+    },
+    "A": {
+      "item": "supplementaries:altimeter"
+    },
+    "T": {
+      "item": "stonkstimecore:time_gear"
+    }
+  },
+  "result": {
+    "id": "travelerscompass:travelerscompass",
+    "count": 1
+  }
+}

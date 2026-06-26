@@ -46,7 +46,7 @@ public class RecipeInput {
     private static HashMap<String, Integer> singleFluidMap(SizedFluidIngredient ingredient) {
         HashMap<String, Integer> map = new HashMap<>();
         for (FluidStack fluid : ingredient.getFluids()) {
-            map.merge(fluid.getFluid().toString(), fluid.getAmount(), Integer::sum);
+            map.merge(fluid.getFluid()+"-fluid1mB", fluid.getAmount(), Integer::sum);
         }
         return map;
     }

@@ -35,7 +35,7 @@ public class RecipeOutput {
         HashMap<String, Integer> outputMap = getOutputDefault(recipe, provider);
 
         for (FluidStack fluid : recipe.getFluidResults()) {
-            outputMap.merge(fluid.getFluid().toString(), fluid.getAmount(), Integer::sum);
+            outputMap.merge(fluid.getFluid()+"-fluid1mB", fluid.getAmount(), Integer::sum);
         }
         return outputMap;
     }
