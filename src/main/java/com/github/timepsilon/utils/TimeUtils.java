@@ -14,6 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
 
+import java.nio.ByteBuffer;
 import java.util.*;
 
 public class TimeUtils {
@@ -27,6 +28,8 @@ public class TimeUtils {
     public static final int MAX_HP = STCConfigServer.CONFIG.MAX_HP.getAsInt();
     public static final int MIN_HP = STCConfigServer.CONFIG.MIN_HP.getAsInt();
     public static final double DEATH_LOSS = STCConfigServer.CONFIG.DEATH_LOSS.getAsDouble();
+
+    private static final Date date = new Date();
 
     public static String secondsToTime(int seconds) {
         int h = seconds / 3600;
@@ -174,6 +177,19 @@ public class TimeUtils {
                 effect.isVisible(),
                 effect.showIcon()
         ));
+    }
+
+    public static byte[] UUIDToBytes(UUID uuid) {
+        ByteBuffer buffer = ByteBuffer.allocate(16);
+
+        buffer.putLong(uuid.getMostSignificantBits());
+        buffer.putLong(uuid.getLeastSignificantBits());
+
+        return buffer.array();
+    }
+
+    public static long getCurrentHour() {
+        return date.getTime() / 3600000;
     }
 
 }

@@ -37,7 +37,7 @@ public class FileManager {
         }
     }
 
-    private static Path makeServerSideDirectory(MinecraftServer server) {
+    public static Path makeServerSideDirectory(MinecraftServer server) {
         Path dir = server.getWorldPath(LevelResource.ROOT).resolve(Core.MODID);
         try {
             Files.createDirectories(dir);

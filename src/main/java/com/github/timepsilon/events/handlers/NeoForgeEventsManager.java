@@ -2,6 +2,7 @@ package com.github.timepsilon.events.handlers;
 
 import com.github.timepsilon.Core;
 import com.github.timepsilon.commands.STCCommand;
+import com.github.timepsilon.database.SCTTransactionDatabase;
 import com.github.timepsilon.datamaps.DataMaps;
 import com.github.timepsilon.datamaps.SCTMap;
 import com.github.timepsilon.utils.TimeUtils;
@@ -12,6 +13,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 
 import java.awt.*;
 
@@ -37,5 +40,18 @@ public class NeoForgeEventsManager {
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         STCCommand.register(event.getDispatcher());
+    }
+
+    @SubscribeEvent
+    public static void onServerLoad(ServerStartedEvent event) {
+        Core.LOGGER.info("Database Setup...");
+        SCTTransactionDatabase.getDatabase().load(event.getServer());
+
+    }
+
+    @SubscribeEvent
+    public static void onServerStop(ServerStoppedEvent event) {
+        Core.LOGGER.info("Database Shutdown...");
+        SCTTransactionDatabase.getDatabase().unload();
     }
 }
