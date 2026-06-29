@@ -6,8 +6,9 @@ import net.minecraft.world.item.Item;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 public record SctTransactionEntry(Instant time, UUID player, String username, String itemId, int amount, int storedMoney) {
@@ -26,7 +27,7 @@ public record SctTransactionEntry(Instant time, UUID player, String username, St
     }
 
     public void bindTo(PreparedStatement statement) throws SQLException {
-        statement.setObject(1, time, Types.TIMESTAMP_WITH_TIMEZONE);
+        statement.setObject(1, OffsetDateTime.ofInstant(time, ZoneOffset.UTC));
         statement.setObject(2, player);
         statement.setString(3, username);
         statement.setString(4, itemId);

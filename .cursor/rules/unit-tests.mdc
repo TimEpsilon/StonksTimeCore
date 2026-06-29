@@ -1,0 +1,46 @@
+---
+description: Tests unitaires JUnit 5 obligatoires pour chaque changement Java/DB/overlay
+globs: src/main/java/**/*.java
+alwaysApply: false
+---
+
+# Tests unitaires (JUnit 5)
+
+**Règle / Rule:** Toute modification de code dans ce projet doit inclure des tests unitaires correspondants.
+
+## Périmètre
+
+- Logique Java (`utils`, `database`, `pending`, `dao`, `entity`)
+- Bindings JDBC et sérialisation
+- Overlays client (calculs purs extractibles sans runtime Minecraft si possible)
+
+## Conventions
+
+- Framework : **JUnit 5** (`org.junit.jupiter`)
+- Emplacement : `src/test/java/` miroir du package source
+- Nom : `{Classe}Test.java`
+- Rapides, sans Docker sauf tests DAO (voir `SctTransactionDaoStressTest`)
+- Pas de runtime Minecraft pour la logique pure ; mocks ou stubs JDBC pour `bindTo`
+
+## Exemples
+
+```java
+// ✅ formatMoney, secondsToTime, merge PendingWriteQueue
+@Test
+void formatMoneyUsesCompactSuffix() {
+    assertEquals("2.45k", TimeUtils.formatMoney(2450));
+}
+
+// ✅ bindTo via stub PreparedStatement
+@Test
+void bindToSetsAllParameters() throws SQLException {
+    entry.bindTo(recordingStatement);
+    assertEquals(player, recordingStatement.getObject(1));
+}
+```
+
+## Checklist avant PR
+
+- [ ] Nouveau comportement couvert par au moins un `@Test`
+- [ ] Cas limites (négatif, vide, fusion de clés)
+- [ ] `.\gradlew.bat test` passe

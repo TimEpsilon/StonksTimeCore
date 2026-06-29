@@ -4,8 +4,9 @@ import com.github.timepsilon.utils.TimeUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 public record BankEntry(UUID player, String username, Instant time, int money) {
@@ -19,7 +20,7 @@ public record BankEntry(UUID player, String username, Instant time, int money) {
     public void bindTo(PreparedStatement statement) throws SQLException {
         statement.setObject(1, player);
         statement.setString(2, username);
-        statement.setObject(3, time, Types.TIMESTAMP_WITH_TIMEZONE);
+        statement.setObject(3, OffsetDateTime.ofInstant(time, ZoneOffset.UTC));
         statement.setInt(4, money);
     }
 }
