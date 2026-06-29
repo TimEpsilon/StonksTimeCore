@@ -34,7 +34,6 @@ public class ModBlockEntities {
     public static final BlockEntityEntry<MoneyLeaderboardEntity> MONEY_LEADERBOARD_ENTITY = REGISTRATE
             .blockEntity("money_leaderboard", MoneyLeaderboardEntity::new)
             .validBlocks(ModBlocks.MONEY_LEADERBOARD)
-            .tick(MoneyLeaderboardEntity::serverTick)
             .renderer(() -> MoneyLeaderboardRenderer::new)
             .register();
 

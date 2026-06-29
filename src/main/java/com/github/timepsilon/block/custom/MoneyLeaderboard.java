@@ -12,6 +12,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
@@ -144,6 +146,21 @@ public class MoneyLeaderboard extends Block implements EntityBlock {
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return state.getValue(SEGMENT) == 0
                 ? new MoneyLeaderboardEntity(ModBlockEntities.MONEY_LEADERBOARD_ENTITY.get(), pos, state)
+                : null;
+    }
+
+    @Override
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(
+            Level level,
+            BlockState state,
+            BlockEntityType<T> type
+    ) {
+        if (level.isClientSide() || state.getValue(SEGMENT) != 0) {
+            return null;
+        }
+        return type == ModBlockEntities.MONEY_LEADERBOARD_ENTITY.get()
+                ? (level1, pos, blockState, blockEntity) ->
+                        MoneyLeaderboardEntity.serverTick(level1, pos, blockState, (MoneyLeaderboardEntity) blockEntity)
                 : null;
     }
 
