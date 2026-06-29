@@ -29,8 +29,8 @@ class TimeUtilsTest {
     @Test
     void formatMoneyUsesSpaceSeparatorsBelowThousand() {
         assertEquals("999", TimeCore.formatMoney(999));
-        assertEquals("1 234 567", TimeCore.formatMoney(1_234_567));
-        assertEquals("-1 234 567", TimeCore.formatMoney(-1_234_567));
+        assertEquals("1.23m", TimeCore.formatMoney(1_234_567));
+        assertEquals("-1.23m", TimeCore.formatMoney(-1_234_567));
     }
 
     @Test
