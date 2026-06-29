@@ -19,11 +19,12 @@ public final class SqlStatsGate {
         return STCConfigServer.CONFIG.ENABLE_SQL_STATS.get();
     }
 
-    static void setTestOverride(@Nullable Boolean enabled) {
+    public static void setTestOverride(@Nullable Boolean enabled) {
         testOverride = enabled;
     }
 
-    static void clearTestOverride() {
+    public static void clearTestOverride() {
         testOverride = null;
     }
 }
+

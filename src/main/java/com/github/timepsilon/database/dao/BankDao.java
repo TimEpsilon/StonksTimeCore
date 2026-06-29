@@ -2,6 +2,7 @@ package com.github.timepsilon.database.dao;
 
 import com.github.timepsilon.Core;
 import com.github.timepsilon.database.PostgresHelper;
+import com.github.timepsilon.database.entity.BalanceHistoryPoint;
 import com.github.timepsilon.database.entity.BankEntry;
 import com.github.timepsilon.database.pending.PendingWriteQueue;
 import com.github.timepsilon.database.pending.PendingWritesStore;
@@ -9,8 +10,12 @@ import com.github.timepsilon.database.pending.PendingWritesStore;
 import javax.annotation.Nullable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -55,6 +60,14 @@ public class BankDao {
             DO UPDATE SET
             money = excluded.money,
             username = excluded.username
+            """;
+
+    private static final String FETCH_HISTORY = """
+            SELECT username, time, money
+            FROM banks
+            WHERE time >= ?
+            ORDER BY time ASC
+            LIMIT ?
             """;
 
     private final PendingWriteQueue<BankEntry> pending = PendingWritesStore.get().banks();
@@ -112,6 +125,37 @@ public class BankDao {
                     "Pending write enqueued (write failed): table={}, batch={}, queueSize={}",
                     BankEntry.TABLE_NAME, entries.size(), pending.size()
             );
+        }
+    }
+
+    public List<BalanceHistoryPoint> fetchPlayerBalanceHistory(Instant since, int limit) {
+        if (limit <= 0) {
+            return List.of();
+        }
+        ensureConnected();
+        if (connection == null) {
+            return List.of();
+        }
+        try (PreparedStatement statement = connection.prepareStatement(FETCH_HISTORY)) {
+            statement.setTimestamp(1, Timestamp.from(since));
+            statement.setInt(2, limit);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                List<BalanceHistoryPoint> points = new ArrayList<>();
+                while (resultSet.next()) {
+                    points.add(new BalanceHistoryPoint(
+                            resultSet.getString("username"),
+                            resultSet.getTimestamp("time").toInstant(),
+                            resultSet.getInt("money")
+                    ));
+                }
+                return List.copyOf(points);
+            }
+        } catch (SQLException e) {
+            Core.LOGGER.error("Failed to fetch bank balance history", e);
+            if (PostgresHelper.isConnectionError(e)) {
+                disconnect();
+            }
+            return List.of();
         }
     }
 

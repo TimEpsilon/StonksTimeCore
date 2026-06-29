@@ -3,7 +3,7 @@ package com.github.timepsilon.database;
 import com.github.timepsilon.database.entity.BankEntry;
 import com.github.timepsilon.database.entity.SctTransactionEntry;
 import com.github.timepsilon.database.pending.PendingWriteQueue;
-import com.github.timepsilon.utils.TimeUtils;
+import com.github.timepsilon.utils.TimeCore;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -37,7 +37,7 @@ class PendingWriteQueueTest {
     void sctQueueMergesAmountsForSameKey() {
         PendingWriteQueue<SctTransactionEntry> queue = new PendingWriteQueue<>(
                 SctTransactionEntry.TABLE_NAME,
-                entry -> TimeUtils.truncateToHour(entry.time()) + "|" + entry.player() + "|" + entry.itemId(),
+                entry -> TimeCore.truncateToHour(entry.time()) + "|" + entry.player() + "|" + entry.itemId(),
                 (existing, incoming) -> new SctTransactionEntry(
                         existing.time(),
                         existing.player(),
