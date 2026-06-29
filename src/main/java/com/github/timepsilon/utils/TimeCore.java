@@ -55,7 +55,7 @@ public final class TimeCore {
     }
 
     private static String formatMoneyWithSpaces(long value) {
-        return String.format("%,d", value).replace(',', ' ');
+        return String.format(Locale.US, "%,d", value).replace(',', ' ');
     }
 
     private static String formatCompactMoney(long value, long divisor, String suffix) {
