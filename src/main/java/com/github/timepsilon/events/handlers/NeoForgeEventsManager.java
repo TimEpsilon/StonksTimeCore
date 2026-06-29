@@ -2,6 +2,7 @@ package com.github.timepsilon.events.handlers;
 
 import com.github.timepsilon.Core;
 import com.github.timepsilon.commands.STCCommand;
+import com.github.timepsilon.config.SqlStatsGate;
 import com.github.timepsilon.database.BankSaveScheduler;
 import com.github.timepsilon.database.MoneyDatabase;
 import com.github.timepsilon.database.SCTTransactionDatabase;
@@ -47,8 +48,12 @@ public class NeoForgeEventsManager {
 
     @SubscribeEvent
     public static void onServerLoad(ServerStartedEvent event) {
-        Core.LOGGER.info("Database Setup...");
         PendingWritesStore.get().bindServer(event.getServer());
+        if (!SqlStatsGate.isEnabled()) {
+            Core.LOGGER.info("SQL stats disabled — skipping PostgreSQL connection and bank save scheduler.");
+            return;
+        }
+        Core.LOGGER.info("Database Setup...");
         SCTTransactionDatabase.getDatabase().load(event.getServer());
         MoneyDatabase.getDatabase().load(event.getServer());
         BankSaveScheduler.start(event.getServer());
@@ -56,6 +61,10 @@ public class NeoForgeEventsManager {
 
     @SubscribeEvent
     public static void onServerStop(ServerStoppedEvent event) {
+        if (!SqlStatsGate.isEnabled()) {
+            PendingWritesStore.get().clearServer();
+            return;
+        }
         BankSaveScheduler.stop();
         MoneyDatabase.getDatabase().saveBanks();
 

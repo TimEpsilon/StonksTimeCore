@@ -52,31 +52,36 @@ Le répertoire de jeu par défaut est `run/`.
 
 ## Base de données et analytique
 
-Le mod persiste les données dans une base **PostgreSQL** unique (`stonkstime` par défaut) avec deux tables :
+Le mod peut persister des **données analytiques** dans une base **PostgreSQL** (`stonkstime` par défaut) avec deux tables :
 
 | Table | Rôle |
 |---|---|
 | `banks` | Snapshots quotidiens des soldes bancaires (Create Numismatics) : `player` (UUID), `username` (TEXT), `time` (DATE), `money` (INT). |
 | `sct_transaction` | Transactions SCT agrégées par heure : `hour` (BIGINT), `player` (UUID), `username` (TEXT), `item` (TEXT), `amount` (INT), `money` (INT). |
 
+**Par défaut, les écritures SQL de stats sont désactivées** (`enableSqlStats = false`). Le serveur fonctionne sans PostgreSQL. Activez-les uniquement si vous utilisez Grafana ou une autre couche d'analyse.
+
 Architecture :
 
 - `MoneyDatabase` / `BankDao` / `BankEntry` — soldes bancaires
 - `SCTTransactionDatabase` / `SctTransactionDao` / `SctTransactionEntry` — transactions du chronoscope
 - `PostgresHelper` — connexions JDBC PostgreSQL (config serveur)
+- `SqlStatsGate` — interrupteur central `enableSqlStats`
 
-Connexion configurée dans `config/stonkstimecore-server.toml` (section `database`) :
+Configuration dans `config/stonkstimecore-server.toml` (section `database`). Documentation détaillée : [`docs/configuration.md`](docs/configuration.md).
 
 ```toml
 [database]
+    enableSqlStats = false          # true pour activer PostgreSQL + cron
     host = "localhost"
     port = 5432
     database = "stonkstime"
     user = "stonkstime"
     password = "stonkstime"
+    bankSaveIntervalSeconds = 60    # cron snapshots soldes (secondes réelles)
 ```
 
-Les tables sont créées au démarrage du serveur et les données sont flushées à l'arrêt (`NeoForgeEventsManager`). Les soldes sont aussi sauvegardés périodiquement via `TimerHandler`.
+Quand `enableSqlStats = true`, les tables sont créées au démarrage et les données sont flushées à l'arrêt (`NeoForgeEventsManager`). Les soldes sont aussi sauvegardés périodiquement via `BankSaveScheduler` (intervalle configurable).
 
 ### Grafana (dashboards)
 

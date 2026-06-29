@@ -1,6 +1,7 @@
 package com.github.timepsilon.database;
 
 import com.github.timepsilon.Core;
+import com.github.timepsilon.config.SqlStatsGate;
 import com.github.timepsilon.database.pending.PendingWritesStore;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -15,6 +16,7 @@ public final class DatabaseRetryHandler {
 
     @SubscribeEvent
     public static void onServerTick(ServerTickEvent.Post event) {
+        if (!SqlStatsGate.isEnabled()) return;
         if (event.getServer().getTickCount() % RETRY_INTERVAL_TICKS != 0) return;
         if (!PendingWritesStore.get().hasPending()) return;
 
