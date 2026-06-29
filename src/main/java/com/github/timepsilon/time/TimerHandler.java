@@ -135,8 +135,7 @@ public class TimerHandler {
 
     @SubscribeEvent
     public static void onServerTick(ServerTickEvent.Post event) {
-        if (event.getServer().getTickCount() % 18000 != 0) return; // Save every 15mins
-        Core.LOGGER.info("Saving Bank Accounts...");
+        if (event.getServer().getTickCount() % 1200 != 0) return; // Save every 1min
         MoneyDatabase.getDatabase().saveBanks();
     }
 
