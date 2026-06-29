@@ -1,4 +1,4 @@
-package com.github.timepsilon.utils;
+﻿package com.github.timepsilon.utils;
 
 import org.junit.jupiter.api.Test;
 
@@ -6,7 +6,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TimeUtilsTest {
 
@@ -58,8 +57,8 @@ class TimeUtilsTest {
     @Test
     void getCurrentHourStartIsTruncatedToHour() {
         Instant hourStart = TimeUtils.getCurrentHourStart();
-        assertEquals(0, hourStart.truncatedTo(ChronoUnit.HOURS).compareTo(hourStart));
-        assertTrue(hourStart.get(ChronoUnit.MINUTE) == 0);
-        assertTrue(hourStart.get(ChronoUnit.SECOND) == 0);
+        assertEquals(hourStart, hourStart.truncatedTo(ChronoUnit.HOURS));
+        assertEquals(0, hourStart.getNano());
+        assertEquals(0L, hourStart.getEpochSecond() % 3600);
     }
 }
