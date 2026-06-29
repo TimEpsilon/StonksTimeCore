@@ -1,7 +1,6 @@
 package com.github.timepsilon.time;
 
 import com.github.timepsilon.Core;
-import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.database.MoneyDatabase;
 import com.github.timepsilon.packets.server.TimerInfoPacket;
 import com.github.timepsilon.packets.server.TimerSyncPacket;
@@ -19,8 +18,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
-
 import java.util.UUID;
 
 @EventBusSubscriber(modid = Core.MODID)
@@ -131,14 +128,6 @@ public class TimerHandler {
 
     @SubscribeEvent
     public static void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
-        MoneyDatabase.getDatabase().saveBanks();
-    }
-
-    @SubscribeEvent
-    public static void onServerTick(ServerTickEvent.Post event) {
-        int interval = STCConfigServer.CONFIG.BANK_SAVE_INTERVAL_TICKS.get();
-        if (event.getServer().getTickCount() % interval != 0) return;
-        MoneyDatabase.getDatabase().flushPending();
         MoneyDatabase.getDatabase().saveBanks();
     }
 

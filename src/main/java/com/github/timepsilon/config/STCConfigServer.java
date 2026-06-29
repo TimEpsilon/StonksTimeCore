@@ -44,7 +44,7 @@ public class STCConfigServer {
     public final ModConfigSpec.ConfigValue<String> DB_NAME;
     public final ModConfigSpec.ConfigValue<String> DB_USER;
     public final ModConfigSpec.ConfigValue<String> DB_PASSWORD;
-    public final ModConfigSpec.IntValue BANK_SAVE_INTERVAL_TICKS;
+    public final ModConfigSpec.IntValue BANK_SAVE_INTERVAL_SECONDS;
 
     static {
         Pair<STCConfigServer,ModConfigSpec> pair = new ModConfigSpec.Builder().configure(STCConfigServer::new);
@@ -196,9 +196,9 @@ public class STCConfigServer {
         DB_PASSWORD = builder
                 .comment("PostgreSQL password.")
                 .define("password", "stonkstime");
-        BANK_SAVE_INTERVAL_TICKS = builder
-                .comment("How often (in server ticks) all player bank balances are saved to PostgreSQL. 20 ticks = 1 second.")
-                .defineInRange("bankSaveIntervalTicks", 20, 1, Integer.MAX_VALUE);
+        BANK_SAVE_INTERVAL_SECONDS = builder
+                .comment("How often (in real seconds, wall-clock) all player bank balances are saved to PostgreSQL. Uses a background scheduler, not server ticks.")
+                .defineInRange("bankSaveIntervalSeconds", 1, 1, Integer.MAX_VALUE);
 
         builder.pop();
     }

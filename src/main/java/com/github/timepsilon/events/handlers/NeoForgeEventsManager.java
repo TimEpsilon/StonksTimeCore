@@ -2,6 +2,7 @@ package com.github.timepsilon.events.handlers;
 
 import com.github.timepsilon.Core;
 import com.github.timepsilon.commands.STCCommand;
+import com.github.timepsilon.database.BankSaveScheduler;
 import com.github.timepsilon.database.MoneyDatabase;
 import com.github.timepsilon.database.SCTTransactionDatabase;
 import com.github.timepsilon.database.pending.PendingWritesStore;
@@ -50,10 +51,12 @@ public class NeoForgeEventsManager {
         PendingWritesStore.get().bindServer(event.getServer());
         SCTTransactionDatabase.getDatabase().load(event.getServer());
         MoneyDatabase.getDatabase().load(event.getServer());
+        BankSaveScheduler.start(event.getServer());
     }
 
     @SubscribeEvent
     public static void onServerStop(ServerStoppedEvent event) {
+        BankSaveScheduler.stop();
         MoneyDatabase.getDatabase().saveBanks();
 
         Core.LOGGER.info("Database Shutdown...");
