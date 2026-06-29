@@ -37,6 +37,37 @@ public class TimeUtils {
         return String.format("%d:%02d:%02d", h, m, s);
     }
 
+    public static String formatMoney(int amount) {
+        long abs = Math.abs((long) amount);
+        String sign = amount < 0 ? "-" : "";
+
+        if (abs >= 1_000_000_000L) {
+            return sign + formatCompactMoney(abs, 1_000_000_000L, "md");
+        }
+        if (abs >= 1_000_000L) {
+            return sign + formatCompactMoney(abs, 1_000_000L, "m");
+        }
+        if (abs >= 1_000L) {
+            return sign + formatCompactMoney(abs, 1_000L, "k");
+        }
+        return sign + formatMoneyWithSpaces(abs);
+    }
+
+    private static String formatMoneyWithSpaces(long value) {
+        return String.format("%,d", value).replace(',', ' ');
+    }
+
+    private static String formatCompactMoney(long value, long divisor, String suffix) {
+        double compact = (double) value / divisor;
+        if (compact >= 100) {
+            return Math.round(compact) + " " + suffix;
+        }
+        if (Math.abs(compact - Math.rint(compact)) < 0.05) {
+            return (long) Math.rint(compact) + " " + suffix;
+        }
+        return String.format(Locale.FRENCH, "%.1f", compact) + " " + suffix;
+    }
+
     public static String SCTToTime(double sct) {
         int seconds = (int) Math.ceil(sct / TIME_TO_MONEY);
         int h = seconds / 3600;

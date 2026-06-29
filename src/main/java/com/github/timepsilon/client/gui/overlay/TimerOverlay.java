@@ -28,9 +28,9 @@ public class TimerOverlay implements LayeredDraw.Layer {
     private static final int INFO_TIME = 20 * 3;
 
     private static final ItemStack TIME_ICON = new ItemStack(Items.CLOCK);
-    private static final ItemStack MONEY_ICON = new ItemStack(Items.GOLD_NUGGET);
-    private static final ResourceLocation EFFECT_BACKGROUND_SPRITE =
-            ResourceLocation.withDefaultNamespace("hud/effect_background");
+    private static final String MCOIN_ICON = "\u9000";
+    private static final ResourceLocation STATUS_BACKGROUND_SPRITE =
+            ResourceLocation.withDefaultNamespace("toast/advancement");
 
     private int seconds = 0;
     private int money = 0;
@@ -49,15 +49,15 @@ public class TimerOverlay implements LayeredDraw.Layer {
         Font font = minecraft.font;
 
         String timeText = TimeUtils.secondsToTime(seconds);
-        String moneyText = money + "\u9000";
+        String moneyText = TimeUtils.formatMoney(money);
 
         int panelWidth = computePanelWidth(font, timeText, moneyText);
         int panelX = screenWidth - EDGE_MARGIN - panelWidth;
         int moneyRowY = screenHeight - EDGE_MARGIN - ROW_HEIGHT;
         int timeRowY = moneyRowY - ROW_SPACING - ROW_HEIGHT;
 
-        drawStatusRow(guiGraphics, minecraft, panelX, timeRowY, panelWidth, TIME_ICON, timeText, getColor());
-        drawStatusRow(guiGraphics, minecraft, panelX, moneyRowY, panelWidth, MONEY_ICON, moneyText, 0xFFFFFF);
+        drawStatusRow(guiGraphics, minecraft, panelX, timeRowY, panelWidth, TIME_ICON, null, timeText, getColor());
+        drawStatusRow(guiGraphics, minecraft, panelX, moneyRowY, panelWidth, null, MCOIN_ICON, moneyText, 0xFFFFFF);
 
         if (!timeInfo.isEmpty()) {
             manageNotifications(guiGraphics, screenHeight, timeRowY, panelWidth, font, minecraft);
@@ -70,15 +70,24 @@ public class TimerOverlay implements LayeredDraw.Layer {
     }
 
     private static void drawStatusRow(GuiGraphics guiGraphics, Minecraft minecraft, int x, int y, int width,
-                                      ItemStack icon, String text, int textColor) {
-        guiGraphics.blitSprite(EFFECT_BACKGROUND_SPRITE, x, y, width, ROW_HEIGHT);
-
-        int iconX = x + ICON_PADDING;
-        int iconY = y + (ROW_HEIGHT - ICON_SIZE) / 2;
-        guiGraphics.renderItem(icon, iconX, iconY);
+                                      ItemStack itemIcon, String fontIcon, String text, int textColor) {
+        guiGraphics.blitSprite(STATUS_BACKGROUND_SPRITE, x, y, width, ROW_HEIGHT);
 
         int textX = x + ROW_HEIGHT + TEXT_PADDING;
         int textY = y + (ROW_HEIGHT - minecraft.font.lineHeight) / 2;
+
+        if (fontIcon != null) {
+            int iconX = x + ICON_PADDING;
+            int iconY = y + (ROW_HEIGHT - minecraft.font.lineHeight) / 2;
+            guiGraphics.drawString(minecraft.font, fontIcon, iconX, iconY, 0xFFFFFF, true);
+        } else if (itemIcon != null) {
+            int iconX = x + ICON_PADDING;
+            int iconY = y + (ROW_HEIGHT - ICON_SIZE) / 2;
+            guiGraphics.renderItem(itemIcon, iconX, iconY);
+        } else {
+            textX = x + TEXT_PADDING;
+        }
+
         guiGraphics.drawString(minecraft.font, text, textX, textY, textColor, true);
     }
 
@@ -130,7 +139,7 @@ public class TimerOverlay implements LayeredDraw.Layer {
 
     private static void drawNotificationRow(GuiGraphics guiGraphics, Minecraft minecraft, int x, int y, int width,
                                               String text, int textColor) {
-        guiGraphics.blitSprite(EFFECT_BACKGROUND_SPRITE, x, y, width, ROW_HEIGHT);
+        guiGraphics.blitSprite(STATUS_BACKGROUND_SPRITE, x, y, width, ROW_HEIGHT);
 
         int textX = x + TEXT_PADDING;
         int textY = y + (ROW_HEIGHT - minecraft.font.lineHeight) / 2;
