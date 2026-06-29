@@ -1,6 +1,7 @@
 package com.github.timepsilon.time;
 
 import com.github.timepsilon.Core;
+import com.github.timepsilon.config.SqlStatsGate;
 import com.github.timepsilon.database.MoneyDatabase;
 import com.github.timepsilon.packets.server.TimerInfoPacket;
 import com.github.timepsilon.packets.server.TimerSyncPacket;
@@ -128,7 +129,9 @@ public class TimerHandler {
 
     @SubscribeEvent
     public static void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
-        MoneyDatabase.getDatabase().saveBanks();
+        if (SqlStatsGate.isEnabled()) {
+            MoneyDatabase.getDatabase().saveBanks();
+        }
     }
 
     public static void sendOverlayPacket(ServerPlayer player, int time, int money,  boolean isOut) {

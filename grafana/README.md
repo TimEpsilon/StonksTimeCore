@@ -58,18 +58,20 @@ Variables d'environnement optionnelles (`.env` ou shell) :
 
 ## Connexion du mod Minecraft
 
-Configurer la section `database` dans le fichier serveur NeoForge (`config/stonkstimecore-server.toml`) :
+Configurer la section `database` dans le fichier serveur NeoForge (`config/stonkstimecore-server.toml`). Voir aussi [`docs/configuration.md`](../docs/configuration.md).
 
 ```toml
 [database]
+    enableSqlStats = true           # false par défaut — pas de PostgreSQL sans ce flag
     host = "localhost"
     port = 5432
     database = "stonkstime"
     user = "stonkstime"
     password = "stonkstime"
+    bankSaveIntervalSeconds = 60
 ```
 
-Le mod écrit directement dans PostgreSQL au démarrage/arrêt du serveur — plus de fichiers `.db` locaux.
+Le mod écrit dans PostgreSQL uniquement si `enableSqlStats = true` (démarrage, cron soldes, transactions SCT, arrêt serveur).
 
 ## Réinitialiser les données de test
 

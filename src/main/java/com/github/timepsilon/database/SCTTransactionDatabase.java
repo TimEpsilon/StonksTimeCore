@@ -1,5 +1,6 @@
 package com.github.timepsilon.database;
 
+import com.github.timepsilon.config.SqlStatsGate;
 import com.github.timepsilon.database.dao.SctTransactionDao;
 import com.github.timepsilon.database.entity.SctTransactionEntry;
 import net.minecraft.server.MinecraftServer;
@@ -19,19 +20,23 @@ public class SCTTransactionDatabase {
     private SCTTransactionDatabase() {}
 
     public void load(MinecraftServer server) {
+        if (!SqlStatsGate.isEnabled()) return;
         dao.connect();
         dao.tryFlushPending();
     }
 
     public void unload() {
+        if (!SqlStatsGate.isEnabled()) return;
         dao.flushAndClose();
     }
 
     public void flushPending() {
+        if (!SqlStatsGate.isEnabled()) return;
         dao.tryFlushPending();
     }
 
     public void sendTransactions(ServerPlayer player, Map<Item, Integer> amountMap, Map<Item, Float> moneyMap) {
+        if (!SqlStatsGate.isEnabled()) return;
         List<SctTransactionEntry> entries = new ArrayList<>();
         for (Map.Entry<Item, Integer> entry : amountMap.entrySet()) {
             Item item = entry.getKey();

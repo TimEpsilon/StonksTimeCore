@@ -1,6 +1,8 @@
 package com.github.timepsilon.database;
 
+import com.github.timepsilon.config.SqlStatsGate;
 import com.github.timepsilon.database.dao.BankDao;
+import com.github.timepsilon.database.entity.BalanceHistoryPoint;
 import com.github.timepsilon.database.entity.BankEntry;
 import com.mojang.authlib.GameProfile;
 import dev.ithundxr.createnumismatics.content.backend.BankAccount;
@@ -9,6 +11,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 import javax.annotation.Nullable;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,22 +28,29 @@ public class MoneyDatabase {
     private MoneyDatabase() {}
 
     public void load(MinecraftServer server) {
+        if (!SqlStatsGate.isEnabled()) return;
         this.server = server;
         dao.connect();
         dao.tryFlushPending();
     }
 
     public void unload() {
+        if (!SqlStatsGate.isEnabled()) return;
         dao.flushAndClose();
         server = null;
     }
 
     public void flushPending() {
+        if (!SqlStatsGate.isEnabled()) return;
         dao.tryFlushPending();
     }
 
+    public List<BalanceHistoryPoint> fetchBalanceHistory(Instant since, int limit) {
+        return dao.fetchPlayerBalanceHistory(since, limit);
+    }
+
     public void saveBanks() {
-        if (server == null) return;
+        if (!SqlStatsGate.isEnabled() || server == null) return;
 
         List<BankEntry> entries = new ArrayList<>();
         for (Map.Entry<UUID, BankAccount> entry : BankSavedData.load(server).getAccounts().entrySet()) {

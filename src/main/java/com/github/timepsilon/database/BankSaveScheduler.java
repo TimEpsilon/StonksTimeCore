@@ -2,6 +2,7 @@ package com.github.timepsilon.database;
 
 import com.github.timepsilon.Core;
 import com.github.timepsilon.config.STCConfigServer;
+import com.github.timepsilon.config.SqlStatsGate;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.concurrent.Executors;
@@ -21,7 +22,15 @@ public final class BankSaveScheduler {
 
     private BankSaveScheduler() {}
 
+    public static boolean shouldStart() {
+        return SqlStatsGate.isEnabled();
+    }
+
     public static void start(MinecraftServer server) {
+        if (!shouldStart()) {
+            Core.LOGGER.info("Bank save scheduler skipped (SQL stats disabled).");
+            return;
+        }
         stop();
         SERVER.set(server);
         int intervalSeconds = resolveIntervalSeconds(STCConfigServer.CONFIG.BANK_SAVE_INTERVAL_SECONDS.get());

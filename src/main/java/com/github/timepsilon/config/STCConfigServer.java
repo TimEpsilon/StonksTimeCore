@@ -39,6 +39,7 @@ public class STCConfigServer {
     public final ModConfigSpec.IntValue SRE_MIRROR_DURATION;
     public final ModConfigSpec.DoubleValue SCT_GOLDEN_TICKET_PROBABILITY;
 
+    public final ModConfigSpec.BooleanValue ENABLE_SQL_STATS;
     public final ModConfigSpec.ConfigValue<String> DB_HOST;
     public final ModConfigSpec.IntValue DB_PORT;
     public final ModConfigSpec.ConfigValue<String> DB_NAME;
@@ -181,23 +182,53 @@ public class STCConfigServer {
 
         builder.pop();
         builder.translation("config.stonkstimecore.database").push("database");
+        ENABLE_SQL_STATS = builder
+                .comment(
+                        "Enable PostgreSQL analytics writes (bank snapshots + SCT transactions).",
+                        "When false (default), the mod does not connect to PostgreSQL and skips all stats SQL.",
+                        "Activer les écritures analytiques PostgreSQL (snapshots banque + transactions SCT).",
+                        "Si false (défaut), le mod ne se connecte pas à PostgreSQL et ignore toute requête SQL de stats."
+                )
+                .translation("config.stonkstimecore.database.enableSqlStats")
+                .define("enableSqlStats", false);
         DB_HOST = builder
-                .comment("PostgreSQL host.")
+                .comment(
+                        "PostgreSQL host (used only when enableSqlStats is true).",
+                        "Hôte PostgreSQL (utilisé uniquement si enableSqlStats est true)."
+                )
                 .define("host", "localhost");
         DB_PORT = builder
-                .comment("PostgreSQL port.")
+                .comment(
+                        "PostgreSQL port.",
+                        "Port PostgreSQL."
+                )
                 .defineInRange("port", 5432, 1, 65535);
         DB_NAME = builder
-                .comment("PostgreSQL database name.")
+                .comment(
+                        "PostgreSQL database name.",
+                        "Nom de la base PostgreSQL."
+                )
                 .define("database", "stonkstime");
         DB_USER = builder
-                .comment("PostgreSQL user.")
+                .comment(
+                        "PostgreSQL user.",
+                        "Utilisateur PostgreSQL."
+                )
                 .define("user", "stonkstime");
         DB_PASSWORD = builder
-                .comment("PostgreSQL password.")
+                .comment(
+                        "PostgreSQL password.",
+                        "Mot de passe PostgreSQL."
+                )
                 .define("password", "stonkstime");
         BANK_SAVE_INTERVAL_SECONDS = builder
-                .comment("How often (in real seconds, wall-clock) all player bank balances are saved to PostgreSQL. Uses a background scheduler, not server ticks.")
+                .comment(
+                        "Cron interval (wall-clock seconds) for periodic bank balance snapshots to PostgreSQL.",
+                        "Uses a background scheduler, not server ticks. Minimum 1 second.",
+                        "Intervalle cron (secondes réelles) entre chaque snapshot des soldes bancaires vers PostgreSQL.",
+                        "Utilise un planificateur en arrière-plan, pas les ticks serveur. Minimum 1 seconde."
+                )
+                .translation("config.stonkstimecore.database.bankSaveIntervalSeconds")
                 .defineInRange("bankSaveIntervalSeconds", 1, 1, Integer.MAX_VALUE);
 
         builder.pop();
