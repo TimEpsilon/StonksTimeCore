@@ -56,8 +56,8 @@ Le mod persiste les données dans une base **PostgreSQL** unique (`stonkstime` p
 
 | Table | Rôle |
 |---|---|
-| `banks` | Snapshots quotidiens des soldes bancaires (Create Numismatics) : `player` (UUID), `time` (DATE), `money` (INT). |
-| `sct_transaction` | Transactions SCT agrégées par heure : `hour` (BIGINT), `player` (UUID), `item` (TEXT), `amount` (INT), `money` (INT). |
+| `banks` | Snapshots quotidiens des soldes bancaires (Create Numismatics) : `player` (UUID), `username` (TEXT), `time` (DATE), `money` (INT). |
+| `sct_transaction` | Transactions SCT agrégées par heure : `hour` (BIGINT), `player` (UUID), `username` (TEXT), `item` (TEXT), `amount` (INT), `money` (INT). |
 
 Architecture :
 

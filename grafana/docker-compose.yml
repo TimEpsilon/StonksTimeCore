@@ -18,18 +18,6 @@ services:
       timeout: 5s
       retries: 10
 
-  seed:
-    profiles: [seed]
-    image: postgres:16-alpine
-    depends_on:
-      postgres:
-        condition: service_healthy
-    environment:
-      PGPASSWORD: ${POSTGRES_PASSWORD:-stonkstime}
-    volumes:
-      - ./seed/seed.sql:/seed.sql:ro
-    entrypoint: ["/bin/sh", "-c", "psql -h postgres -U stonkstime -d stonkstime -f /seed.sql"]
-
   grafana:
     image: grafana/grafana:11.4.0
     container_name: stonks-grafana

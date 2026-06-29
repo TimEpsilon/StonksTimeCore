@@ -26,7 +26,8 @@ grafana/
 ├── docker-compose.yml              # PostgreSQL + Grafana
 ├── init/
 │   ├── 01-schema.sql               # Schéma (exécuté au premier démarrage PG)
-│   └── 02-seed.sql                 # Données de démo initiales
+│   ├── 02-migration-username.sql   # Migration colonne username (bases existantes)
+│   └── 03-seed.sql                 # Données de démo initiales
 ├── provisioning/
 │   ├── datasources/postgres.yaml   # Source PostgreSQL native
 │   ├── dashboards/default.yaml     # Chargement auto des dashboards
@@ -84,24 +85,26 @@ Ou via les scripts :
 ./seed/seed.sh    # Linux/macOS
 ```
 
-Les données couvrent **10 jours** (20–29 juin 2025), **5 joueurs** et plusieurs items Minecraft. Charlie (UUID `…440003`) a un solde anormalement élevé à partir du jour 7 pour tester l'alerte.
+Les données couvrent **10 jours** (20–29 juin 2025), **5 joueurs** (Alice, Bob, Charlie, Diana, Eve) et plusieurs items Minecraft. Charlie a un solde anormalement élevé à partir du jour 7 pour tester l'alerte.
 
 ## Schéma
 
 ### Table `banks`
 
-| Colonne | Type   | Description              |
+| Colonne  | Type   | Description              |
 |---------|--------|--------------------------|
-| player  | UUID   | UUID joueur              |
+| player  | UUID   | UUID joueur (clé)        |
+| username| TEXT   | Nom d'affichage joueur   |
 | time    | DATE   | Jour serveur             |
 | money   | INT    | Solde bancaire           |
 
 ### Table `sct_transaction`
 
-| Colonne | Type   | Description                              |
+| Colonne  | Type   | Description                              |
 |---------|--------|------------------------------------------|
 | hour    | BIGINT | Bucket horaire (`epoch_ms / 3_600_000`)  |
-| player  | UUID   | UUID joueur                              |
+| player  | UUID   | UUID joueur (clé)                        |
+| username| TEXT   | Nom d'affichage joueur                   |
 | item    | TEXT   | ID item (`minecraft:diamond`, etc.)      |
 | amount  | INT    | Quantité vendue                          |
 | money   | INT    | Valeur × 1000 (diviser par 1000 en SQL)  |
@@ -137,7 +140,7 @@ docker compose down -v
 ## Notes techniques
 
 - Source de données : plugin PostgreSQL natif de Grafana (pas de plugin tiers)
-- Les UUID joueurs sont affichés via `player::text`
+- Les noms joueurs sont affichés via la colonne `username` (l'UUID reste la clé primaire)
 - Les montants SCT sont convertis avec `money / 1000.0`
 - Les dates `banks.time` : `(time::timestamp AT TIME ZONE 'UTC')`
 - Les buckets horaires SCT : `to_timestamp(hour * 3600) AT TIME ZONE 'UTC'`

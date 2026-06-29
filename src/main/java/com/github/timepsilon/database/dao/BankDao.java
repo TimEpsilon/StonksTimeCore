@@ -16,19 +16,25 @@ public class BankDao {
     private static final String CREATE_TABLE = """
             CREATE TABLE IF NOT EXISTS banks (
                 player UUID NOT NULL,
+                username TEXT NOT NULL,
                 time DATE NOT NULL,
                 money INTEGER NOT NULL,
                 PRIMARY KEY (player, time)
             )
             """;
 
+    private static final String MIGRATE_USERNAME = """
+            ALTER TABLE banks ADD COLUMN IF NOT EXISTS username TEXT NOT NULL DEFAULT 'unknown'
+            """;
+
     private static final String UPSERT = """
             INSERT INTO banks
-            (player, time, money)
-            VALUES (?, ?, ?)
+            (player, username, time, money)
+            VALUES (?, ?, ?, ?)
             ON CONFLICT (player, time)
             DO UPDATE SET
-            money = excluded.money
+            money = excluded.money,
+            username = excluded.username
             """;
 
     private @Nullable Connection connection;
@@ -51,6 +57,7 @@ public class BankDao {
     public void createTable() {
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(CREATE_TABLE);
+            stmt.execute(MIGRATE_USERNAME);
             upsertStatement = connection.prepareStatement(UPSERT);
         } catch (Exception e) {
             Core.LOGGER.error("Error creating bank accounts table", e);
@@ -62,8 +69,8 @@ public class BankDao {
         try {
             for (BankEntry entry : entries) {
                 Core.LOGGER.debug(
-                        "SQL upsert batch: table={}, player={}, time={}, money={}",
-                        BankEntry.TABLE_NAME, entry.player(), entry.time(), entry.money()
+                        "SQL upsert batch: table={}, player={}, username={}, time={}, money={}",
+                        BankEntry.TABLE_NAME, entry.player(), entry.username(), entry.time(), entry.money()
                 );
                 entry.bindTo(upsertStatement);
                 upsertStatement.addBatch();

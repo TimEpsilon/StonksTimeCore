@@ -232,7 +232,7 @@
         {
           "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "time_series",
-          "rawSql": "SELECT (time::timestamp AT TIME ZONE 'UTC') AS time, money AS value, lower(player::text) AS metric FROM banks ORDER BY time",
+          "rawSql": "SELECT (time::timestamp AT TIME ZONE 'UTC') AS time, money AS value, username AS metric FROM banks ORDER BY time",
           "refId": "A",
           "timeColumns": ["time"]
         }
@@ -616,7 +616,7 @@
         {
           "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "table",
-          "rawSql": "SELECT lower(player::text) AS \"Joueur\", money AS \"Solde\" FROM banks WHERE time = (SELECT MAX(time) FROM banks) ORDER BY money DESC",
+          "rawSql": "SELECT username AS \"Joueur\", money AS \"Solde\" FROM banks WHERE time = (SELECT MAX(time) FROM banks) ORDER BY money DESC",
           "refId": "A"
         }
       ],

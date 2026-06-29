@@ -49,6 +49,7 @@ class SctTransactionDaoStressTest {
             SctTransactionEntry entry = new SctTransactionEntry(
                     hour,
                     player,
+                    "StressPlayer",
                     "minecraft:stress_item_" + i,
                     1,
                     100 + i

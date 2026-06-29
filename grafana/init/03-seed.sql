@@ -1,7 +1,5 @@
--- Réinitialise et injecte les données de test (PostgreSQL)
--- Usage: docker compose --profile seed run --rm seed
-
-TRUNCATE banks, sct_transaction;
+-- Données de démonstration (exécuté au premier démarrage PG)
+-- Joueurs: Alice …440001, Bob …440002, Charlie …440003, Diana …440004, Eve …440005
 
 INSERT INTO banks (player, username, time, money) VALUES
 ('550e8400-e29b-41d4-a716-446655440001', 'Alice', '2025-06-20', 12000),

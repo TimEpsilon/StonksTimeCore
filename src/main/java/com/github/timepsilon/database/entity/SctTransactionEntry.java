@@ -8,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public record SctTransactionEntry(long hour, UUID player, String itemId, int amount, int storedMoney) {
+public record SctTransactionEntry(long hour, UUID player, String username, String itemId, int amount, int storedMoney) {
 
     public static final String TABLE_NAME = "sct_transaction";
 
@@ -16,6 +16,7 @@ public record SctTransactionEntry(long hour, UUID player, String itemId, int amo
         return new SctTransactionEntry(
                 TimeUtils.getCurrentHour(),
                 player.getUUID(),
+                player.getGameProfile().getName(),
                 item.toString(),
                 amount,
                 (int) (money * 1000)
@@ -25,9 +26,10 @@ public record SctTransactionEntry(long hour, UUID player, String itemId, int amo
     public void bindTo(PreparedStatement statement) throws SQLException {
         statement.setLong(1, hour);
         statement.setObject(2, player);
-        statement.setString(3, itemId);
-        statement.setInt(4, amount);
-        statement.setInt(5, storedMoney);
+        statement.setString(3, username);
+        statement.setString(4, itemId);
+        statement.setInt(5, amount);
+        statement.setInt(6, storedMoney);
     }
 
     public float moneyAsFloat() {

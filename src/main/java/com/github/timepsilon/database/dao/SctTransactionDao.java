@@ -17,6 +17,7 @@ public class SctTransactionDao {
             CREATE TABLE IF NOT EXISTS sct_transaction (
                 hour BIGINT NOT NULL,
                 player UUID NOT NULL,
+                username TEXT NOT NULL,
                 item TEXT NOT NULL,
                 amount INTEGER NOT NULL,
                 money INTEGER NOT NULL,
@@ -24,14 +25,19 @@ public class SctTransactionDao {
             )
             """;
 
+    private static final String MIGRATE_USERNAME = """
+            ALTER TABLE sct_transaction ADD COLUMN IF NOT EXISTS username TEXT NOT NULL DEFAULT 'unknown'
+            """;
+
     private static final String UPSERT = """
             INSERT INTO sct_transaction
-            (hour, player, item, amount, money)
-            VALUES (?, ?, ?, ?, ?)
+            (hour, player, username, item, amount, money)
+            VALUES (?, ?, ?, ?, ?, ?)
             ON CONFLICT (hour, player, item)
             DO UPDATE SET
             amount = sct_transaction.amount + excluded.amount,
-            money = sct_transaction.money + excluded.money
+            money = sct_transaction.money + excluded.money,
+            username = excluded.username
             """;
 
     private @Nullable Connection connection;
@@ -54,6 +60,7 @@ public class SctTransactionDao {
     public void createTable() {
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(CREATE_TABLE);
+            stmt.execute(MIGRATE_USERNAME);
             upsertStatement = connection.prepareStatement(UPSERT);
         } catch (Exception e) {
             Core.LOGGER.error("Error creating SCT transaction table.", e);
@@ -65,8 +72,8 @@ public class SctTransactionDao {
         try {
             for (SctTransactionEntry entry : entries) {
                 Core.LOGGER.debug(
-                        "SQL upsert batch: table={}, player={}, hour={}, item={}, amount={}, money={}",
-                        SctTransactionEntry.TABLE_NAME, entry.player(), entry.hour(),
+                        "SQL upsert batch: table={}, player={}, username={}, hour={}, item={}, amount={}, money={}",
+                        SctTransactionEntry.TABLE_NAME, entry.player(), entry.username(), entry.hour(),
                         entry.itemId(), entry.amount(), entry.moneyAsFloat()
                 );
                 entry.bindTo(upsertStatement);
