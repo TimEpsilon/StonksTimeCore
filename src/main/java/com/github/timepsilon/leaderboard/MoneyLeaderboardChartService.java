@@ -41,7 +41,9 @@ public final class MoneyLeaderboardChartService {
         }
 
         List<String> topPlayers = byPlayer.entrySet().stream()
-                .sorted(Comparator.comparingInt(entry -> latestBalance(entry.getValue())).reversed())
+                .sorted(Comparator.comparingInt(
+                        (Map.Entry<String, List<BalanceHistoryPoint>> entry) -> latestBalance(entry.getValue())
+                ).reversed())
                 .limit(maxPlayers)
                 .map(Map.Entry::getKey)
                 .toList();
