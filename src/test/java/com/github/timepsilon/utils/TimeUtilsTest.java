@@ -1,4 +1,4 @@
-﻿package com.github.timepsilon.utils;
+package com.github.timepsilon.utils;
 
 import org.junit.jupiter.api.Test;
 
