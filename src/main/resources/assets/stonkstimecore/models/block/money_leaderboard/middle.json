@@ -1,0 +1,71 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "brass": "create:block/brass_casing",
+    "copper": "create:block/copper_casing",
+    "display": "create:block/display_link",
+    "particle": "create:block/brass_casing"
+  },
+  "elements": [
+    {
+      "from": [3, 0, 3],
+      "to": [13, 15, 13],
+      "faces": {
+        "north": { "texture": "#display" },
+        "east": { "texture": "#brass" },
+        "south": { "texture": "#brass" },
+        "west": { "texture": "#brass" },
+        "up": { "texture": "#brass" },
+        "down": { "texture": "#brass" }
+      }
+    },
+    {
+      "from": [2, 0, 2],
+      "to": [14, 16, 3],
+      "faces": {
+        "north": { "texture": "#copper" },
+        "east": { "texture": "#copper" },
+        "south": { "texture": "#copper" },
+        "west": { "texture": "#copper" },
+        "up": { "texture": "#copper" },
+        "down": { "texture": "#copper" }
+      }
+    },
+    {
+      "from": [2, 0, 13],
+      "to": [14, 16, 14],
+      "faces": {
+        "north": { "texture": "#copper" },
+        "east": { "texture": "#copper" },
+        "south": { "texture": "#copper" },
+        "west": { "texture": "#copper" },
+        "up": { "texture": "#copper" },
+        "down": { "texture": "#copper" }
+      }
+    },
+    {
+      "from": [2, 0, 3],
+      "to": [3, 16, 13],
+      "faces": {
+        "north": { "texture": "#copper" },
+        "east": { "texture": "#copper" },
+        "south": { "texture": "#copper" },
+        "west": { "texture": "#copper" },
+        "up": { "texture": "#copper" },
+        "down": { "texture": "#copper" }
+      }
+    },
+    {
+      "from": [13, 0, 3],
+      "to": [14, 16, 13],
+      "faces": {
+        "north": { "texture": "#copper" },
+        "east": { "texture": "#copper" },
+        "south": { "texture": "#copper" },
+        "west": { "texture": "#copper" },
+        "up": { "texture": "#copper" },
+        "down": { "texture": "#copper" }
+      }
+    }
+  ]
+}

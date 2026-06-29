@@ -1,5 +1,6 @@
 package com.github.timepsilon.block;
 
+import com.github.timepsilon.block.custom.MoneyLeaderboard;
 import com.github.timepsilon.block.custom.SlotMachine;
 import com.github.timepsilon.block.custom.StonksTemporalChronoscope;
 import com.simibubi.create.api.stress.BlockStressValues;
@@ -31,6 +32,16 @@ public class ModBlocks {
 
     public static final BlockEntry<SlotMachine> SLOT_MACHINE = REGISTRATE
             .block("slot_machine", SlotMachine::new)
+            .initialProperties(SharedProperties::softMetal)
+            .properties(p -> p.mapColor(MapColor.TERRACOTTA_YELLOW).noOcclusion())
+            .transform(pickaxeOnly())
+            .item()
+            .tab(NumismaticsCreativeModeTabs.getBaseTabKey())
+            .transform(customItemModel())
+            .register();
+
+    public static final BlockEntry<MoneyLeaderboard> MONEY_LEADERBOARD = REGISTRATE
+            .block("money_leaderboard", MoneyLeaderboard::new)
             .initialProperties(SharedProperties::softMetal)
             .properties(p -> p.mapColor(MapColor.TERRACOTTA_YELLOW).noOcclusion())
             .transform(pickaxeOnly())

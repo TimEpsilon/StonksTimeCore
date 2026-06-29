@@ -9,6 +9,8 @@
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.behaviour1" : "Se met en marche.",
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.condition1" : "Lorsque alimenté par Rotation ≥ 30 RPM",
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.summary" : "Converti des items en leur valeur _SCT_ correspondante",
+  "block.stonkstimecore.money_leaderboard" : "Classement des Richesses",
+  "block.stonkstimecore.money_leaderboard.tooltip.summary" : "Affiche le _top 8 des joueurs_ classés par solde bancaire.",
 
   "sounds.stonkstimecore.time_out" : "Cloche Temporelle",
   "sounds.stonkstimecore.slot_machine.losing" : "Machine à Sous Défaite",

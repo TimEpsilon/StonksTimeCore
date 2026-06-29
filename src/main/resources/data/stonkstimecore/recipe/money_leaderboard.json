@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "T",
+    "D",
+    "D",
+    "C",
+    "B"
+  ],
+  "key": {
+    "T": {
+      "item": "create:electron_tube"
+    },
+    "D": {
+      "item": "create:display_board"
+    },
+    "C": {
+      "item": "create:brass_casing"
+    },
+    "B": {
+      "item": "create:andesite_casing"
+    }
+  },
+  "result": {
+    "id": "stonkstimecore:money_leaderboard",
+    "count": 1
+  }
+}

@@ -9,6 +9,8 @@
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.behaviour1" : "Starts spinning.",
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.condition1" : "When Powered by Kinetics ≥ 30 RPM",
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.summary" : "Converts any item into its corresponding _SCT_ amount",
+  "block.stonkstimecore.money_leaderboard" : "Money Leaderboard",
+  "block.stonkstimecore.money_leaderboard.tooltip.summary" : "Displays the top _8 richest players_ ranked by bank balance.",
 
   "sounds.stonkstimecore.time_out" : "Time Out Bell",
   "sounds.stonkstimecore.slot_machine.losing" : "Slot Machine Losing",

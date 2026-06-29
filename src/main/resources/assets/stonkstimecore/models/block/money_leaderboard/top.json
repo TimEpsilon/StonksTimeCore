@@ -1,0 +1,46 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "brass": "create:block/brass_casing",
+    "copper": "create:block/copper_casing",
+    "display": "create:block/display_link",
+    "particle": "create:block/brass_casing"
+  },
+  "elements": [
+    {
+      "from": [3, 0, 3],
+      "to": [13, 14, 13],
+      "faces": {
+        "north": { "texture": "#display" },
+        "east": { "texture": "#brass" },
+        "south": { "texture": "#brass" },
+        "west": { "texture": "#brass" },
+        "up": { "texture": "#brass" },
+        "down": { "texture": "#brass" }
+      }
+    },
+    {
+      "from": [2, 14, 2],
+      "to": [14, 16, 14],
+      "faces": {
+        "north": { "texture": "#copper" },
+        "east": { "texture": "#copper" },
+        "south": { "texture": "#copper" },
+        "west": { "texture": "#copper" },
+        "up": { "texture": "#brass" },
+        "down": { "texture": "#copper" }
+      }
+    },
+    {
+      "from": [4, 15, 4],
+      "to": [12, 16, 12],
+      "faces": {
+        "north": { "texture": "#display" },
+        "east": { "texture": "#display" },
+        "south": { "texture": "#display" },
+        "west": { "texture": "#display" },
+        "up": { "texture": "#display" }
+      }
+    }
+  ]
+}

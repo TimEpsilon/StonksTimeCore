@@ -1,9 +1,11 @@
 package com.github.timepsilon.block.entity;
 
 import com.github.timepsilon.block.ModBlocks;
+import com.github.timepsilon.block.entity.client.MoneyLeaderboardRenderer;
 import com.github.timepsilon.block.entity.client.SlotMachineRenderer;
 import com.github.timepsilon.block.entity.client.StonksTemporalChronoscopeRenderer;
 import com.github.timepsilon.block.entity.client.StonksTemporalChronoscopeVisual;
+import com.github.timepsilon.block.entity.server.MoneyLeaderboardEntity;
 import com.github.timepsilon.block.entity.server.SlotMachineEntity;
 import com.github.timepsilon.block.entity.server.StonksTemporalChronoscopeEntity;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
@@ -27,6 +29,13 @@ public class ModBlockEntities {
             .blockEntity("slot_machine", SlotMachineEntity::new)
             .validBlocks(ModBlocks.SLOT_MACHINE)
             .renderer(() -> SlotMachineRenderer::new)
+            .register();
+
+    public static final BlockEntityEntry<MoneyLeaderboardEntity> MONEY_LEADERBOARD_ENTITY = REGISTRATE
+            .blockEntity("money_leaderboard", MoneyLeaderboardEntity::new)
+            .validBlocks(ModBlocks.MONEY_LEADERBOARD)
+            .tick(MoneyLeaderboardEntity::serverTick)
+            .renderer(() -> MoneyLeaderboardRenderer::new)
             .register();
 
 }

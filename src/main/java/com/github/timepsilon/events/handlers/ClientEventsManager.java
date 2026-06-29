@@ -2,6 +2,7 @@ package com.github.timepsilon.events.handlers;
 
 import com.github.timepsilon.Core;
 import com.github.timepsilon.block.entity.ModBlockEntities;
+import com.github.timepsilon.block.entity.client.MoneyLeaderboardRenderer;
 import com.github.timepsilon.block.entity.client.SlotMachineRenderer;
 import com.github.timepsilon.block.entity.server.SlotMachineEntity;
 import com.github.timepsilon.client.gui.overlay.TimerOverlay;
@@ -49,6 +50,7 @@ public class ClientEventsManager {
         EntityRenderers.register(ModEntities.POTION_MAGIC_PROJECTILE.get(), PotionMagicProjectileRenderer::new);
 
         BlockEntityRenderers.register(ModBlockEntities.SLOT_MACHINE_ENTITY.get(), SlotMachineRenderer::new);
+        BlockEntityRenderers.register(ModBlockEntities.MONEY_LEADERBOARD_ENTITY.get(), MoneyLeaderboardRenderer::new);
     }
 
     @SubscribeEvent
