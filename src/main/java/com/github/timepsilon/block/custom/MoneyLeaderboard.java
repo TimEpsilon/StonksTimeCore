@@ -5,6 +5,7 @@ import com.github.timepsilon.block.entity.server.MoneyLeaderboardEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -19,15 +20,20 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public class MoneyLeaderboard extends Block implements EntityBlock {
 
+    public static final int WIDTH = 8;
     public static final int HEIGHT = 8;
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-    public static final IntegerProperty SEGMENT = IntegerProperty.create("segment", 0, HEIGHT - 1);
+    public static final IntegerProperty PART_X = IntegerProperty.create("part_x", 0, WIDTH - 1);
+    public static final IntegerProperty PART_Y = IntegerProperty.create("part_y", 0, HEIGHT - 1);
 
     private static final VoxelShape SHAPE = Block.box(2, 0, 2, 14, 16, 14);
 
@@ -35,11 +41,30 @@ public class MoneyLeaderboard extends Block implements EntityBlock {
         super(properties);
         registerDefaultState(defaultBlockState()
                 .setValue(FACING, Direction.NORTH)
-                .setValue(SEGMENT, 0));
+                .setValue(PART_X, 0)
+                .setValue(PART_Y, 0));
+    }
+
+    public static boolean isMainPart(BlockState state) {
+        return state.getValue(PART_X) == 0 && state.getValue(PART_Y) == 0;
+    }
+
+    public static BlockPos getPartOffset(Direction facing, int partX, int partY) {
+        return switch (facing) {
+            case NORTH -> new BlockPos(partX, partY, 0);
+            case SOUTH -> new BlockPos(-partX, partY, 0);
+            case EAST -> new BlockPos(0, partY, partX);
+            case WEST -> new BlockPos(0, partY, -partX);
+            default -> BlockPos.ZERO;
+        };
+    }
+
+    public static BlockPos getPartPos(BlockPos mainPos, Direction facing, int partX, int partY) {
+        return mainPos.offset(getPartOffset(facing, partX, partY));
     }
 
     public static BlockPos getMainPos(BlockState state, BlockPos pos) {
-        return pos.below(state.getValue(SEGMENT));
+        return pos.subtract(getPartOffset(state.getValue(FACING), state.getValue(PART_X), state.getValue(PART_Y)));
     }
 
     @Override
@@ -49,27 +74,32 @@ public class MoneyLeaderboard extends Block implements EntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, SEGMENT);
+        builder.add(FACING, PART_X, PART_Y);
     }
 
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockPos pos = context.getClickedPos();
         Level level = context.getLevel();
+        Direction facing = context.getHorizontalDirection().getOpposite();
 
         if (pos.getY() + HEIGHT - 1 >= level.getMaxBuildHeight()) {
             return null;
         }
 
-        for (int i = 0; i < HEIGHT; i++) {
-            if (!level.getBlockState(pos.above(i)).canBeReplaced(context)) {
-                return null;
+        for (int x = 0; x < WIDTH; x++) {
+            for (int y = 0; y < HEIGHT; y++) {
+                BlockPos partPos = getPartPos(pos, facing, x, y);
+                if (!level.getBlockState(partPos).canBeReplaced(context)) {
+                    return null;
+                }
             }
         }
 
         return defaultBlockState()
-                .setValue(FACING, context.getHorizontalDirection().getOpposite())
-                .setValue(SEGMENT, 0);
+                .setValue(FACING, facing)
+                .setValue(PART_X, 0)
+                .setValue(PART_Y, 0);
     }
 
     @Override
@@ -79,34 +109,69 @@ public class MoneyLeaderboard extends Block implements EntityBlock {
         }
 
         Direction facing = state.getValue(FACING);
-        for (int segment = 1; segment < HEIGHT; segment++) {
-            level.setBlock(
-                    pos.above(segment),
-                    defaultBlockState().setValue(FACING, facing).setValue(SEGMENT, segment),
-                    Block.UPDATE_ALL
-            );
+        for (int x = 0; x < WIDTH; x++) {
+            for (int y = 0; y < HEIGHT; y++) {
+                if (x == 0 && y == 0) {
+                    continue;
+                }
+                level.setBlock(
+                        getPartPos(pos, facing, x, y),
+                        defaultBlockState().setValue(FACING, facing).setValue(PART_X, x).setValue(PART_Y, y),
+                        Block.UPDATE_ALL
+                );
+            }
         }
+    }
+
+    @Override
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        if (!level.isClientSide && !isMainPart(state)) {
+            BlockPos mainPos = getMainPos(state, pos);
+            BlockState mainState = level.getBlockState(mainPos);
+            if (mainState.getBlock() == this && isMainPart(mainState)) {
+                level.destroyBlock(mainPos, false);
+            }
+        }
+        return super.playerWillDestroy(level, pos, state, player);
     }
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (!state.is(newState.getBlock()) && !level.isClientSide) {
             BlockPos mainPos = getMainPos(state, pos);
-            for (int segment = 0; segment < HEIGHT; segment++) {
-                BlockPos segmentPos = mainPos.above(segment);
-                if (segmentPos.equals(pos)) {
-                    continue;
-                }
-                BlockState segmentState = level.getBlockState(segmentPos);
-                if (segmentState.getBlock() == this) {
-                    level.setBlock(segmentPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+            Direction facing = state.getValue(FACING);
+            boolean isMain = mainPos.equals(pos);
+
+            for (int x = 0; x < WIDTH; x++) {
+                for (int y = 0; y < HEIGHT; y++) {
+                    if (x == 0 && y == 0) {
+                        continue;
+                    }
+                    BlockPos partPos = getPartPos(mainPos, facing, x, y);
+                    if (partPos.equals(pos)) {
+                        continue;
+                    }
+                    BlockState partState = level.getBlockState(partPos);
+                    if (partState.getBlock() == this) {
+                        level.removeBlock(partPos, false);
+                    }
                 }
             }
-            if (!mainPos.equals(pos)) {
-                Block.popResource(level, mainPos, new ItemStack(this));
+
+            if (!isMain) {
+                level.removeBlock(mainPos, false);
+                Block.popResource(level, pos, new ItemStack(this));
             }
         }
         super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+
+    @Override
+    protected List<ItemStack> getDrops(BlockState state, LootParams.Builder params) {
+        if (!isMainPart(state)) {
+            return List.of();
+        }
+        return super.getDrops(state, params);
     }
 
     @Override
@@ -119,23 +184,33 @@ public class MoneyLeaderboard extends Block implements EntityBlock {
             BlockPos neighborPos
     ) {
         BlockPos mainPos = getMainPos(state, pos);
-        int segment = state.getValue(SEGMENT);
-        BlockPos expectedPos = mainPos.above(segment);
+        Direction facing = state.getValue(FACING);
+        int partX = state.getValue(PART_X);
+        int partY = state.getValue(PART_Y);
+        BlockPos expectedPos = getPartPos(mainPos, facing, partX, partY);
 
         if (!expectedPos.equals(pos)) {
             return Blocks.AIR.defaultBlockState();
         }
 
         BlockState mainState = level.getBlockState(mainPos);
-        if (!(mainState.getBlock() instanceof MoneyLeaderboard) || mainState.getValue(SEGMENT) != 0) {
+        if (!(mainState.getBlock() instanceof MoneyLeaderboard) || !isMainPart(mainState)) {
             return Blocks.AIR.defaultBlockState();
         }
 
-        for (int i = 0; i < HEIGHT; i++) {
-            BlockPos segmentPos = mainPos.above(i);
-            BlockState segmentState = level.getBlockState(segmentPos);
-            if (!(segmentState.getBlock() instanceof MoneyLeaderboard) || segmentState.getValue(SEGMENT) != i) {
-                return Blocks.AIR.defaultBlockState();
+        if (!mainState.getValue(FACING).equals(facing)) {
+            return Blocks.AIR.defaultBlockState();
+        }
+
+        for (int x = 0; x < WIDTH; x++) {
+            for (int y = 0; y < HEIGHT; y++) {
+                BlockPos partPos = getPartPos(mainPos, facing, x, y);
+                BlockState partState = level.getBlockState(partPos);
+                if (!(partState.getBlock() instanceof MoneyLeaderboard)
+                        || partState.getValue(PART_X) != x
+                        || partState.getValue(PART_Y) != y) {
+                    return Blocks.AIR.defaultBlockState();
+                }
             }
         }
 
@@ -144,7 +219,7 @@ public class MoneyLeaderboard extends Block implements EntityBlock {
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return state.getValue(SEGMENT) == 0
+        return isMainPart(state)
                 ? new MoneyLeaderboardEntity(ModBlockEntities.MONEY_LEADERBOARD_ENTITY.get(), pos, state)
                 : null;
     }
@@ -155,7 +230,7 @@ public class MoneyLeaderboard extends Block implements EntityBlock {
             BlockState state,
             BlockEntityType<T> type
     ) {
-        if (level.isClientSide() || state.getValue(SEGMENT) != 0) {
+        if (level.isClientSide() || !isMainPart(state)) {
             return null;
         }
         return type == ModBlockEntities.MONEY_LEADERBOARD_ENTITY.get()

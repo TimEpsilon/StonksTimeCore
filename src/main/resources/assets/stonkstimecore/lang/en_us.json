@@ -10,7 +10,8 @@
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.condition1" : "When Powered by Kinetics ≥ 30 RPM",
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.summary" : "Converts any item into its corresponding _SCT_ amount",
   "block.stonkstimecore.money_leaderboard" : "Money Leaderboard",
-  "block.stonkstimecore.money_leaderboard.tooltip.summary" : "Displays the top _8 richest players_ ranked by bank balance.",
+  "block.stonkstimecore.money_leaderboard.tooltip.summary" : "Displays a _8×8 chart_ of player bank balances over time from PostgreSQL.",
+  "block.stonkstimecore.money_leaderboard.no_data" : "Waiting for bank history...",
 
   "sounds.stonkstimecore.time_out" : "Time Out Bell",
   "sounds.stonkstimecore.slot_machine.losing" : "Slot Machine Losing",

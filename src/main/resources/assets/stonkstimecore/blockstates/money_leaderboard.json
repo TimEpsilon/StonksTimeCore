@@ -1,39 +1,20 @@
 {
-  "variants": {
-    "facing=north,segment=0": { "model": "stonkstimecore:block/money_leaderboard/bottom" },
-    "facing=north,segment=1": { "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=north,segment=2": { "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=north,segment=3": { "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=north,segment=4": { "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=north,segment=5": { "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=north,segment=6": { "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=north,segment=7": { "model": "stonkstimecore:block/money_leaderboard/top" },
-
-    "facing=south,segment=0": { "y": 180, "model": "stonkstimecore:block/money_leaderboard/bottom" },
-    "facing=south,segment=1": { "y": 180, "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=south,segment=2": { "y": 180, "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=south,segment=3": { "y": 180, "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=south,segment=4": { "y": 180, "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=south,segment=5": { "y": 180, "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=south,segment=6": { "y": 180, "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=south,segment=7": { "y": 180, "model": "stonkstimecore:block/money_leaderboard/top" },
-
-    "facing=east,segment=0": { "y": 90, "model": "stonkstimecore:block/money_leaderboard/bottom" },
-    "facing=east,segment=1": { "y": 90, "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=east,segment=2": { "y": 90, "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=east,segment=3": { "y": 90, "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=east,segment=4": { "y": 90, "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=east,segment=5": { "y": 90, "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=east,segment=6": { "y": 90, "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=east,segment=7": { "y": 90, "model": "stonkstimecore:block/money_leaderboard/top" },
-
-    "facing=west,segment=0": { "y": 270, "model": "stonkstimecore:block/money_leaderboard/bottom" },
-    "facing=west,segment=1": { "y": 270, "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=west,segment=2": { "y": 270, "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=west,segment=3": { "y": 270, "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=west,segment=4": { "y": 270, "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=west,segment=5": { "y": 270, "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=west,segment=6": { "y": 270, "model": "stonkstimecore:block/money_leaderboard/middle" },
-    "facing=west,segment=7": { "y": 270, "model": "stonkstimecore:block/money_leaderboard/top" }
-  }
+  "multipart": [
+    {
+      "when": { "facing": "north" },
+      "apply": { "model": "stonkstimecore:block/money_leaderboard/cell" }
+    },
+    {
+      "when": { "facing": "south" },
+      "apply": { "model": "stonkstimecore:block/money_leaderboard/cell", "y": 180 }
+    },
+    {
+      "when": { "facing": "east" },
+      "apply": { "model": "stonkstimecore:block/money_leaderboard/cell", "y": 90 }
+    },
+    {
+      "when": { "facing": "west" },
+      "apply": { "model": "stonkstimecore:block/money_leaderboard/cell", "y": 270 }
+    }
+  ]
 }

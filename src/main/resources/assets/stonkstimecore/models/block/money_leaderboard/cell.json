@@ -1,0 +1,23 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "brass": "create:block/brass_casing",
+    "copper": "create:block/copper_casing",
+    "display": "create:block/display_board",
+    "particle": "create:block/brass_casing"
+  },
+  "elements": [
+    {
+      "from": [2, 0, 2],
+      "to": [14, 16, 3],
+      "faces": {
+        "north": { "texture": "#display" },
+        "east": { "texture": "#brass" },
+        "south": { "texture": "#copper" },
+        "west": { "texture": "#brass" },
+        "up": { "texture": "#brass" },
+        "down": { "texture": "#brass" }
+      }
+    }
+  ]
+}

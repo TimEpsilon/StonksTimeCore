@@ -1,6 +1,7 @@
 package com.github.timepsilon.database;
 
 import com.github.timepsilon.database.dao.BankDao;
+import com.github.timepsilon.database.entity.BalanceHistoryPoint;
 import com.github.timepsilon.database.entity.BankEntry;
 import com.mojang.authlib.GameProfile;
 import dev.ithundxr.createnumismatics.content.backend.BankAccount;
@@ -9,6 +10,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 import javax.annotation.Nullable;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +39,10 @@ public class MoneyDatabase {
 
     public void flushPending() {
         dao.tryFlushPending();
+    }
+
+    public List<BalanceHistoryPoint> fetchBalanceHistory(Instant since, int limit) {
+        return dao.fetchPlayerBalanceHistory(since, limit);
     }
 
     public void saveBanks() {

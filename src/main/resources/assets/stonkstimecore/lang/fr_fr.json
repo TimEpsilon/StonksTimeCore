@@ -10,7 +10,8 @@
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.condition1" : "Lorsque alimenté par Rotation ≥ 30 RPM",
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.summary" : "Converti des items en leur valeur _SCT_ correspondante",
   "block.stonkstimecore.money_leaderboard" : "Classement des Richesses",
-  "block.stonkstimecore.money_leaderboard.tooltip.summary" : "Affiche le _top 8 des joueurs_ classés par solde bancaire.",
+  "block.stonkstimecore.money_leaderboard.tooltip.summary" : "Affiche un _graphique 8×8_ des soldes bancaires par joueur depuis PostgreSQL.",
+  "block.stonkstimecore.money_leaderboard.no_data" : "En attente de l'historique bancaire...",
 
   "sounds.stonkstimecore.time_out" : "Cloche Temporelle",
   "sounds.stonkstimecore.slot_machine.losing" : "Machine à Sous Défaite",
