@@ -32,42 +32,11 @@ public class TimeUtils {
     public static final double DEATH_LOSS = STCConfigServer.CONFIG.DEATH_LOSS.getAsDouble();
 
     public static String secondsToTime(int seconds) {
-        if (seconds >= 86400) {
-            int days = seconds / 86400;
-            int remaining = seconds % 86400;
-            int h = remaining / 3600;
-            int m = (remaining % 3600) / 60;
-            return String.format("%dJ %d:%02d", days, h, m);
-        }
-        int h = seconds / 3600;
-        int m = (seconds % 3600) / 60;
-        int s = seconds % 60;
-        return String.format("%d:%02d:%02d", h, m, s);
+        return TimeCore.secondsToTime(seconds);
     }
 
     public static String formatMoney(int amount) {
-        long abs = Math.abs((long) amount);
-        String sign = amount < 0 ? "-" : "";
-
-        if (abs >= 1_000_000_000L) {
-            return sign + formatCompactMoney(abs, 1_000_000_000L, "md");
-        }
-        if (abs >= 1_000_000L) {
-            return sign + formatCompactMoney(abs, 1_000_000L, "m");
-        }
-        if (abs >= 1_000L) {
-            return sign + formatCompactMoney(abs, 1_000L, "k");
-        }
-        return sign + formatMoneyWithSpaces(abs);
-    }
-
-    private static String formatMoneyWithSpaces(long value) {
-        return String.format("%,d", value).replace(',', ' ');
-    }
-
-    private static String formatCompactMoney(long value, long divisor, String suffix) {
-        double compact = (double) value / divisor;
-        return String.format(Locale.US, "%.2f", compact) + suffix;
+        return TimeCore.formatMoney(amount);
     }
 
     public static String SCTToTime(double sct) {
@@ -225,15 +194,15 @@ public class TimeUtils {
     }
 
     public static Instant getCurrentInstant() {
-        return Instant.now().truncatedTo(ChronoUnit.MILLIS);
+        return TimeCore.getCurrentInstant();
     }
 
     public static Instant truncateToHour(Instant instant) {
-        return instant.truncatedTo(ChronoUnit.HOURS);
+        return TimeCore.truncateToHour(instant);
     }
 
     public static Instant getCurrentHourStart() {
-        return truncateToHour(getCurrentInstant());
+        return TimeCore.getCurrentHourStart();
     }
 
 }

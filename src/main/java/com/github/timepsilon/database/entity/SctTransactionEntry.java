@@ -1,6 +1,6 @@
 package com.github.timepsilon.database.entity;
 
-import com.github.timepsilon.utils.TimeUtils;
+import com.github.timepsilon.utils.TimeCore;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 
@@ -17,7 +17,7 @@ public record SctTransactionEntry(Instant time, UUID player, String username, St
 
     public static SctTransactionEntry from(ServerPlayer player, Item item, int amount, float money) {
         return new SctTransactionEntry(
-                TimeUtils.getCurrentHourStart(),
+                TimeCore.getCurrentHourStart(),
                 player.getUUID(),
                 player.getGameProfile().getName(),
                 item.toString(),

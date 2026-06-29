@@ -3,7 +3,7 @@ package com.github.timepsilon.database.pending;
 import com.github.timepsilon.Core;
 import com.github.timepsilon.database.entity.BankEntry;
 import com.github.timepsilon.database.entity.SctTransactionEntry;
-import com.github.timepsilon.utils.TimeUtils;
+import com.github.timepsilon.utils.TimeCore;
 import com.github.timepsilon.utils.FileManager;
 import net.minecraft.server.MinecraftServer;
 
@@ -23,7 +23,7 @@ public final class PendingWritesStore {
 
     private final PendingWriteQueue<SctTransactionEntry> sctTransactions = new PendingWriteQueue<>(
             SctTransactionEntry.TABLE_NAME,
-            entry -> TimeUtils.truncateToHour(entry.time()) + "|" + entry.player() + "|" + entry.itemId(),
+            entry -> TimeCore.truncateToHour(entry.time()) + "|" + entry.player() + "|" + entry.itemId(),
             (existing, incoming) -> new SctTransactionEntry(
                     existing.time(),
                     existing.player(),
