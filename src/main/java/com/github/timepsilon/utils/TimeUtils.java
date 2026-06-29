@@ -59,13 +59,7 @@ public class TimeUtils {
 
     private static String formatCompactMoney(long value, long divisor, String suffix) {
         double compact = (double) value / divisor;
-        if (compact >= 100) {
-            return Math.round(compact) + " " + suffix;
-        }
-        if (Math.abs(compact - Math.rint(compact)) < 0.05) {
-            return (long) Math.rint(compact) + " " + suffix;
-        }
-        return String.format(Locale.FRENCH, "%.1f", compact) + " " + suffix;
+        return String.format(Locale.US, "%.2f", compact) + suffix;
     }
 
     public static String SCTToTime(double sct) {

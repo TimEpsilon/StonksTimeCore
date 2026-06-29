@@ -77,9 +77,7 @@ public class TimerOverlay implements LayeredDraw.Layer {
         int textY = y + (ROW_HEIGHT - minecraft.font.lineHeight) / 2;
 
         if (fontIcon != null) {
-            int iconX = x + ICON_PADDING;
-            int iconY = y + (ROW_HEIGHT - minecraft.font.lineHeight) / 2;
-            guiGraphics.drawString(minecraft.font, fontIcon, iconX, iconY, 0xFFFFFF, true);
+            drawScaledFontIcon(guiGraphics, minecraft.font, fontIcon, x + ICON_PADDING, y);
         } else if (itemIcon != null) {
             int iconX = x + ICON_PADDING;
             int iconY = y + (ROW_HEIGHT - ICON_SIZE) / 2;
@@ -89,6 +87,17 @@ public class TimerOverlay implements LayeredDraw.Layer {
         }
 
         guiGraphics.drawString(minecraft.font, text, textX, textY, textColor, true);
+    }
+
+    private static void drawScaledFontIcon(GuiGraphics guiGraphics, Font font, String fontIcon, int x, int y) {
+        int iconY = y + (ROW_HEIGHT - ICON_SIZE) / 2;
+        float scale = (float) ICON_SIZE / font.lineHeight;
+        var pose = guiGraphics.pose();
+        pose.pushPose();
+        pose.translate(x, iconY, 0);
+        pose.scale(scale, scale, 1f);
+        guiGraphics.drawString(font, fontIcon, 0, 0, 0xFFFFFF, true);
+        pose.popPose();
     }
 
     public void setSeconds(int seconds) {
