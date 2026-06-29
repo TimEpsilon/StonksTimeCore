@@ -1,6 +1,7 @@
 package com.github.timepsilon.time;
 
 import com.github.timepsilon.Core;
+import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.database.MoneyDatabase;
 import com.github.timepsilon.packets.server.TimerInfoPacket;
 import com.github.timepsilon.packets.server.TimerSyncPacket;
@@ -135,8 +136,9 @@ public class TimerHandler {
 
     @SubscribeEvent
     public static void onServerTick(ServerTickEvent.Post event) {
-        if (event.getServer().getTickCount() % 18000 != 0) return; // Save every 15mins
-        Core.LOGGER.info("Saving Bank Accounts...");
+        int interval = STCConfigServer.CONFIG.BANK_SAVE_INTERVAL_TICKS.get();
+        if (event.getServer().getTickCount() % interval != 0) return;
+        MoneyDatabase.getDatabase().flushPending();
         MoneyDatabase.getDatabase().saveBanks();
     }
 
