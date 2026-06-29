@@ -6,6 +6,8 @@ import com.google.gson.GsonBuilder;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.LevelResource;
 
+import javax.annotation.Nullable;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,6 +36,20 @@ public class FileManager {
             );
         } catch (IOException e) {
             throw new RuntimeException("Failed to write " + name, e);
+        }
+    }
+
+    @Nullable
+    public static <T> T readFileOnWorld(String name, Class<T> type, MinecraftServer server) {
+        Path file = makeServerSideDirectory(server).resolve(name);
+        if (!Files.exists(file)) {
+            return null;
+        }
+        try {
+            return GSON.fromJson(Files.readString(file), type);
+        } catch (IOException e) {
+            Core.LOGGER.error("Failed to read {}", name, e);
+            return null;
         }
     }
 

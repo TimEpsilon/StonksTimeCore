@@ -3,6 +3,8 @@ package com.github.timepsilon.database.dao;
 import com.github.timepsilon.Core;
 import com.github.timepsilon.database.PostgresHelper;
 import com.github.timepsilon.database.entity.SctTransactionEntry;
+import com.github.timepsilon.database.pending.PendingWriteQueue;
+import com.github.timepsilon.database.pending.PendingWritesStore;
 
 import javax.annotation.Nullable;
 import java.sql.Connection;
@@ -10,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
+import java.util.List;
 
 public class SctTransactionDao {
 
@@ -40,35 +43,117 @@ public class SctTransactionDao {
             username = excluded.username
             """;
 
+    private final PendingWriteQueue<SctTransactionEntry> pending = PendingWritesStore.get().sctTransactions();
+
     private @Nullable Connection connection;
     private @Nullable PreparedStatement upsertStatement;
+    private @Nullable BankDao.ConnectionSupplier connectionSupplier = PostgresHelper::open;
 
     public void connect() {
-        connect(PostgresHelper::open);
+        connect(connectionSupplier);
     }
 
     public void connect(BankDao.ConnectionSupplier supplier) {
+        connectionSupplier = supplier;
         try {
             if (connection != null && !connection.isClosed()) return;
             connection = supplier.get();
             Core.LOGGER.debug("Connected to PostgreSQL (table={}).", SctTransactionEntry.TABLE_NAME);
+            createTable();
+            tryFlushPending();
         } catch (SQLException e) {
             Core.LOGGER.error("Error loading SCT transaction database!", e);
+            disconnect();
         }
     }
 
     public void createTable() {
+        if (connection == null) return;
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(CREATE_TABLE);
             stmt.execute(MIGRATE_USERNAME);
             upsertStatement = connection.prepareStatement(UPSERT);
         } catch (Exception e) {
             Core.LOGGER.error("Error creating SCT transaction table.", e);
+            disconnect();
         }
     }
 
     public void upsertAll(Collection<SctTransactionEntry> entries) {
-        if (upsertStatement == null) return;
+        if (entries.isEmpty()) return;
+        ensureConnected();
+        if (!isReady()) {
+            pending.enqueueAll(entries);
+            Core.LOGGER.debug(
+                    "Pending write enqueued (no connection): table={}, batch={}, queueSize={}",
+                    SctTransactionEntry.TABLE_NAME, entries.size(), pending.size()
+            );
+            PendingWritesStore.get().persistToDisk();
+            return;
+        }
+        if (!executeBatch(entries)) {
+            pending.enqueueAll(entries);
+            Core.LOGGER.debug(
+                    "Pending write enqueued (write failed): table={}, batch={}, queueSize={}",
+                    SctTransactionEntry.TABLE_NAME, entries.size(), pending.size()
+            );
+        }
+    }
+
+    public boolean tryFlushPending() {
+        if (pending.isEmpty()) return true;
+        ensureConnected();
+        if (!isReady()) return false;
+
+        List<SctTransactionEntry> toFlush = pending.drainAll();
+        Core.LOGGER.info("Flushing {} pending SCT transaction write(s).", toFlush.size());
+        if (executeBatch(toFlush)) {
+            PendingWritesStore.get().persistToDisk();
+            return true;
+        }
+        pending.enqueueAll(toFlush);
+        PendingWritesStore.get().persistToDisk();
+        return false;
+    }
+
+    public void flushAndClose() {
+        tryFlushPending();
+        try {
+            if (upsertStatement != null) {
+                int[] results = upsertStatement.executeBatch();
+                Core.LOGGER.debug(
+                        "SQL batch flushed on close: table={}, count={}",
+                        SctTransactionEntry.TABLE_NAME, results.length
+                );
+                upsertStatement.clearBatch();
+            }
+        } catch (SQLException e) {
+            Core.LOGGER.error("Failed to flush transactions to database!", e);
+        }
+        disconnect();
+    }
+
+    private void ensureConnected() {
+        if (isReady()) {
+            try {
+                if (connection.isClosed()) {
+                    disconnect();
+                }
+            } catch (SQLException e) {
+                disconnect();
+            }
+        }
+        if (!isReady()) {
+            connect(connectionSupplier);
+        }
+    }
+
+    private boolean isReady() {
+        return connection != null && upsertStatement != null;
+    }
+
+    private boolean executeBatch(Collection<SctTransactionEntry> entries) {
+        if (upsertStatement == null) return false;
         try {
             for (SctTransactionEntry entry : entries) {
                 Core.LOGGER.debug(
@@ -85,25 +170,18 @@ public class SctTransactionDao {
                     SctTransactionEntry.TABLE_NAME, results.length
             );
             upsertStatement.clearBatch();
+            return true;
         } catch (SQLException e) {
             Core.LOGGER.error("Failed to send transactions to database!", e);
-        }
-    }
-
-    public void flushAndClose() {
-        try {
-            if (upsertStatement != null) {
-                int[] results = upsertStatement.executeBatch();
-                Core.LOGGER.debug(
-                        "SQL batch flushed on close: table={}, count={}",
-                        SctTransactionEntry.TABLE_NAME, results.length
+            if (PostgresHelper.isConnectionError(e)) {
+                Core.LOGGER.warn(
+                        "PostgreSQL connection lost (table={}), will retry pending writes.",
+                        SctTransactionEntry.TABLE_NAME
                 );
-                upsertStatement.clearBatch();
             }
-        } catch (SQLException e) {
-            Core.LOGGER.error("Failed to flush transactions to database!", e);
+            disconnect();
+            return false;
         }
-        disconnect();
     }
 
     private void disconnect() {

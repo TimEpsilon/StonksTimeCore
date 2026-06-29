@@ -27,12 +27,16 @@ public class MoneyDatabase {
     public void load(MinecraftServer server) {
         this.server = server;
         dao.connect();
-        dao.createTable();
+        dao.tryFlushPending();
     }
 
     public void unload() {
         dao.flushAndClose();
         server = null;
+    }
+
+    public void flushPending() {
+        dao.tryFlushPending();
     }
 
     public void saveBanks() {

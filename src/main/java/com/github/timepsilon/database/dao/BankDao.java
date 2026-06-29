@@ -3,6 +3,8 @@ package com.github.timepsilon.database.dao;
 import com.github.timepsilon.Core;
 import com.github.timepsilon.database.PostgresHelper;
 import com.github.timepsilon.database.entity.BankEntry;
+import com.github.timepsilon.database.pending.PendingWriteQueue;
+import com.github.timepsilon.database.pending.PendingWritesStore;
 
 import javax.annotation.Nullable;
 import java.sql.Connection;
@@ -10,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
+import java.util.List;
 
 public class BankDao {
 
@@ -37,35 +40,117 @@ public class BankDao {
             username = excluded.username
             """;
 
+    private final PendingWriteQueue<BankEntry> pending = PendingWritesStore.get().banks();
+
     private @Nullable Connection connection;
     private @Nullable PreparedStatement upsertStatement;
+    private @Nullable ConnectionSupplier connectionSupplier = PostgresHelper::open;
 
     public void connect() {
-        connect(PostgresHelper::open);
+        connect(connectionSupplier);
     }
 
     public void connect(ConnectionSupplier supplier) {
+        connectionSupplier = supplier;
         try {
             if (connection != null && !connection.isClosed()) return;
             connection = supplier.get();
             Core.LOGGER.debug("Connected to PostgreSQL (table={}).", BankEntry.TABLE_NAME);
+            createTable();
+            tryFlushPending();
         } catch (SQLException e) {
             Core.LOGGER.error("Error loading bank accounts database!", e);
+            disconnect();
         }
     }
 
     public void createTable() {
+        if (connection == null) return;
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(CREATE_TABLE);
             stmt.execute(MIGRATE_USERNAME);
             upsertStatement = connection.prepareStatement(UPSERT);
         } catch (Exception e) {
             Core.LOGGER.error("Error creating bank accounts table", e);
+            disconnect();
         }
     }
 
     public void upsertAll(Collection<BankEntry> entries) {
-        if (upsertStatement == null) return;
+        if (entries.isEmpty()) return;
+        ensureConnected();
+        if (!isReady()) {
+            pending.enqueueAll(entries);
+            Core.LOGGER.debug(
+                    "Pending write enqueued (no connection): table={}, batch={}, queueSize={}",
+                    BankEntry.TABLE_NAME, entries.size(), pending.size()
+            );
+            PendingWritesStore.get().persistToDisk();
+            return;
+        }
+        if (!executeBatch(entries)) {
+            pending.enqueueAll(entries);
+            Core.LOGGER.debug(
+                    "Pending write enqueued (write failed): table={}, batch={}, queueSize={}",
+                    BankEntry.TABLE_NAME, entries.size(), pending.size()
+            );
+        }
+    }
+
+    public boolean tryFlushPending() {
+        if (pending.isEmpty()) return true;
+        ensureConnected();
+        if (!isReady()) return false;
+
+        List<BankEntry> toFlush = pending.drainAll();
+        Core.LOGGER.info("Flushing {} pending bank write(s).", toFlush.size());
+        if (executeBatch(toFlush)) {
+            PendingWritesStore.get().persistToDisk();
+            return true;
+        }
+        pending.enqueueAll(toFlush);
+        PendingWritesStore.get().persistToDisk();
+        return false;
+    }
+
+    public void flushAndClose() {
+        tryFlushPending();
+        try {
+            if (upsertStatement != null) {
+                int[] results = upsertStatement.executeBatch();
+                Core.LOGGER.debug(
+                        "SQL batch flushed on close: table={}, count={}",
+                        BankEntry.TABLE_NAME, results.length
+                );
+                upsertStatement.clearBatch();
+            }
+        } catch (SQLException e) {
+            Core.LOGGER.error("Failed to flush banks to database!", e);
+        }
+        disconnect();
+    }
+
+    private void ensureConnected() {
+        if (isReady()) {
+            try {
+                if (connection.isClosed()) {
+                    disconnect();
+                }
+            } catch (SQLException e) {
+                disconnect();
+            }
+        }
+        if (!isReady()) {
+            connect(connectionSupplier);
+        }
+    }
+
+    private boolean isReady() {
+        return connection != null && upsertStatement != null;
+    }
+
+    private boolean executeBatch(Collection<BankEntry> entries) {
+        if (upsertStatement == null) return false;
         try {
             for (BankEntry entry : entries) {
                 Core.LOGGER.debug(
@@ -81,25 +166,15 @@ public class BankDao {
                     BankEntry.TABLE_NAME, results.length
             );
             upsertStatement.clearBatch();
+            return true;
         } catch (SQLException e) {
             Core.LOGGER.error("Couldn't update banks database: ", e);
-        }
-    }
-
-    public void flushAndClose() {
-        try {
-            if (upsertStatement != null) {
-                int[] results = upsertStatement.executeBatch();
-                Core.LOGGER.debug(
-                        "SQL batch flushed on close: table={}, count={}",
-                        BankEntry.TABLE_NAME, results.length
-                );
-                upsertStatement.clearBatch();
+            if (PostgresHelper.isConnectionError(e)) {
+                Core.LOGGER.warn("PostgreSQL connection lost (table={}), will retry pending writes.", BankEntry.TABLE_NAME);
             }
-        } catch (SQLException e) {
-            Core.LOGGER.error("Failed to flush banks to database!", e);
+            disconnect();
+            return false;
         }
-        disconnect();
     }
 
     private void disconnect() {

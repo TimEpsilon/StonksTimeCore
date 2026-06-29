@@ -20,11 +20,15 @@ public class SCTTransactionDatabase {
 
     public void load(MinecraftServer server) {
         dao.connect();
-        dao.createTable();
+        dao.tryFlushPending();
     }
 
     public void unload() {
         dao.flushAndClose();
+    }
+
+    public void flushPending() {
+        dao.tryFlushPending();
     }
 
     public void sendTransactions(ServerPlayer player, Map<Item, Integer> amountMap, Map<Item, Float> moneyMap) {

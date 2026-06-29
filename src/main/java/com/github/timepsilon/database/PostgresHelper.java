@@ -29,4 +29,17 @@ public final class PostgresHelper {
         Core.LOGGER.debug("PostgreSQL connection opened: url={}, user={}", jdbcUrl, user);
         return connection;
     }
+
+    public static boolean isConnectionError(SQLException exception) {
+        String sqlState = exception.getSQLState();
+        if (sqlState != null && sqlState.startsWith("08")) {
+            return true;
+        }
+        String message = exception.getMessage();
+        return message != null && (
+                message.contains("connection") ||
+                message.contains("Connection") ||
+                message.contains("closed")
+        );
+    }
 }
