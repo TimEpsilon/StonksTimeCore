@@ -55,7 +55,17 @@ public final class TimeCore {
     }
 
     private static String formatMoneyWithSpaces(long value) {
-        return String.format(Locale.US, "%,d", value).replace(',', ' ');
+        String digits = Long.toString(value);
+        int firstGroup = digits.length() % 3;
+        if (firstGroup == 0) {
+            firstGroup = 3;
+        }
+        StringBuilder out = new StringBuilder(digits.length() + digits.length() / 3);
+        out.append(digits, 0, firstGroup);
+        for (int i = firstGroup; i < digits.length(); i += 3) {
+            out.append(' ').append(digits, i, Math.min(i + 3, digits.length()));
+        }
+        return out.toString();
     }
 
     private static String formatCompactMoney(long value, long divisor, String suffix) {

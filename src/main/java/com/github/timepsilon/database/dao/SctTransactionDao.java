@@ -1,6 +1,7 @@
 package com.github.timepsilon.database.dao;
 
-import com.github.timepsilon.Core;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.github.timepsilon.database.PostgresHelper;
 import com.github.timepsilon.database.entity.SctTransactionEntry;
 import com.github.timepsilon.database.pending.PendingWriteQueue;
@@ -15,6 +16,8 @@ import java.util.Collection;
 import java.util.List;
 
 public class SctTransactionDao {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SctTransactionDao.class);
 
     private static final String CREATE_TABLE = """
             CREATE TABLE IF NOT EXISTS sct_transaction (
@@ -75,11 +78,11 @@ public class SctTransactionDao {
         try {
             if (connection != null && !connection.isClosed()) return;
             connection = supplier.get();
-            Core.LOGGER.debug("Connected to PostgreSQL (table={}).", SctTransactionEntry.TABLE_NAME);
+            LOGGER.debug("Connected to PostgreSQL (table={}).", SctTransactionEntry.TABLE_NAME);
             createTable();
             tryFlushPending();
         } catch (SQLException e) {
-            Core.LOGGER.error("Error loading SCT transaction database!", e);
+            LOGGER.error("Error loading SCT transaction database!", e);
             disconnect();
         }
     }
@@ -92,7 +95,7 @@ public class SctTransactionDao {
             stmt.execute(MIGRATE_TIMESTAMP);
             upsertStatement = connection.prepareStatement(UPSERT);
         } catch (Exception e) {
-            Core.LOGGER.error("Error creating SCT transaction table.", e);
+            LOGGER.error("Error creating SCT transaction table.", e);
             disconnect();
         }
     }
@@ -102,7 +105,7 @@ public class SctTransactionDao {
         ensureConnected();
         if (!isReady()) {
             pending.enqueueAll(entries);
-            Core.LOGGER.debug(
+            LOGGER.debug(
                     "Pending write enqueued (no connection): table={}, batch={}, queueSize={}",
                     SctTransactionEntry.TABLE_NAME, entries.size(), pending.size()
             );
@@ -111,7 +114,7 @@ public class SctTransactionDao {
         }
         if (!executeBatch(entries)) {
             pending.enqueueAll(entries);
-            Core.LOGGER.debug(
+            LOGGER.debug(
                     "Pending write enqueued (write failed): table={}, batch={}, queueSize={}",
                     SctTransactionEntry.TABLE_NAME, entries.size(), pending.size()
             );
@@ -124,7 +127,7 @@ public class SctTransactionDao {
         if (!isReady()) return false;
 
         List<SctTransactionEntry> toFlush = pending.drainAll();
-        Core.LOGGER.info("Flushing {} pending SCT transaction write(s).", toFlush.size());
+        LOGGER.info("Flushing {} pending SCT transaction write(s).", toFlush.size());
         if (executeBatch(toFlush)) {
             PendingWritesStore.get().persistToDisk();
             return true;
@@ -139,14 +142,14 @@ public class SctTransactionDao {
         try {
             if (upsertStatement != null) {
                 int[] results = upsertStatement.executeBatch();
-                Core.LOGGER.debug(
+                LOGGER.debug(
                         "SQL batch flushed on close: table={}, count={}",
                         SctTransactionEntry.TABLE_NAME, results.length
                 );
                 upsertStatement.clearBatch();
             }
         } catch (SQLException e) {
-            Core.LOGGER.error("Failed to flush transactions to database!", e);
+            LOGGER.error("Failed to flush transactions to database!", e);
         }
         disconnect();
     }
@@ -174,7 +177,7 @@ public class SctTransactionDao {
         if (upsertStatement == null) return false;
         try {
             for (SctTransactionEntry entry : entries) {
-                Core.LOGGER.debug(
+                LOGGER.debug(
                         "SQL upsert batch: table={}, player={}, username={}, time={}, item={}, amount={}, money={}",
                         SctTransactionEntry.TABLE_NAME, entry.player(), entry.username(), entry.time(),
                         entry.itemId(), entry.amount(), entry.moneyAsFloat()
@@ -183,16 +186,16 @@ public class SctTransactionDao {
                 upsertStatement.addBatch();
             }
             int[] results = upsertStatement.executeBatch();
-            Core.LOGGER.debug(
+            LOGGER.debug(
                     "SQL batch executed: table={}, count={}",
                     SctTransactionEntry.TABLE_NAME, results.length
             );
             upsertStatement.clearBatch();
             return true;
         } catch (SQLException e) {
-            Core.LOGGER.error("Failed to send transactions to database!", e);
+            LOGGER.error("Failed to send transactions to database!", e);
             if (PostgresHelper.isConnectionError(e)) {
-                Core.LOGGER.warn(
+                LOGGER.warn(
                         "PostgreSQL connection lost (table={}), will retry pending writes.",
                         SctTransactionEntry.TABLE_NAME
                 );
@@ -211,10 +214,10 @@ public class SctTransactionDao {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
                 connection = null;
-                Core.LOGGER.debug("Disconnected from PostgreSQL (table={}).", SctTransactionEntry.TABLE_NAME);
+                LOGGER.debug("Disconnected from PostgreSQL (table={}).", SctTransactionEntry.TABLE_NAME);
             }
         } catch (SQLException e) {
-            Core.LOGGER.error("Error closing SCT transaction database!", e);
+            LOGGER.error("Error closing SCT transaction database!", e);
         }
     }
 }
