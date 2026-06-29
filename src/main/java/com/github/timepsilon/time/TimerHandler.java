@@ -1,6 +1,7 @@
 package com.github.timepsilon.time;
 
 import com.github.timepsilon.Core;
+import com.github.timepsilon.database.MoneyDatabase;
 import com.github.timepsilon.packets.server.TimerInfoPacket;
 import com.github.timepsilon.packets.server.TimerSyncPacket;
 import com.github.timepsilon.utils.TimeUtils;
@@ -17,6 +18,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import java.util.UUID;
 
@@ -124,6 +126,18 @@ public class TimerHandler {
         // Lose 10% of player money (leaving a minimum of 10 remaining seconds)
         TimeUtils.loseAndExplodeOnDeath(account, player, event.getSource().getWeaponItem());
 
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
+        MoneyDatabase.getDatabase().saveBanks();
+    }
+
+    @SubscribeEvent
+    public static void onServerTick(ServerTickEvent.Post event) {
+        if (event.getServer().getTickCount() % 18000 != 0) return; // Save every 15mins
+        Core.LOGGER.info("Saving Bank Accounts...");
+        MoneyDatabase.getDatabase().saveBanks();
     }
 
     public static void sendOverlayPacket(ServerPlayer player, int time, int money,  boolean isOut) {
