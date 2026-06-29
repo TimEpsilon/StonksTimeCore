@@ -188,7 +188,7 @@
         {
           "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "time_series",
-          "rawSql": "SELECT to_timestamp(hour * 3600) AT TIME ZONE 'UTC' AS time, SUM(SUM(amount)) OVER (ORDER BY hour) AS \"Items cumulés\" FROM sct_transaction GROUP BY hour ORDER BY hour",
+          "rawSql": "SELECT to_timestamp(hour * 3600) AT TIME ZONE 'UTC' AS time, SUM(hourly_total) OVER (ORDER BY hour) AS \"Items cumulés\" FROM (SELECT hour, SUM(amount) AS hourly_total FROM sct_transaction GROUP BY hour) t ORDER BY hour",
           "refId": "A",
           "timeColumns": ["time"]
         }
