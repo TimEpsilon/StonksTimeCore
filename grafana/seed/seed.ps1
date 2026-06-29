@@ -1,37 +1,22 @@
 #!/usr/bin/env pwsh
-# Génère les bases SQLite de test dans grafana/data/
+# Réinitialise les données de test PostgreSQL via Docker Compose
 $ErrorActionPreference = "Stop"
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $GrafanaDir = Split-Path -Parent $ScriptDir
-$DataDir = Join-Path $GrafanaDir "data"
-$SeedSql = Join-Path $ScriptDir "seed.sql"
 
-New-Item -ItemType Directory -Force -Path $DataDir | Out-Null
-
-Push-Location $DataDir
+Push-Location $GrafanaDir
 try {
-    if (Get-Command docker -ErrorAction SilentlyContinue) {
-        Push-Location $GrafanaDir
-        try {
-            docker compose --profile seed run --rm seed
-        }
-        finally {
-            Pop-Location
-        }
-    }
-    elseif (Get-Command sqlite3 -ErrorAction SilentlyContinue) {
-        Get-Content $SeedSql | sqlite3
-        Write-Host "Bases generees dans $DataDir"
-        Write-Host "  - BankAccounts.db"
-        Write-Host "  - SCTTransaction.db"
-    }
-    else {
-        Write-Host "Docker ou sqlite3 requis."
-        Write-Host "  Docker: cd grafana && docker compose --profile seed run --rm seed"
-        Write-Host "  sqlite3: winget install SQLite.SQLite"
+    if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
+        Write-Host "Docker requis pour injecter les données de test."
+        Write-Host "  cd grafana && docker compose up -d postgres"
+        Write-Host "  docker compose --profile seed run --rm seed"
         exit 1
     }
+
+    docker compose up -d postgres
+    docker compose --profile seed run --rm seed
+    Write-Host "Données de test injectées dans PostgreSQL (base stonkstime)."
 }
 finally {
     Pop-Location

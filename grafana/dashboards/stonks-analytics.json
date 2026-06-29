@@ -16,7 +16,7 @@
       "type": "row"
     },
     {
-      "datasource": { "type": "frser-sqlite-datasource", "uid": "scttransactions" },
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -37,7 +37,7 @@
       },
       "targets": [
         {
-          "datasource": { "type": "frser-sqlite-datasource", "uid": "scttransactions" },
+          "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "table",
           "rawSql": "SELECT item, SUM(amount) AS total FROM sct_transaction GROUP BY item ORDER BY total DESC LIMIT 1",
           "refId": "A"
@@ -47,7 +47,7 @@
       "type": "stat"
     },
     {
-      "datasource": { "type": "frser-sqlite-datasource", "uid": "scttransactions" },
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -70,7 +70,7 @@
       },
       "targets": [
         {
-          "datasource": { "type": "frser-sqlite-datasource", "uid": "scttransactions" },
+          "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "table",
           "rawSql": "SELECT SUM(amount) AS total FROM sct_transaction",
           "refId": "A"
@@ -80,7 +80,7 @@
       "type": "stat"
     },
     {
-      "datasource": { "type": "frser-sqlite-datasource", "uid": "scttransactions" },
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -103,7 +103,7 @@
       },
       "targets": [
         {
-          "datasource": { "type": "frser-sqlite-datasource", "uid": "scttransactions" },
+          "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "table",
           "rawSql": "SELECT item, SUM(money) / 1000.0 AS revenue FROM sct_transaction GROUP BY item ORDER BY revenue DESC LIMIT 1",
           "refId": "A"
@@ -113,7 +113,7 @@
       "type": "stat"
     },
     {
-      "datasource": { "type": "frser-sqlite-datasource", "uid": "bankaccounts" },
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -136,7 +136,7 @@
       },
       "targets": [
         {
-          "datasource": { "type": "frser-sqlite-datasource", "uid": "bankaccounts" },
+          "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "table",
           "rawSql": "SELECT SUM(money) AS total FROM banks WHERE time = (SELECT MAX(time) FROM banks)",
           "refId": "A"
@@ -153,7 +153,7 @@
       "type": "row"
     },
     {
-      "datasource": { "type": "frser-sqlite-datasource", "uid": "scttransactions" },
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
@@ -186,9 +186,9 @@
       },
       "targets": [
         {
-          "datasource": { "type": "frser-sqlite-datasource", "uid": "scttransactions" },
+          "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "time_series",
-          "rawSql": "SELECT datetime(hour * 3600, 'unixepoch') AS time, SUM(SUM(amount)) OVER (ORDER BY hour) AS \"Items cumulés\" FROM sct_transaction GROUP BY hour ORDER BY hour",
+          "rawSql": "SELECT to_timestamp(hour * 3600) AT TIME ZONE 'UTC' AS time, SUM(SUM(amount)) OVER (ORDER BY hour) AS \"Items cumulés\" FROM sct_transaction GROUP BY hour ORDER BY hour",
           "refId": "A",
           "timeColumns": ["time"]
         }
@@ -197,7 +197,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": { "type": "frser-sqlite-datasource", "uid": "bankaccounts" },
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
@@ -230,9 +230,9 @@
       },
       "targets": [
         {
-          "datasource": { "type": "frser-sqlite-datasource", "uid": "bankaccounts" },
+          "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "time_series",
-          "rawSql": "SELECT time || 'T00:00:00Z' AS time, money AS value, lower(substr(hex(player), 1, 8) || '-' || substr(hex(player), 9, 4) || '-' || substr(hex(player), 13, 4) || '-' || substr(hex(player), 17, 4) || '-' || substr(hex(player), 21, 12)) AS metric FROM banks ORDER BY time",
+          "rawSql": "SELECT (time::timestamp AT TIME ZONE 'UTC') AS time, money AS value, lower(player::text) AS metric FROM banks ORDER BY time",
           "refId": "A",
           "timeColumns": ["time"]
         }
@@ -241,7 +241,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": { "type": "frser-sqlite-datasource", "uid": "bankaccounts" },
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
@@ -274,9 +274,9 @@
       },
       "targets": [
         {
-          "datasource": { "type": "frser-sqlite-datasource", "uid": "bankaccounts" },
+          "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "time_series",
-          "rawSql": "SELECT time || 'T00:00:00Z' AS time, SUM(money) AS \"Solde total serveur\" FROM banks GROUP BY time ORDER BY time",
+          "rawSql": "SELECT (time::timestamp AT TIME ZONE 'UTC') AS time, SUM(money) AS \"Solde total serveur\" FROM banks GROUP BY time ORDER BY time",
           "refId": "A",
           "timeColumns": ["time"]
         }
@@ -285,7 +285,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": { "type": "frser-sqlite-datasource", "uid": "scttransactions" },
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
@@ -317,9 +317,9 @@
       },
       "targets": [
         {
-          "datasource": { "type": "frser-sqlite-datasource", "uid": "scttransactions" },
+          "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "time_series",
-          "rawSql": "SELECT datetime(hour * 3600, 'unixepoch') AS time, COUNT(*) AS \"Transactions par heure\" FROM sct_transaction GROUP BY hour ORDER BY hour",
+          "rawSql": "SELECT to_timestamp(hour * 3600) AT TIME ZONE 'UTC' AS time, COUNT(*) AS \"Transactions par heure\" FROM sct_transaction GROUP BY hour ORDER BY hour",
           "refId": "A",
           "timeColumns": ["time"]
         }
@@ -335,7 +335,7 @@
       "type": "row"
     },
     {
-      "datasource": { "type": "frser-sqlite-datasource", "uid": "scttransactions" },
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
@@ -354,7 +354,7 @@
       },
       "targets": [
         {
-          "datasource": { "type": "frser-sqlite-datasource", "uid": "scttransactions" },
+          "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "table",
           "rawSql": "SELECT amount AS \"Quantité vendue\" FROM sct_transaction",
           "refId": "A"
@@ -364,7 +364,7 @@
       "type": "histogram"
     },
     {
-      "datasource": { "type": "frser-sqlite-datasource", "uid": "scttransactions" },
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
@@ -383,7 +383,7 @@
       },
       "targets": [
         {
-          "datasource": { "type": "frser-sqlite-datasource", "uid": "scttransactions" },
+          "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "table",
           "rawSql": "SELECT money / 1000.0 AS \"Valeur transaction\" FROM sct_transaction",
           "refId": "A"
@@ -393,7 +393,7 @@
       "type": "histogram"
     },
     {
-      "datasource": { "type": "frser-sqlite-datasource", "uid": "bankaccounts" },
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
@@ -412,7 +412,7 @@
       },
       "targets": [
         {
-          "datasource": { "type": "frser-sqlite-datasource", "uid": "bankaccounts" },
+          "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "table",
           "rawSql": "SELECT money AS \"Solde joueur\" FROM banks WHERE time = (SELECT MAX(time) FROM banks)",
           "refId": "A"
@@ -422,7 +422,7 @@
       "type": "histogram"
     },
     {
-      "datasource": { "type": "frser-sqlite-datasource", "uid": "scttransactions" },
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
@@ -452,9 +452,9 @@
       },
       "targets": [
         {
-          "datasource": { "type": "frser-sqlite-datasource", "uid": "scttransactions" },
+          "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "time_series",
-          "rawSql": "SELECT datetime(hour * 3600, 'unixepoch') AS time, AVG(money) / 1000.0 AS \"Valeur moyenne\" FROM sct_transaction GROUP BY hour ORDER BY hour",
+          "rawSql": "SELECT to_timestamp(hour * 3600) AT TIME ZONE 'UTC' AS time, AVG(money) / 1000.0 AS \"Valeur moyenne\" FROM sct_transaction GROUP BY hour ORDER BY hour",
           "refId": "A",
           "timeColumns": ["time"]
         }
@@ -463,7 +463,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": { "type": "frser-sqlite-datasource", "uid": "bankaccounts" },
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
@@ -493,9 +493,9 @@
       },
       "targets": [
         {
-          "datasource": { "type": "frser-sqlite-datasource", "uid": "bankaccounts" },
+          "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "time_series",
-          "rawSql": "SELECT time || 'T00:00:00Z' AS time, COUNT(DISTINCT hex(player)) AS \"Joueurs actifs\" FROM banks GROUP BY time ORDER BY time",
+          "rawSql": "SELECT (time::timestamp AT TIME ZONE 'UTC') AS time, COUNT(DISTINCT player) AS \"Joueurs actifs\" FROM banks GROUP BY time ORDER BY time",
           "refId": "A",
           "timeColumns": ["time"]
         }
@@ -511,7 +511,7 @@
       "type": "row"
     },
     {
-      "datasource": { "type": "frser-sqlite-datasource", "uid": "scttransactions" },
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -536,7 +536,7 @@
       },
       "targets": [
         {
-          "datasource": { "type": "frser-sqlite-datasource", "uid": "scttransactions" },
+          "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "table",
           "rawSql": "SELECT item AS \"Item\", SUM(amount) AS \"Quantité totale\" FROM sct_transaction GROUP BY item ORDER BY \"Quantité totale\" DESC LIMIT 10",
           "refId": "A"
@@ -546,7 +546,7 @@
       "type": "table"
     },
     {
-      "datasource": { "type": "frser-sqlite-datasource", "uid": "scttransactions" },
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -572,7 +572,7 @@
       },
       "targets": [
         {
-          "datasource": { "type": "frser-sqlite-datasource", "uid": "scttransactions" },
+          "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "table",
           "rawSql": "SELECT item AS \"Item\", SUM(money) / 1000.0 AS \"Revenu total\" FROM sct_transaction GROUP BY item ORDER BY \"Revenu total\" DESC LIMIT 10",
           "refId": "A"
@@ -582,7 +582,7 @@
       "type": "table"
     },
     {
-      "datasource": { "type": "frser-sqlite-datasource", "uid": "bankaccounts" },
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -614,9 +614,9 @@
       },
       "targets": [
         {
-          "datasource": { "type": "frser-sqlite-datasource", "uid": "bankaccounts" },
+          "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "table",
-          "rawSql": "SELECT lower(substr(hex(player), 1, 8) || '-' || substr(hex(player), 9, 4) || '-' || substr(hex(player), 13, 4) || '-' || substr(hex(player), 17, 4) || '-' || substr(hex(player), 21, 12)) AS \"Joueur\", money AS \"Solde\" FROM banks WHERE time = (SELECT MAX(time) FROM banks) ORDER BY money DESC",
+          "rawSql": "SELECT lower(player::text) AS \"Joueur\", money AS \"Solde\" FROM banks WHERE time = (SELECT MAX(time) FROM banks) ORDER BY money DESC",
           "refId": "A"
         }
       ],
@@ -626,12 +626,12 @@
   ],
   "refresh": "30s",
   "schemaVersion": 39,
-  "tags": ["stonks", "sqlite", "minecraft"],
+  "tags": ["stonks", "postgresql", "minecraft"],
   "templating": { "list": [] },
   "time": { "from": "now-30d", "to": "now" },
   "timepicker": {},
   "timezone": "browser",
-  "title": "StonksTime — Analytics SQLite",
+  "title": "StonksTime — Analytics PostgreSQL",
   "uid": "stonks-analytics",
   "version": 1
 }

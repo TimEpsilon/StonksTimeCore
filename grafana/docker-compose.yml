@@ -28,7 +28,7 @@ services:
       PGPASSWORD: ${POSTGRES_PASSWORD:-stonkstime}
     volumes:
       - ./seed/seed.sql:/seed.sql:ro
-    entrypoint: ["psql", "-h", "postgres", "-U", "${POSTGRES_USER:-stonkstime}", "-d", "${POSTGRES_DB:-stonkstime}", "-f", "/seed.sql"]
+    entrypoint: ["/bin/sh", "-c", "psql -h postgres -U stonkstime -d stonkstime -f /seed.sql"]
 
   grafana:
     image: grafana/grafana:11.4.0

@@ -1,6 +1,6 @@
 # StonksTimeCore
 
-Mod cœur de **StonksLand V3** pour Minecraft **1.21.1** (NeoForge **21.1.211**). Il implémente une économie basée sur le **temps** : les joueurs convertissent leur monnaie (Create Numismatics) en temps de jeu ; lorsque le temps est épuisé, ils sont éliminés (« out »). Le mod ajoute des machines Create, des événements aléatoires, des sorts Iron's Spellbooks et une couche SQLite pour l'analyse des données économiques.
+Mod cœur de **StonksLand V3** pour Minecraft **1.21.1** (NeoForge **21.1.211**). Il implémente une économie basée sur le **temps** : les joueurs convertissent leur monnaie (Create Numismatics) en temps de jeu ; lorsque le temps est épuisé, ils sont éliminés (« out »). Le mod ajoute des machines Create, des événements aléatoires, des sorts Iron's Spellbooks et une couche PostgreSQL pour l'analyse des données économiques.
 
 > **Note :** mod conçu pour StonksLand V3 — ne pas utiliser seul en production.
 
@@ -52,38 +52,49 @@ Le répertoire de jeu par défaut est `run/`.
 
 ## Base de données et analytique
 
-Le mod persiste des données SQLite dans le dossier du monde :
+Le mod persiste les données dans une base **PostgreSQL** unique (`stonkstime` par défaut) avec deux tables :
 
-```
-<monde>/stonkstimecore/
-├── BankAccounts.db
-└── SCTTransaction.db
-```
-
-| Fichier | Rôle |
+| Table | Rôle |
 |---|---|
-| `BankAccounts.db` | Snapshots quotidiens des soldes bancaires (Create Numismatics), table `banks` (`player`, `time`, `money`). |
-| `SCTTransaction.db` | Transactions SCT agrégées par heure, table `sct_transaction` (`hour`, `player`, `item`, `amount`, `money`). |
+| `banks` | Snapshots quotidiens des soldes bancaires (Create Numismatics) : `player` (UUID), `time` (DATE), `money` (INT). |
+| `sct_transaction` | Transactions SCT agrégées par heure : `hour` (BIGINT), `player` (UUID), `item` (TEXT), `amount` (INT), `money` (INT). |
 
 Architecture :
 
 - `MoneyDatabase` / `BankDao` / `BankEntry` — soldes bancaires
 - `SCTTransactionDatabase` / `SctTransactionDao` / `SctTransactionEntry` — transactions du chronoscope
-- `SqliteHelper` — connexions SQLite (mode WAL, `synchronous=NORMAL`)
+- `PostgresHelper` — connexions JDBC PostgreSQL (config serveur)
 
-Les bases sont ouvertes au démarrage du serveur et fermées à l'arrêt (`NeoForgeEventsManager`). Les soldes sont aussi sauvegardés périodiquement via `TimerHandler`.
+Connexion configurée dans `config/stonkstimecore-server.toml` (section `database`) :
+
+```toml
+[database]
+    host = "localhost"
+    port = 5432
+    database = "stonkstime"
+    user = "stonkstime"
+    password = "stonkstime"
+```
+
+Les tables sont créées au démarrage du serveur et les données sont flushées à l'arrêt (`NeoForgeEventsManager`). Les soldes sont aussi sauvegardés périodiquement via `TimerHandler`.
 
 ### Grafana (dashboards)
 
-Un stack Docker Grafana est fourni dans [`grafana/`](grafana/) pour visualiser les bases SQLite (soldes, transactions SCT, alertes). Voir [`grafana/README.md`](grafana/README.md) pour le détail.
+Un stack Docker (PostgreSQL + Grafana) est fourni dans [`grafana/`](grafana/) pour visualiser soldes, transactions SCT et alertes. Voir [`grafana/README.md`](grafana/README.md) pour le détail.
 
 ```bash
 cd grafana
-docker compose --profile seed run --rm seed   # données de test
-docker compose up -d                          # http://localhost:3000 (admin/admin)
+docker compose up -d                          # PostgreSQL + Grafana
+# http://localhost:3000 (admin/admin)
 ```
 
-Pour les données réelles, copier `BankAccounts.db` et `SCTTransaction.db` depuis `<monde>/stonkstimecore/` vers `grafana/data/`.
+Pour réinitialiser les données de démonstration :
+
+```bash
+docker compose --profile seed run --rm seed
+```
+
+Le mod et Grafana partagent la même base PostgreSQL sur `localhost:5432`.
 
 ## Tests
 
@@ -93,7 +104,7 @@ Pour les données réelles, copier `BankAccounts.db` et `SCTTransaction.db` depu
 
 Le projet inclut un test de charge JUnit 5 :
 
-- `SctTransactionDaoStressTest` — vérifie que 200 upserts SQLite s'exécutent en moins de 5 secondes.
+- `SctTransactionDaoStressTest` — vérifie que 200 upserts PostgreSQL s'exécutent en moins de 5 secondes (Testcontainers, Docker requis).
 
 ## Structure du projet
 
@@ -102,7 +113,7 @@ src/main/java/com/github/timepsilon/
 ├── Core.java                 # Point d'entrée du mod
 ├── block/                    # Blocs (chronoscope, machine à sous)
 ├── commands/                 # Commandes /stc
-├── database/                 # Couche SQLite (DAO, entités)
+├── database/                 # Couche PostgreSQL (DAO, entités)
 ├── stonksevent/              # Événements Stonks aléatoires
 ├── time/                     # Timer, statut « out » des joueurs
 ├── ironsspellbooks/          # Sorts personnalisés
@@ -112,7 +123,7 @@ src/main/java/com/github/timepsilon/
 src/main/resources/           # Assets, data packs, mixins
 src/test/java/                # Tests unitaires
 libs/                         # Dépendances locales (JAR)
-grafana/                      # Stack Docker Grafana + dashboards + seed
+grafana/                      # Stack Docker PostgreSQL + Grafana + dashboards
 ```
 
 ## Dépendances requises (runtime)

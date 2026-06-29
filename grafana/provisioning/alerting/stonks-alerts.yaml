@@ -14,7 +14,7 @@ groups:
             relativeTimeRange:
               from: 604800
               to: 0
-            datasourceUid: bankaccounts
+            datasourceUid: stonkstime
             model:
               rawSql: |
                 WITH latest AS (
@@ -34,8 +34,8 @@ groups:
               intervalMs: 1000
               maxDataPoints: 43200
               datasource:
-                type: frser-sqlite-datasource
-                uid: bankaccounts
+                type: grafana-postgresql-datasource
+                uid: stonkstime
           - refId: B
             datasourceUid: __expr__
             model:

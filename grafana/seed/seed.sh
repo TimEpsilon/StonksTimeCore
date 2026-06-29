@@ -1,22 +1,19 @@
 #!/usr/bin/env bash
-# Génère les bases SQLite de test dans grafana/data/
+# Réinitialise les données de test PostgreSQL via Docker Compose
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 GRAFANA_DIR="$(dirname "$SCRIPT_DIR")"
-DATA_DIR="$GRAFANA_DIR/data"
-SEED_SQL="$SCRIPT_DIR/seed.sql"
 
-mkdir -p "$DATA_DIR"
-cd "$DATA_DIR"
+cd "$GRAFANA_DIR"
 
-if command -v sqlite3 >/dev/null 2>&1; then
-    sqlite3 < "$SEED_SQL"
-    echo "Bases générées dans $DATA_DIR"
-    echo "  - BankAccounts.db"
-    echo "  - SCTTransaction.db"
-else
-    echo "sqlite3 introuvable. Utilisez Docker:"
-    echo "  docker run --rm -v \"${DATA_DIR}:/data\" -v \"${SEED_SQL}:/seed.sql:ro\" keinos/sqlite3 sh -c 'cd /data && sqlite3 < /seed.sql'"
+if ! command -v docker >/dev/null 2>&1; then
+    echo "Docker requis pour injecter les données de test."
+    echo "  cd grafana && docker compose up -d postgres"
+    echo "  docker compose --profile seed run --rm seed"
     exit 1
 fi
+
+docker compose up -d postgres
+docker compose --profile seed run --rm seed
+echo "Données de test injectées dans PostgreSQL (base stonkstime)."
