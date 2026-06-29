@@ -4,6 +4,7 @@ import com.github.timepsilon.utils.TimeUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -18,7 +19,7 @@ public record BankEntry(UUID player, String username, Instant time, int money) {
     public void bindTo(PreparedStatement statement) throws SQLException {
         statement.setObject(1, player);
         statement.setString(2, username);
-        statement.setObject(3, time);
+        statement.setObject(3, time, Types.TIMESTAMP_WITH_TIMEZONE);
         statement.setInt(4, money);
     }
 }
