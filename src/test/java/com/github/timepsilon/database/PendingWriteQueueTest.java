@@ -3,9 +3,10 @@ package com.github.timepsilon.database;
 import com.github.timepsilon.database.entity.BankEntry;
 import com.github.timepsilon.database.entity.SctTransactionEntry;
 import com.github.timepsilon.database.pending.PendingWriteQueue;
+import com.github.timepsilon.utils.TimeUtils;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,16 +18,16 @@ class PendingWriteQueueTest {
     private static final UUID PLAYER = UUID.fromString("00000000-0000-0000-0000-000000000001");
 
     @Test
-    void bankQueueKeepsLatestSnapshotPerPlayerAndDay() {
+    void bankQueueKeepsLatestSnapshotPerPlayerAndTimestamp() {
         PendingWriteQueue<BankEntry> queue = new PendingWriteQueue<>(
                 BankEntry.TABLE_NAME,
                 entry -> entry.player() + "|" + entry.time(),
                 (existing, incoming) -> incoming
         );
 
-        LocalDate day = LocalDate.of(2026, 6, 29);
-        queue.enqueueAll(List.of(new BankEntry(PLAYER, "Alice", day, 100)));
-        queue.enqueueAll(List.of(new BankEntry(PLAYER, "Alice", day, 250)));
+        Instant snapshotTime = Instant.parse("2026-06-29T12:00:00.000Z");
+        queue.enqueueAll(List.of(new BankEntry(PLAYER, "Alice", snapshotTime, 100)));
+        queue.enqueueAll(List.of(new BankEntry(PLAYER, "Alice", snapshotTime, 250)));
 
         assertEquals(1, queue.size());
         assertEquals(250, queue.drainAll().getFirst().money());
@@ -36,9 +37,9 @@ class PendingWriteQueueTest {
     void sctQueueMergesAmountsForSameKey() {
         PendingWriteQueue<SctTransactionEntry> queue = new PendingWriteQueue<>(
                 SctTransactionEntry.TABLE_NAME,
-                entry -> entry.hour() + "|" + entry.player() + "|" + entry.itemId(),
+                entry -> TimeUtils.truncateToHour(entry.time()) + "|" + entry.player() + "|" + entry.itemId(),
                 (existing, incoming) -> new SctTransactionEntry(
-                        existing.hour(),
+                        existing.time(),
                         existing.player(),
                         incoming.username(),
                         existing.itemId(),
@@ -47,11 +48,12 @@ class PendingWriteQueueTest {
                 )
         );
 
+        Instant hourStart = Instant.parse("2026-06-29T12:00:00.000Z");
         queue.enqueueAll(List.of(new SctTransactionEntry(
-                42L, PLAYER, "Alice", "minecraft:gold", 2, 1000
+                hourStart, PLAYER, "Alice", "minecraft:gold", 2, 1000
         )));
         queue.enqueueAll(List.of(new SctTransactionEntry(
-                42L, PLAYER, "Alice", "minecraft:gold", 3, 500
+                hourStart, PLAYER, "Alice", "minecraft:gold", 3, 500
         )));
 
         assertEquals(1, queue.size());
@@ -68,7 +70,7 @@ class PendingWriteQueueTest {
                 (existing, incoming) -> incoming
         );
 
-        queue.enqueueAll(List.of(new BankEntry(PLAYER, "Alice", LocalDate.of(2026, 6, 29), 10)));
+        queue.enqueueAll(List.of(new BankEntry(PLAYER, "Alice", Instant.parse("2026-06-29T12:00:00.000Z"), 10)));
         assertEquals(1, queue.drainAll().size());
         assertTrue(queue.isEmpty());
     }

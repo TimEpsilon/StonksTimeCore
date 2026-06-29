@@ -3,6 +3,9 @@ package com.github.timepsilon.database.pending;
 import com.github.timepsilon.database.entity.BankEntry;
 import com.github.timepsilon.database.entity.SctTransactionEntry;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,34 +30,36 @@ public final class PendingWritesSnapshot {
             return new BankEntry(
                     java.util.UUID.fromString(player),
                     username,
-                    java.time.LocalDate.parse(time),
+                    parseInstant(time),
                     money
             );
         }
     }
 
     public record SctTransactionEntryDto(
-            long hour,
+            String time,
             String player,
             String username,
             String itemId,
             int amount,
-            int storedMoney
+            int storedMoney,
+            Long hour
     ) {
         static SctTransactionEntryDto from(SctTransactionEntry entry) {
             return new SctTransactionEntryDto(
-                    entry.hour(),
+                    entry.time().toString(),
                     entry.player().toString(),
                     entry.username(),
                     entry.itemId(),
                     entry.amount(),
-                    entry.storedMoney()
+                    entry.storedMoney(),
+                    null
             );
         }
 
         SctTransactionEntry toEntry() {
             return new SctTransactionEntry(
-                    hour,
+                    resolveTime(),
                     java.util.UUID.fromString(player),
                     username,
                     itemId,
@@ -62,5 +67,22 @@ public final class PendingWritesSnapshot {
                     storedMoney
             );
         }
+
+        private Instant resolveTime() {
+            if (time != null && !time.isBlank()) {
+                return parseInstant(time);
+            }
+            if (hour != null) {
+                return Instant.ofEpochSecond(hour * 3600L);
+            }
+            throw new IllegalStateException("SCT pending write missing time");
+        }
+    }
+
+    private static Instant parseInstant(String value) {
+        if (value.contains("T")) {
+            return Instant.parse(value);
+        }
+        return LocalDate.parse(value).atStartOfDay(ZoneOffset.UTC).toInstant();
     }
 }

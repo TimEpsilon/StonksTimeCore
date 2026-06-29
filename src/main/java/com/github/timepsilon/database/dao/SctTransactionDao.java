@@ -18,13 +18,13 @@ public class SctTransactionDao {
 
     private static final String CREATE_TABLE = """
             CREATE TABLE IF NOT EXISTS sct_transaction (
-                hour BIGINT NOT NULL,
+                time TIMESTAMPTZ(3) NOT NULL,
                 player UUID NOT NULL,
                 username TEXT NOT NULL,
                 item TEXT NOT NULL,
                 amount INTEGER NOT NULL,
                 money INTEGER NOT NULL,
-                PRIMARY KEY (hour, player, item)
+                PRIMARY KEY (time, player, item)
             )
             """;
 
@@ -32,11 +32,28 @@ public class SctTransactionDao {
             ALTER TABLE sct_transaction ADD COLUMN IF NOT EXISTS username TEXT NOT NULL DEFAULT 'unknown'
             """;
 
+    private static final String MIGRATE_TIMESTAMP = """
+            DO $$
+            BEGIN
+                IF EXISTS (
+                    SELECT 1 FROM information_schema.columns
+                    WHERE table_schema = current_schema()
+                      AND table_name = 'sct_transaction'
+                      AND column_name = 'hour'
+                ) THEN
+                    ALTER TABLE sct_transaction RENAME COLUMN hour TO time;
+                    ALTER TABLE sct_transaction
+                        ALTER COLUMN time TYPE TIMESTAMPTZ(3)
+                        USING to_timestamp(time * 3600) AT TIME ZONE 'UTC';
+                END IF;
+            END $$
+            """;
+
     private static final String UPSERT = """
             INSERT INTO sct_transaction
-            (hour, player, username, item, amount, money)
+            (time, player, username, item, amount, money)
             VALUES (?, ?, ?, ?, ?, ?)
-            ON CONFLICT (hour, player, item)
+            ON CONFLICT (time, player, item)
             DO UPDATE SET
             amount = sct_transaction.amount + excluded.amount,
             money = sct_transaction.money + excluded.money,
@@ -72,6 +89,7 @@ public class SctTransactionDao {
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(CREATE_TABLE);
             stmt.execute(MIGRATE_USERNAME);
+            stmt.execute(MIGRATE_TIMESTAMP);
             upsertStatement = connection.prepareStatement(UPSERT);
         } catch (Exception e) {
             Core.LOGGER.error("Error creating SCT transaction table.", e);
@@ -157,8 +175,8 @@ public class SctTransactionDao {
         try {
             for (SctTransactionEntry entry : entries) {
                 Core.LOGGER.debug(
-                        "SQL upsert batch: table={}, player={}, username={}, hour={}, item={}, amount={}, money={}",
-                        SctTransactionEntry.TABLE_NAME, entry.player(), entry.username(), entry.hour(),
+                        "SQL upsert batch: table={}, player={}, username={}, time={}, item={}, amount={}, money={}",
+                        SctTransactionEntry.TABLE_NAME, entry.player(), entry.username(), entry.time(),
                         entry.itemId(), entry.amount(), entry.moneyAsFloat()
                 );
                 entry.bindTo(upsertStatement);

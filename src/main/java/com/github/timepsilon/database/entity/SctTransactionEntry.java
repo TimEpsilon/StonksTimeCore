@@ -6,15 +6,16 @@ import net.minecraft.world.item.Item;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.UUID;
 
-public record SctTransactionEntry(long hour, UUID player, String username, String itemId, int amount, int storedMoney) {
+public record SctTransactionEntry(Instant time, UUID player, String username, String itemId, int amount, int storedMoney) {
 
     public static final String TABLE_NAME = "sct_transaction";
 
     public static SctTransactionEntry from(ServerPlayer player, Item item, int amount, float money) {
         return new SctTransactionEntry(
-                TimeUtils.getCurrentHour(),
+                TimeUtils.getCurrentHourStart(),
                 player.getUUID(),
                 player.getGameProfile().getName(),
                 item.toString(),
@@ -24,7 +25,7 @@ public record SctTransactionEntry(long hour, UUID player, String username, Strin
     }
 
     public void bindTo(PreparedStatement statement) throws SQLException {
-        statement.setLong(1, hour);
+        statement.setObject(1, time);
         statement.setObject(2, player);
         statement.setString(3, username);
         statement.setString(4, itemId);

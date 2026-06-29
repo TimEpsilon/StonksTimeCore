@@ -20,7 +20,7 @@ public class BankDao {
             CREATE TABLE IF NOT EXISTS banks (
                 player UUID NOT NULL,
                 username TEXT NOT NULL,
-                time DATE NOT NULL,
+                time TIMESTAMPTZ(3) NOT NULL,
                 money INTEGER NOT NULL,
                 PRIMARY KEY (player, time)
             )
@@ -28,6 +28,23 @@ public class BankDao {
 
     private static final String MIGRATE_USERNAME = """
             ALTER TABLE banks ADD COLUMN IF NOT EXISTS username TEXT NOT NULL DEFAULT 'unknown'
+            """;
+
+    private static final String MIGRATE_TIMESTAMP = """
+            DO $$
+            BEGIN
+                IF EXISTS (
+                    SELECT 1 FROM information_schema.columns
+                    WHERE table_schema = current_schema()
+                      AND table_name = 'banks'
+                      AND column_name = 'time'
+                      AND data_type = 'date'
+                ) THEN
+                    ALTER TABLE banks
+                        ALTER COLUMN time TYPE TIMESTAMPTZ(3)
+                        USING (time::timestamp AT TIME ZONE 'UTC');
+                END IF;
+            END $$
             """;
 
     private static final String UPSERT = """
@@ -69,6 +86,7 @@ public class BankDao {
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(CREATE_TABLE);
             stmt.execute(MIGRATE_USERNAME);
+            stmt.execute(MIGRATE_TIMESTAMP);
             upsertStatement = connection.prepareStatement(UPSERT);
         } catch (Exception e) {
             Core.LOGGER.error("Error creating bank accounts table", e);

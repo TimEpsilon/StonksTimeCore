@@ -12,6 +12,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -42,12 +43,12 @@ class SctTransactionDaoStressTest {
         dao.createTable();
 
         UUID player = UUID.randomUUID();
-        long hour = 42_000L;
+        Instant hourStart = Instant.parse("2025-06-20T08:00:00.000Z");
 
         long startNanos = System.nanoTime();
         for (int i = 0; i < TRANSACTIONS_PER_SECOND; i++) {
             SctTransactionEntry entry = new SctTransactionEntry(
-                    hour,
+                    hourStart,
                     player,
                     "StressPlayer",
                     "minecraft:stress_item_" + i,

@@ -15,7 +15,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
 
 import java.nio.ByteBuffer;
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class TimeUtils {
@@ -212,16 +213,20 @@ public class TimeUtils {
         return buffer.array();
     }
 
-    public static long getCurrentHour() {
-        return (new Date()).getTime() / 3600000;
-    }
-
     public static long getCurrentMinute() {
         return (new Date()).getTime() / 60000;
     }
 
-    public static LocalDate getCurrentDate() {
-        return LocalDate.now();
+    public static Instant getCurrentInstant() {
+        return Instant.now().truncatedTo(ChronoUnit.MILLIS);
+    }
+
+    public static Instant truncateToHour(Instant instant) {
+        return instant.truncatedTo(ChronoUnit.HOURS);
+    }
+
+    public static Instant getCurrentHourStart() {
+        return truncateToHour(getCurrentInstant());
     }
 
 }

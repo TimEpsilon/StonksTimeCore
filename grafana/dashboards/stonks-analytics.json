@@ -188,7 +188,7 @@
         {
           "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "time_series",
-          "rawSql": "SELECT to_timestamp(hour * 3600) AT TIME ZONE 'UTC' AS time, SUM(hourly_total) OVER (ORDER BY hour) AS \"Items cumulés\" FROM (SELECT hour, SUM(amount) AS hourly_total FROM sct_transaction GROUP BY hour) t ORDER BY hour",
+          "rawSql": "SELECT time AS time, SUM(hourly_total) OVER (ORDER BY time) AS \"Items cumulés\" FROM (SELECT date_trunc('hour', time) AS time, SUM(amount) AS hourly_total FROM sct_transaction GROUP BY date_trunc('hour', time)) t ORDER BY time",
           "refId": "A",
           "timeColumns": ["time"]
         }
@@ -232,7 +232,7 @@
         {
           "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "time_series",
-          "rawSql": "SELECT (time::timestamp AT TIME ZONE 'UTC') AS time, money AS value, username AS metric FROM banks ORDER BY time",
+          "rawSql": "SELECT time AS time, money AS value, username AS metric FROM banks ORDER BY time",
           "refId": "A",
           "timeColumns": ["time"]
         }
@@ -276,7 +276,7 @@
         {
           "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "time_series",
-          "rawSql": "SELECT (time::timestamp AT TIME ZONE 'UTC') AS time, SUM(money) AS \"Solde total serveur\" FROM banks GROUP BY time ORDER BY time",
+          "rawSql": "SELECT time AS time, SUM(money) AS \"Solde total serveur\" FROM banks GROUP BY time ORDER BY time",
           "refId": "A",
           "timeColumns": ["time"]
         }
@@ -319,7 +319,7 @@
         {
           "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "time_series",
-          "rawSql": "SELECT to_timestamp(hour * 3600) AT TIME ZONE 'UTC' AS time, COUNT(*) AS \"Transactions par heure\" FROM sct_transaction GROUP BY hour ORDER BY hour",
+          "rawSql": "SELECT date_trunc('hour', time) AS time, COUNT(*) AS \"Transactions par heure\" FROM sct_transaction GROUP BY date_trunc('hour', time) ORDER BY time",
           "refId": "A",
           "timeColumns": ["time"]
         }
@@ -454,7 +454,7 @@
         {
           "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "time_series",
-          "rawSql": "SELECT to_timestamp(hour * 3600) AT TIME ZONE 'UTC' AS time, AVG(money) / 1000.0 AS \"Valeur moyenne\" FROM sct_transaction GROUP BY hour ORDER BY hour",
+          "rawSql": "SELECT date_trunc('hour', time) AS time, AVG(money) / 1000.0 AS \"Valeur moyenne\" FROM sct_transaction GROUP BY date_trunc('hour', time) ORDER BY time",
           "refId": "A",
           "timeColumns": ["time"]
         }
@@ -495,7 +495,7 @@
         {
           "datasource": { "type": "grafana-postgresql-datasource", "uid": "stonkstime" },
           "format": "time_series",
-          "rawSql": "SELECT (time::timestamp AT TIME ZONE 'UTC') AS time, COUNT(DISTINCT player) AS \"Joueurs actifs\" FROM banks GROUP BY time ORDER BY time",
+          "rawSql": "SELECT time AS time, COUNT(DISTINCT player) AS \"Joueurs actifs\" FROM banks GROUP BY time ORDER BY time",
           "refId": "A",
           "timeColumns": ["time"]
         }
