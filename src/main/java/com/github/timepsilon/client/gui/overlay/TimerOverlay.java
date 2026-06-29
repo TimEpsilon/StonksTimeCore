@@ -4,9 +4,9 @@ import com.github.timepsilon.utils.TimeUtils;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -29,6 +29,8 @@ public class TimerOverlay implements LayeredDraw.Layer {
 
     private static final ItemStack TIME_ICON = new ItemStack(Items.CLOCK);
     private static final ItemStack MONEY_ICON = new ItemStack(Items.GOLD_NUGGET);
+    private static final ResourceLocation EFFECT_BACKGROUND_SPRITE =
+            ResourceLocation.withDefaultNamespace("hud/effect_background");
 
     private int seconds = 0;
     private int money = 0;
@@ -69,7 +71,7 @@ public class TimerOverlay implements LayeredDraw.Layer {
 
     private static void drawStatusRow(GuiGraphics guiGraphics, Minecraft minecraft, int x, int y, int width,
                                       ItemStack icon, String text, int textColor) {
-        guiGraphics.blitSprite(Gui.EFFECT_BACKGROUND_SPRITE, x, y, width, ROW_HEIGHT);
+        guiGraphics.blitSprite(EFFECT_BACKGROUND_SPRITE, x, y, width, ROW_HEIGHT);
 
         int iconX = x + ICON_PADDING;
         int iconY = y + (ROW_HEIGHT - ICON_SIZE) / 2;
@@ -128,7 +130,7 @@ public class TimerOverlay implements LayeredDraw.Layer {
 
     private static void drawNotificationRow(GuiGraphics guiGraphics, Minecraft minecraft, int x, int y, int width,
                                               String text, int textColor) {
-        guiGraphics.blitSprite(Gui.EFFECT_BACKGROUND_SPRITE, x, y, width, ROW_HEIGHT);
+        guiGraphics.blitSprite(EFFECT_BACKGROUND_SPRITE, x, y, width, ROW_HEIGHT);
 
         int textX = x + TEXT_PADDING;
         int textY = y + (ROW_HEIGHT - minecraft.font.lineHeight) / 2;
