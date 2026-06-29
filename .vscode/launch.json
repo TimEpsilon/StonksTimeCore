@@ -1,0 +1,115 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Client",
+      "presentation": {
+        "group": "Mod Development - StonksTimeCore3",
+        "order": 0
+      },
+      "projectName": "StonksTimeCore3",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\alexb\\Desktop\\Cache\\StonksTimeCore3\\build\\moddev\\clientRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\alexb\\Desktop\\Cache\\StonksTimeCore3\\build\\moddev\\clientRunVmArgs.txt",
+        "-Dfml.modFolders\u003dstonkstimecore%%C:\\Users\\alexb\\Desktop\\Cache\\StonksTimeCore3\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Client2",
+      "presentation": {
+        "group": "Mod Development - StonksTimeCore3",
+        "order": 1
+      },
+      "projectName": "StonksTimeCore3",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\alexb\\Desktop\\Cache\\StonksTimeCore3\\build\\moddev\\client2RunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\alexb\\Desktop\\Cache\\StonksTimeCore3\\build\\moddev\\client2RunVmArgs.txt",
+        "-Dfml.modFolders\u003dstonkstimecore%%C:\\Users\\alexb\\Desktop\\Cache\\StonksTimeCore3\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Data",
+      "presentation": {
+        "group": "Mod Development - StonksTimeCore3",
+        "order": 2
+      },
+      "projectName": "StonksTimeCore3",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\alexb\\Desktop\\Cache\\StonksTimeCore3\\build\\moddev\\dataRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\alexb\\Desktop\\Cache\\StonksTimeCore3\\build\\moddev\\dataRunVmArgs.txt",
+        "-Dfml.modFolders\u003dstonkstimecore%%C:\\Users\\alexb\\Desktop\\Cache\\StonksTimeCore3\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "GameTestServer",
+      "presentation": {
+        "group": "Mod Development - StonksTimeCore3",
+        "order": 3
+      },
+      "projectName": "StonksTimeCore3",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\alexb\\Desktop\\Cache\\StonksTimeCore3\\build\\moddev\\gameTestServerRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\alexb\\Desktop\\Cache\\StonksTimeCore3\\build\\moddev\\gameTestServerRunVmArgs.txt",
+        "-Dfml.modFolders\u003dstonkstimecore%%C:\\Users\\alexb\\Desktop\\Cache\\StonksTimeCore3\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Server",
+      "presentation": {
+        "group": "Mod Development - StonksTimeCore3",
+        "order": 4
+      },
+      "projectName": "StonksTimeCore3",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\alexb\\Desktop\\Cache\\StonksTimeCore3\\build\\moddev\\serverRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\alexb\\Desktop\\Cache\\StonksTimeCore3\\build\\moddev\\serverRunVmArgs.txt",
+        "-Dfml.modFolders\u003dstonkstimecore%%C:\\Users\\alexb\\Desktop\\Cache\\StonksTimeCore3\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    }
+  ]
+}

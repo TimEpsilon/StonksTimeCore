@@ -18,8 +18,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
-
 import java.util.UUID;
 
 @EventBusSubscriber(modid = Core.MODID)
@@ -130,12 +128,6 @@ public class TimerHandler {
 
     @SubscribeEvent
     public static void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
-        MoneyDatabase.getDatabase().saveBanks();
-    }
-
-    @SubscribeEvent
-    public static void onServerTick(ServerTickEvent.Post event) {
-        if (event.getServer().getTickCount() % 1200 != 0) return; // Save every 1min
         MoneyDatabase.getDatabase().saveBanks();
     }
 

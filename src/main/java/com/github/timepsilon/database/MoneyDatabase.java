@@ -1,67 +1,62 @@
 package com.github.timepsilon.database;
 
-import com.github.timepsilon.Core;
-import com.github.timepsilon.utils.TimeUtils;
+import com.github.timepsilon.database.dao.BankDao;
+import com.github.timepsilon.database.entity.BankEntry;
+import com.mojang.authlib.GameProfile;
 import dev.ithundxr.createnumismatics.content.backend.BankAccount;
 import dev.ithundxr.createnumismatics.content.backend.BankSavedData;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 
-import java.sql.*;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
-public class MoneyDatabase extends AbstractDatabase {
+public class MoneyDatabase {
 
     private static final MoneyDatabase DATABASE = new MoneyDatabase();
 
+    private final BankDao dao = new BankDao();
+    private @Nullable MinecraftServer server;
+
     private MoneyDatabase() {}
 
+    public void load(MinecraftServer server) {
+        this.server = server;
+        dao.connect();
+        dao.tryFlushPending();
+    }
+
+    public void unload() {
+        dao.flushAndClose();
+        server = null;
+    }
+
+    public void flushPending() {
+        dao.tryFlushPending();
+    }
+
     public void saveBanks() {
-        try {
-            for (Map.Entry<UUID,BankAccount> entry : BankSavedData.load(server).getAccounts().entrySet()) {
-                long time = TimeUtils.getCurrentMinute();
-                byte[] uuid = TimeUtils.UUIDToBytes(entry.getKey());
-                int money = entry.getValue().getBalance();
+        if (server == null) return;
 
-                statement.setBytes(1, uuid);
-                statement.setLong(2, time);
-                statement.setInt(3, money);
-                statement.addBatch();
-            }
-            statement.executeBatch();
-            statement.clearBatch();
-        } catch (SQLException e) {
-            Core.LOGGER.error("Couldn't Update Banks Database : ", e);
+        List<BankEntry> entries = new ArrayList<>();
+        for (Map.Entry<UUID, BankAccount> entry : BankSavedData.load(server).getAccounts().entrySet()) {
+            UUID playerId = entry.getKey();
+            entries.add(BankEntry.snapshot(playerId, resolveUsername(playerId), entry.getValue().getBalance()));
         }
+        dao.upsertAll(entries);
     }
 
-    protected void createTables() {
-        try (Statement stmt = connection.createStatement()) {
-            stmt.execute("""
-            CREATE TABLE IF NOT EXISTS banks (
-                player BLOB NOT NULL,
-                time INTEGER NOT NULL,
-                money INTEGER NOT NULL,
-                PRIMARY KEY (player,time)
-            )
-            """);
-
-            // Prepared statement
-            statement = connection.prepareStatement("""
-            INSERT INTO banks
-            (player, time, money)
-            VALUES (?, ?, ?)
-            ON CONFLICT (player, time)
-            DO UPDATE SET
-            money = excluded.money;
-            """);
-        } catch (Exception e) {
-            Core.LOGGER.error("Error Creating {} Database", getDatabaseName(), e);
+    private String resolveUsername(UUID playerId) {
+        ServerPlayer online = server.getPlayerList().getPlayer(playerId);
+        if (online != null) {
+            return online.getGameProfile().getName();
         }
-    }
-
-    @Override
-    public String getDatabaseName() {
-        return "BankAccounts";
+        Optional<GameProfile> profile = server.getProfileCache().get(playerId);
+        return profile.map(GameProfile::getName).orElseGet(() -> playerId.toString());
     }
 
     public static MoneyDatabase getDatabase() {
