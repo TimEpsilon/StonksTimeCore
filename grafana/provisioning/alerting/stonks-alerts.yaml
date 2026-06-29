@@ -1,0 +1,71 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: StonksTime Alertes
+    folder: StonksTime
+    interval: 5m
+    rules:
+      - uid: stonks-wealthy-player
+        title: Joueur avec solde anormal
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 604800
+              to: 0
+            datasourceUid: bankaccounts
+            model:
+              rawSql: |
+                WITH latest AS (
+                  SELECT player, money
+                  FROM banks
+                  WHERE time = (SELECT MAX(time) FROM banks)
+                ),
+                stats AS (
+                  SELECT
+                    MAX(money) AS max_money,
+                    AVG(money) AS avg_money
+                  FROM latest
+                )
+                SELECT max_money * 1.0 / NULLIF(avg_money, 0) AS ratio
+                FROM stats
+              format: table
+              intervalMs: 1000
+              maxDataPoints: 43200
+              datasource:
+                type: frser-sqlite-datasource
+                uid: bankaccounts
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              type: reduce
+              expression: A
+              reducer: last
+              refId: B
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              expression: B
+              refId: C
+              conditions:
+                - evaluator:
+                    params: [3]
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: [C]
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          summary: "Un joueur dépasse 3× la moyenne des soldes"
+          description: "Le ratio solde max / solde moyen dépasse 3 sur le dernier jour enregistré."
+        labels:
+          severity: warning

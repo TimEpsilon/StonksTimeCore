@@ -1,0 +1,19 @@
+apiVersion: 1
+
+datasources:
+  - name: BankAccounts
+    uid: bankaccounts
+    type: frser-sqlite-datasource
+    access: proxy
+    isDefault: true
+    editable: false
+    jsonData:
+      path: /data/sqlite/BankAccounts.db
+
+  - name: SCTTransactions
+    uid: scttransactions
+    type: frser-sqlite-datasource
+    access: proxy
+    editable: false
+    jsonData:
+      path: /data/sqlite/SCTTransaction.db

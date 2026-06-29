@@ -39,6 +39,12 @@ public class STCConfigServer {
     public final ModConfigSpec.IntValue SRE_MIRROR_DURATION;
     public final ModConfigSpec.DoubleValue SCT_GOLDEN_TICKET_PROBABILITY;
 
+    public final ModConfigSpec.ConfigValue<String> DB_HOST;
+    public final ModConfigSpec.IntValue DB_PORT;
+    public final ModConfigSpec.ConfigValue<String> DB_NAME;
+    public final ModConfigSpec.ConfigValue<String> DB_USER;
+    public final ModConfigSpec.ConfigValue<String> DB_PASSWORD;
+
     static {
         Pair<STCConfigServer,ModConfigSpec> pair = new ModConfigSpec.Builder().configure(STCConfigServer::new);
         CONFIG = pair.getLeft();
@@ -172,6 +178,25 @@ public class STCConfigServer {
                 .translation("config.stonkstimecore.sre.mirrorDuration")
                 .defineInRange("mirrorDuration",180, 0, Integer.MAX_VALUE);
 
+        builder.pop();
+        builder.translation("config.stonkstimecore.database").push("database");
+        DB_HOST = builder
+                .comment("PostgreSQL host.")
+                .define("host", "localhost");
+        DB_PORT = builder
+                .comment("PostgreSQL port.")
+                .defineInRange("port", 5432, 1, 65535);
+        DB_NAME = builder
+                .comment("PostgreSQL database name.")
+                .define("database", "stonkstime");
+        DB_USER = builder
+                .comment("PostgreSQL user.")
+                .define("user", "stonkstime");
+        DB_PASSWORD = builder
+                .comment("PostgreSQL password.")
+                .define("password", "stonkstime");
+
+        builder.pop();
     }
 
 }

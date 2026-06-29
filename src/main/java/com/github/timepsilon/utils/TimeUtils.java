@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
 
 import java.nio.ByteBuffer;
+import java.time.LocalDate;
 import java.util.*;
 
 public class TimeUtils {
@@ -192,6 +193,10 @@ public class TimeUtils {
 
     public static long getCurrentMinute() {
         return (new Date()).getTime() / 60000;
+    }
+
+    public static LocalDate getCurrentDate() {
+        return LocalDate.now();
     }
 
 }
