@@ -1,5 +1,6 @@
 package com.github.timepsilon.database.dao;
 
+import com.github.timepsilon.Core;
 import com.github.timepsilon.database.PostgresHelper;
 import com.github.timepsilon.database.entity.SctTransactionEntry;
 
@@ -9,12 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class SctTransactionDao {
-
-    private static final Logger LOGGER = Logger.getLogger(SctTransactionDao.class.getName());
 
     private static final String CREATE_TABLE = """
             CREATE TABLE IF NOT EXISTS sct_transaction (
@@ -48,9 +45,9 @@ public class SctTransactionDao {
         try {
             if (connection != null && !connection.isClosed()) return;
             connection = supplier.get();
-            LOGGER.info("Connected to PostgreSQL (sct_transaction).");
+            Core.LOGGER.debug("Connected to PostgreSQL (table={}).", SctTransactionEntry.TABLE_NAME);
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Error loading SCT transaction database!", e);
+            Core.LOGGER.error("Error loading SCT transaction database!", e);
         }
     }
 
@@ -59,7 +56,7 @@ public class SctTransactionDao {
             stmt.execute(CREATE_TABLE);
             upsertStatement = connection.prepareStatement(UPSERT);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error creating SCT transaction table.", e);
+            Core.LOGGER.error("Error creating SCT transaction table.", e);
         }
     }
 
@@ -67,24 +64,37 @@ public class SctTransactionDao {
         if (upsertStatement == null) return;
         try {
             for (SctTransactionEntry entry : entries) {
+                Core.LOGGER.debug(
+                        "SQL upsert batch: table={}, player={}, hour={}, item={}, amount={}, money={}",
+                        SctTransactionEntry.TABLE_NAME, entry.player(), entry.hour(),
+                        entry.itemId(), entry.amount(), entry.moneyAsFloat()
+                );
                 entry.bindTo(upsertStatement);
                 upsertStatement.addBatch();
             }
-            upsertStatement.executeBatch();
+            int[] results = upsertStatement.executeBatch();
+            Core.LOGGER.debug(
+                    "SQL batch executed: table={}, count={}",
+                    SctTransactionEntry.TABLE_NAME, results.length
+            );
             upsertStatement.clearBatch();
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Failed to send transactions to database!", e);
+            Core.LOGGER.error("Failed to send transactions to database!", e);
         }
     }
 
     public void flushAndClose() {
         try {
             if (upsertStatement != null) {
-                upsertStatement.executeBatch();
+                int[] results = upsertStatement.executeBatch();
+                Core.LOGGER.debug(
+                        "SQL batch flushed on close: table={}, count={}",
+                        SctTransactionEntry.TABLE_NAME, results.length
+                );
                 upsertStatement.clearBatch();
             }
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Failed to flush transactions to database!", e);
+            Core.LOGGER.error("Failed to flush transactions to database!", e);
         }
         disconnect();
     }
@@ -98,10 +108,10 @@ public class SctTransactionDao {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
                 connection = null;
-                LOGGER.info("Disconnected from SCT transaction database.");
+                Core.LOGGER.debug("Disconnected from PostgreSQL (table={}).", SctTransactionEntry.TABLE_NAME);
             }
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Error closing SCT transaction database!", e);
+            Core.LOGGER.error("Error closing SCT transaction database!", e);
         }
     }
 }

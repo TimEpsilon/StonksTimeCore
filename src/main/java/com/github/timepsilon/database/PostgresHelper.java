@@ -1,5 +1,6 @@
 package com.github.timepsilon.database;
 
+import com.github.timepsilon.Core;
 import com.github.timepsilon.config.STCConfigServer;
 
 import java.sql.Connection;
@@ -23,6 +24,9 @@ public final class PostgresHelper {
     public static Connection open(String host, int port, String database, String user, String password)
             throws SQLException {
         String jdbcUrl = "jdbc:postgresql://" + host + ":" + port + "/" + database;
-        return DriverManager.getConnection(jdbcUrl, user, password);
+        Core.LOGGER.debug("Opening PostgreSQL connection: url={}, user={}", jdbcUrl, user);
+        Connection connection = DriverManager.getConnection(jdbcUrl, user, password);
+        Core.LOGGER.debug("PostgreSQL connection opened: url={}, user={}", jdbcUrl, user);
+        return connection;
     }
 }

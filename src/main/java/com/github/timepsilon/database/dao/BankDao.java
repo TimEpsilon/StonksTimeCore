@@ -42,7 +42,7 @@ public class BankDao {
         try {
             if (connection != null && !connection.isClosed()) return;
             connection = supplier.get();
-            Core.LOGGER.info("Connected to PostgreSQL (banks).");
+            Core.LOGGER.debug("Connected to PostgreSQL (table={}).", BankEntry.TABLE_NAME);
         } catch (SQLException e) {
             Core.LOGGER.error("Error loading bank accounts database!", e);
         }
@@ -61,10 +61,18 @@ public class BankDao {
         if (upsertStatement == null) return;
         try {
             for (BankEntry entry : entries) {
+                Core.LOGGER.debug(
+                        "SQL upsert batch: table={}, player={}, time={}, money={}",
+                        BankEntry.TABLE_NAME, entry.player(), entry.time(), entry.money()
+                );
                 entry.bindTo(upsertStatement);
                 upsertStatement.addBatch();
             }
-            upsertStatement.executeBatch();
+            int[] results = upsertStatement.executeBatch();
+            Core.LOGGER.debug(
+                    "SQL batch executed: table={}, count={}",
+                    BankEntry.TABLE_NAME, results.length
+            );
             upsertStatement.clearBatch();
         } catch (SQLException e) {
             Core.LOGGER.error("Couldn't update banks database: ", e);
@@ -74,7 +82,11 @@ public class BankDao {
     public void flushAndClose() {
         try {
             if (upsertStatement != null) {
-                upsertStatement.executeBatch();
+                int[] results = upsertStatement.executeBatch();
+                Core.LOGGER.debug(
+                        "SQL batch flushed on close: table={}, count={}",
+                        BankEntry.TABLE_NAME, results.length
+                );
                 upsertStatement.clearBatch();
             }
         } catch (SQLException e) {
@@ -92,7 +104,7 @@ public class BankDao {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
                 connection = null;
-                Core.LOGGER.info("Disconnected from bank accounts database.");
+                Core.LOGGER.debug("Disconnected from PostgreSQL (table={}).", BankEntry.TABLE_NAME);
             }
         } catch (SQLException e) {
             Core.LOGGER.error("Error closing bank accounts database!", e);
