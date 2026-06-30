@@ -1,5 +1,6 @@
 package com.github.timepsilon.commands.timer;
 
+import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.time.TimerHandler;
 import com.github.timepsilon.utils.TimeUtils;
 import com.mojang.authlib.GameProfile;
@@ -23,7 +24,7 @@ public class TimerLogic {
         Collection<GameProfile> players = GameProfileArgument.getGameProfiles(ctx, "player");
         int seconds = players.stream()
                 .map(player -> Numismatics.BANK.getOrCreateAccount(player.getId(), BankAccount.Type.PLAYER))
-                .mapToInt(account -> account.getBalance() / TimeUtils.TIME_TO_MONEY)
+                .mapToInt(account -> account.getBalance() /  STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt())
                 .sum();
 
         ctx.getSource().sendSuccess(() -> Component.literal(TimeUtils.secondsToTime(seconds)), false);
@@ -36,7 +37,7 @@ public class TimerLogic {
 
         for (GameProfile player : players) {
             BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getId(), BankAccount.Type.PLAYER);
-            account.setBalance(seconds* TimeUtils.TIME_TO_MONEY);
+            account.setBalance(seconds* STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt());
             ctx.getSource().sendSuccess(() -> Component.translatable("commands.stonkstimecore.set_time",player.getName(), TimeUtils.secondsToTime(seconds)), false);
         }
         return seconds;
@@ -50,11 +51,11 @@ public class TimerLogic {
             BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getId(), BankAccount.Type.PLAYER);
             ServerPlayer sPlayer = tryGettingPlayer(ctx.getSource().getServer(), player.getId());
             if (seconds > 0) {
-                account.deposit(seconds* TimeUtils.TIME_TO_MONEY);
-                TimerHandler.sendInfoPacket(sPlayer, "+"+(seconds*TimeUtils.TIME_TO_MONEY)+"\u9000");
+                account.deposit(seconds* STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt());
+                TimerHandler.sendInfoPacket(sPlayer, "+"+(seconds*STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt())+"\u9000");
             } else {
-                account.deduct(-seconds* TimeUtils.TIME_TO_MONEY);
-                TimerHandler.sendInfoPacket(sPlayer, (seconds*TimeUtils.TIME_TO_MONEY)+"\u9000");
+                account.deduct(-seconds* STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt());
+                TimerHandler.sendInfoPacket(sPlayer, (seconds*STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt())+"\u9000");
             }
             ctx.getSource().sendSuccess(() -> Component.translatable("commands.stonkstimecore.add_time",seconds,player.getName()), false);
         }

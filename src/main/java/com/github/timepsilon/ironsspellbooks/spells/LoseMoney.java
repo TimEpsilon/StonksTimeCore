@@ -1,6 +1,7 @@
 package com.github.timepsilon.ironsspellbooks.spells;
 
 import com.github.timepsilon.Core;
+import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.ironsspellbooks.ModSchoolRegistry;
 import com.github.timepsilon.particle.ModParticles;
 import com.github.timepsilon.time.TimerHandler;
@@ -42,7 +43,7 @@ public class LoseMoney extends AbstractSpell {
     @Override
     public List<MutableComponent> getUniqueInfo(int spellLevel, LivingEntity caster) {
         return List.of(
-                Component.literal(Utils.stringTruncation(getSpellPower(spellLevel, caster)*60*TimeUtils.TIME_TO_MONEY, 1)).withStyle(ChatFormatting.DARK_GREEN)
+                Component.literal(Utils.stringTruncation(getSpellPower(spellLevel, caster)*60* STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt(), 1)).withStyle(ChatFormatting.DARK_GREEN)
                         .append(Component.literal("\u9000 ").withStyle(ChatFormatting.WHITE))
                         .append(Component.translatable("ui.stonkstimecore.lose_money").withStyle(ChatFormatting.DARK_GREEN))
         );
@@ -70,7 +71,7 @@ public class LoseMoney extends AbstractSpell {
                 BankAccount targetAccount = Numismatics.BANK.getOrCreateAccount(targetEntity.getUUID(), BankAccount.Type.PLAYER);
                 BankAccount receiverAccount = Numismatics.BANK.getOrCreateAccount(senderEntity.getUUID(), BankAccount.Type.PLAYER);
 
-                int amount = (int) Math.min(getSpellPower(spellLevel, entity)*60*TimeUtils.TIME_TO_MONEY, targetAccount.getBalance());
+                int amount = (int) Math.min(getSpellPower(spellLevel, entity)*60*STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt(), targetAccount.getBalance());
 
                 targetAccount.deduct(amount);
                 TimerHandler.sendInfoPacket(targetEntity, "-"+amount+"\u9000");

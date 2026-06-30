@@ -40,11 +40,12 @@ public class SRELoseMoney extends AbstractRandomStonksEvent {
                             .withStyle(ChatFormatting.RED)
             );
         } else {
-            account.deduct(amount * TimeUtils.TIME_TO_MONEY);
-            TimerHandler.sendInfoPacket((ServerPlayer) player, "-"+(amount*TimeUtils.TIME_TO_MONEY)+"\u9000");
+            int money = amount * STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt();
+            account.deduct(money);
+            TimerHandler.sendInfoPacket((ServerPlayer) player, "-"+money+"\u9000");
 
             player.sendSystemMessage(
-                    Component.translatable("sre.stonkstimecore.lose_money.amount", TimeUtils.secondsToTime(amount), amount * TimeUtils.TIME_TO_MONEY)
+                    Component.translatable("sre.stonkstimecore.lose_money.amount", TimeUtils.secondsToTime(amount), money)
                             .withStyle(ChatFormatting.RED)
             );
         }

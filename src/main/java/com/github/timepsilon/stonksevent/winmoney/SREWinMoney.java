@@ -34,21 +34,21 @@ public class SREWinMoney extends AbstractRandomStonksEvent {
         PlayerOutData timer = PlayerOutData.getPlayerOutData(player.getServer());
         boolean isOut = timer.isOut(player.getUUID());
 
-
+        int money = amount  * STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt();
         if (isOut) {
-            List<ItemStack> coins = TimeUtils.minimumNumberOfCoins(amount);
+            List<ItemStack> coins = TimeUtils.minimumNumberOfCoins(money);
 
             // Identical to a /give animation
             for (ItemStack item : coins) {
                 givePlayer(player, item);
             }
         } else {
-            account.deposit(amount * TimeUtils.TIME_TO_MONEY);
-            TimerHandler.sendInfoPacket((ServerPlayer) player, "+"+(amount*TimeUtils.TIME_TO_MONEY)+"\u9000");
+            account.deposit(money);
+            TimerHandler.sendInfoPacket((ServerPlayer) player, "+"+money+"\u9000");
         }
 
         player.sendSystemMessage(
-                Component.translatable("sre.stonkstimecore.win_money.amount", TimeUtils.secondsToTime(amount), amount * TimeUtils.TIME_TO_MONEY)
+                Component.translatable("sre.stonkstimecore.win_money.amount", TimeUtils.secondsToTime(amount), money)
                         .withStyle(ChatFormatting.GREEN)
         );
     }

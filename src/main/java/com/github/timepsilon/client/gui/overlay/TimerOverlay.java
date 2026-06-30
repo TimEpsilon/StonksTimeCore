@@ -1,10 +1,14 @@
 package com.github.timepsilon.client.gui.overlay;
 
+import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.utils.TimeUtils;
+import dev.ithundxr.createnumismatics.content.backend.Coin;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
 import java.awt.*;
@@ -24,14 +28,21 @@ public class TimerOverlay implements LayeredDraw.Layer {
     private static final int infoTime = 20*3;
     private static final HashMap<String, Long> timeInfo = new HashMap<>();
 
+    private static final ItemStack TIME_ICON = new ItemStack(Items.CLOCK);
+    private static final ItemStack MONEY_ICON = Coin.SUN.asStack();
+
     @Override
     public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
-        if (Minecraft.getInstance().player == null || Minecraft.getInstance().level == null) return;
-        if (Minecraft.getInstance().options.hideGui || Minecraft.getInstance().player.isSpectator()) return; // Hide timer if F1 or spectator
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.player == null || minecraft.level == null) return;
+        if (minecraft.options.hideGui || minecraft.player.isSpectator()) return; // Hide timer if F1 or spectator
         if (isOut) return ; // Being out =>  no more render
 
         int width = guiGraphics.guiWidth();
         int height = guiGraphics.guiHeight();
+
+        String timeText = TimeUtils.secondsToTime(seconds);
+        String moneyText = TimeUtils.formatMoney(money);
 
         guiGraphics.drawString(Minecraft.getInstance().font, TimeUtils.secondsToTime(seconds), width*textX, height*textY, getColor(), true);
         guiGraphics.drawString(Minecraft.getInstance().font, money+"\u9000", width*textX, height*(textY-0.03f), Color.WHITE.getRGB(), true);
@@ -100,9 +111,9 @@ public class TimerOverlay implements LayeredDraw.Layer {
         // Above 6h remaining -> Green
         // Below 30min -> Red
         // In between -> Green -> Yellow -> Orange -> Red
-        if (seconds > TimeUtils.SAFE_TIME) return Color.decode("#39a32a").getRGB();
-        if (seconds < TimeUtils.DANGER_TIME) return Color.decode("#c90808").getRGB();
-        float t = ((float)seconds - TimeUtils.DANGER_TIME) / (TimeUtils.SAFE_TIME-TimeUtils.DANGER_TIME);
+        if (seconds > STCConfigServer.CONFIG.SAFE_TIME.getAsInt()) return Color.decode("#39a32a").getRGB();
+        if (seconds < STCConfigServer.CONFIG.DANGER_TIME.getAsInt()) return Color.decode("#c90808").getRGB();
+        float t = ((float)seconds - STCConfigServer.CONFIG.DANGER_TIME.getAsInt()) / (STCConfigServer.CONFIG.SAFE_TIME.getAsInt()-STCConfigServer.CONFIG.DANGER_TIME.getAsInt());
 
         return interpolateColor(t);
     }

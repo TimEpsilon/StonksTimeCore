@@ -1,5 +1,6 @@
 package com.github.timepsilon.entity.custom;
 
+import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.items.ModItems;
 import com.github.timepsilon.time.PlayerOutData;
 import com.github.timepsilon.utils.TimeUtils;
@@ -91,7 +92,7 @@ public class TimeGearEntity extends Entity implements GeoEntity {
         if (!this.getState().shouldSpin()) return;
 
         if (this.bank != null) {
-            int seconds = this.bank.getBalance() / TimeUtils.TIME_TO_MONEY;
+            int seconds = this.bank.getBalance() / STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt();
             String time = TimeUtils.secondsToTime(seconds);
             this.setCustomName(Component.literal(time).withStyle(ChatFormatting.GOLD));
 

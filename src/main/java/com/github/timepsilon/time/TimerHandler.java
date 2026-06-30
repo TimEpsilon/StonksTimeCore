@@ -1,6 +1,7 @@
 package com.github.timepsilon.time;
 
 import com.github.timepsilon.Core;
+import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.config.SqlStatsGate;
 import com.github.timepsilon.database.MoneyDatabase;
 import com.github.timepsilon.packets.server.TimerInfoPacket;
@@ -50,16 +51,16 @@ public class TimerHandler {
         }
 
         // Decrease account by 1s
-        account.deduct(TimeUtils.TIME_TO_MONEY, true);
+        account.deduct(STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt(), true);
 
         // Convert money to seconds
-        int seconds = account.getBalance() / TimeUtils.TIME_TO_MONEY;
+        int seconds = account.getBalance() / STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt();
 
         // Update Overlay
         sendOverlayPacket(player, seconds, account.getBalance(), timer.isOut(uuid));
 
         // HP logic
-        if (!(TimeUtils.DANGER_TIME < seconds && seconds < TimeUtils.SAFE_TIME)) {
+        if (!(STCConfigServer.CONFIG.DANGER_TIME.getAsInt() < seconds && seconds < STCConfigServer.CONFIG.SAFE_TIME.getAsInt())) {
             int hp = TimeUtils.howMuchHP(seconds);
             if (!player.getAttribute(Attributes.MAX_HEALTH).hasModifier(TIME_HP)) {
                 AttributeModifier timeHPModifier = new AttributeModifier(TIME_HP, 0, AttributeModifier.Operation.ADD_VALUE);
@@ -97,8 +98,8 @@ public class TimerHandler {
         // Setup for players with no money
         // If the player is not in the map, we assume that it's their first time connecting
         if (!timer.getPlayerIsOut().containsKey(player.getUUID())) {
-            Core.LOGGER.info("{} joined for the first time. {}s have been added to their timer", player.getName(), TimeUtils.BASE_TIME);
-            account.setBalance(TimeUtils.BASE_TIME * TimeUtils.TIME_TO_MONEY);
+            Core.LOGGER.info("{} joined for the first time. {}s have been added to their timer", player.getName(), STCConfigServer.CONFIG.BASE_TIME.getAsInt());
+            account.setBalance(STCConfigServer.CONFIG.BASE_TIME.getAsInt() * STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt());
             PlayerOutHandler.setOut(player, false);
         }
     }
