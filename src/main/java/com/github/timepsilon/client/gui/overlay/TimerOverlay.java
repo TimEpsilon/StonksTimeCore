@@ -1,15 +1,10 @@
 package com.github.timepsilon.client.gui.overlay;
 
 import com.github.timepsilon.utils.TimeUtils;
-import dev.ithundxr.createnumismatics.content.backend.Coin;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
 import java.awt.*;
@@ -20,72 +15,28 @@ import java.util.Map;
 public class TimerOverlay implements LayeredDraw.Layer {
     public static final TimerOverlay instance = new TimerOverlay();
 
-    private static final int ROW_HEIGHT = 24;
-    private static final int ROW_SPACING = 2;
-    private static final int EDGE_MARGIN = 3;
-    private static final int ICON_SIZE = 18;
-    private static final int ICON_PADDING = 3;
-    private static final int TEXT_PADDING = 4;
-    private static final int INFO_TIME = 20 * 3;
-
-    private static final ItemStack TIME_ICON = new ItemStack(Items.CLOCK);
-    private static final ItemStack MONEY_ICON = Coin.SUN.asStack();
-    private static final ResourceLocation STATUS_BACKGROUND_SPRITE =
-            ResourceLocation.withDefaultNamespace("toast/advancement");
-
     private int seconds = 0;
     private int money = 0;
     private boolean isOut;
+    private static final float textX = 0.9f;
+    private static final float textY = 0.9f;
+    private static final float deltaY = -0.1f;
+    private static final int infoTime = 20*3;
     private static final HashMap<String, Long> timeInfo = new HashMap<>();
 
     @Override
     public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
-        Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.player == null || minecraft.level == null) return;
-        if (minecraft.options.hideGui || minecraft.player.isSpectator()) return;
-        if (isOut) return;
+        if (Minecraft.getInstance().player == null || Minecraft.getInstance().level == null) return;
+        if (Minecraft.getInstance().options.hideGui || Minecraft.getInstance().player.isSpectator()) return; // Hide timer if F1 or spectator
+        if (isOut) return ; // Being out =>  no more render
 
-        int screenWidth = guiGraphics.guiWidth();
-        int screenHeight = guiGraphics.guiHeight();
-        Font font = minecraft.font;
+        int width = guiGraphics.guiWidth();
+        int height = guiGraphics.guiHeight();
 
-        String timeText = TimeUtils.secondsToTime(seconds);
-        String moneyText = TimeUtils.formatMoney(money);
+        guiGraphics.drawString(Minecraft.getInstance().font, TimeUtils.secondsToTime(seconds), width*textX, height*textY, getColor(), true);
+        guiGraphics.drawString(Minecraft.getInstance().font, money+"\u9000", width*textX, height*(textY-0.03f), Color.WHITE.getRGB(), true);
 
-        int panelWidth = computePanelWidth(font, timeText, moneyText);
-        int panelX = screenWidth - EDGE_MARGIN - panelWidth;
-        int moneyRowY = screenHeight - EDGE_MARGIN - ROW_HEIGHT;
-        int timeRowY = moneyRowY - ROW_SPACING - ROW_HEIGHT;
-
-        drawStatusRow(guiGraphics, minecraft, panelX, timeRowY, panelWidth, TIME_ICON, timeText, getColor());
-        drawStatusRow(guiGraphics, minecraft, panelX, moneyRowY, panelWidth, MONEY_ICON, moneyText, 0xFFFFFF);
-
-        if (!timeInfo.isEmpty()) {
-            manageNotifications(guiGraphics, screenHeight, timeRowY, panelWidth, font, minecraft);
-        }
-    }
-
-    private static int computePanelWidth(Font font, String timeText, String moneyText) {
-        int contentWidth = Math.max(font.width(timeText), font.width(moneyText));
-        return ROW_HEIGHT + TEXT_PADDING + contentWidth + TEXT_PADDING;
-    }
-
-    private static void drawStatusRow(GuiGraphics guiGraphics, Minecraft minecraft, int x, int y, int width,
-                                      ItemStack itemIcon, String text, int textColor) {
-        guiGraphics.blitSprite(STATUS_BACKGROUND_SPRITE, x, y, width, ROW_HEIGHT);
-
-        int textX = x + ROW_HEIGHT + TEXT_PADDING;
-        int textY = y + (ROW_HEIGHT - minecraft.font.lineHeight) / 2;
-
-        if (itemIcon != null) {
-            int iconX = x + ICON_PADDING;
-            int iconY = y + (ROW_HEIGHT - ICON_SIZE) / 2;
-            guiGraphics.renderItem(itemIcon, iconX, iconY);
-        } else {
-            textX = x + TEXT_PADDING;
-        }
-
-        guiGraphics.drawString(minecraft.font, text, textX, textY, textColor, true);
+        if (!timeInfo.isEmpty()) manageNotifications(guiGraphics, width, height);
     }
 
     public void setSeconds(int seconds) {
@@ -108,46 +59,29 @@ public class TimerOverlay implements LayeredDraw.Layer {
         timeInfo.put(info, Minecraft.getInstance().level.getGameTime());
     }
 
-    private void manageNotifications(GuiGraphics guiGraphics, int screenHeight, int timeRowY,
-                                     int panelWidth, Font font, Minecraft minecraft) {
-        Iterator<Map.Entry<String, Long>> iterator = timeInfo.entrySet().iterator();
-        Level level = minecraft.level;
+    private void manageNotifications(GuiGraphics guiGraphics, int width, int height) {
+        Iterator<Map.Entry<String,Long>> iterator = timeInfo.entrySet().iterator();
+        Level level = Minecraft.getInstance().level;
         while (iterator.hasNext()) {
-            Map.Entry<String, Long> entry = iterator.next();
+            Map.Entry<String,Long> entry = iterator.next();
             long currentDeltaTime = level.getGameTime() - entry.getValue();
-            if (currentDeltaTime > INFO_TIME) {
+            if (currentDeltaTime > infoTime) {
                 iterator.remove();
-                continue;
+                break;
             }
 
-            float progress = (float) currentDeltaTime / INFO_TIME;
-            String text = entry.getKey();
-            int rowWidth = Math.max(panelWidth, font.width(text) + ROW_HEIGHT + TEXT_PADDING * 2);
-            int rowX = guiGraphics.guiWidth() - EDGE_MARGIN - rowWidth;
-
-            float startY = (float) timeRowY / screenHeight - 0.06f;
-            float endY = startY - 0.1f;
-            float relativeY = interpolateCubic(progress, startY, endY - startY);
-            int notifyY = (int) (screenHeight * relativeY);
-
-            drawNotificationRow(guiGraphics, minecraft, rowX, notifyY, rowWidth, text, getTransparentWhite(progress));
+            float x = (float) currentDeltaTime / infoTime;
+            guiGraphics.drawString(Minecraft.getInstance().font, entry.getKey(), width*textX, height*interpolateCubic(x, textY-0.06f, deltaY), getTransparentWhite(x), true);
         }
     }
 
-    private static void drawNotificationRow(GuiGraphics guiGraphics, Minecraft minecraft, int x, int y, int width,
-                                              String text, int textColor) {
-        guiGraphics.blitSprite(STATUS_BACKGROUND_SPRITE, x, y, width, ROW_HEIGHT);
-
-        int textX = x + TEXT_PADDING;
-        int textY = y + (ROW_HEIGHT - minecraft.font.lineHeight) / 2;
-        guiGraphics.drawString(minecraft.font, text, textX, textY, textColor, true);
-    }
-
     private float interpolateCubic(float x, float x0, float dx) {
-        return (float) (1 - Math.pow(1 - x, 3)) * dx + x0;
+        return (float) (1-Math.pow(1-x,3))*dx + x0;
     }
 
     private int getTransparentWhite(float x) {
+        // 100% opacity for 0-0.75
+        // linear descent between 0.75 and 1
         float alphaF;
 
         if (x < 0.75f) {
@@ -158,32 +92,35 @@ public class TimerOverlay implements LayeredDraw.Layer {
 
         alphaF = Math.clamp(alphaF, 0.1f, 1.0f);
 
-        int alpha = (int) (alphaF * 255.0f);
+        int alpha = (int)(alphaF * 255.0f);
         return (alpha << 24) | 0xFFFFFF;
     }
 
     private int getColor() {
+        // Above 6h remaining -> Green
+        // Below 30min -> Red
+        // In between -> Green -> Yellow -> Orange -> Red
         if (seconds > TimeUtils.SAFE_TIME) return Color.decode("#39a32a").getRGB();
         if (seconds < TimeUtils.DANGER_TIME) return Color.decode("#c90808").getRGB();
-        float t = ((float) seconds - TimeUtils.DANGER_TIME) / (TimeUtils.SAFE_TIME - TimeUtils.DANGER_TIME);
+        float t = ((float)seconds - TimeUtils.DANGER_TIME) / (TimeUtils.SAFE_TIME-TimeUtils.DANGER_TIME);
 
         return interpolateColor(t);
     }
 
     private int interpolateColor(float t) {
-        int rG = 0x39, gG = 0xA3, bG = 0x2A;
-        int rY = 0xEA, gY = 0xFF, bY = 0x29;
-        int rR = 0xC9, gR = 0x08, bR = 0x08;
+        int rG = 0x39, gG = 0xA3, bG = 0x2A; // green  #39A32A
+        int rY = 0xEA, gY = 0xFF, bY = 0x29; // yellow #EAFF29
+        int rR = 0xC9, gR = 0x08, bR = 0x08; // red    #C90808
 
         if (t >= 0.5) {
-            double u = (t - 0.5) * 2.0;
+            double u = (t - 0.5) * 2.0; // [0,1]
             return new Color(
                     (int) (rY + u * (rG - rY)),
                     (int) (gY + u * (gG - gY)),
                     (int) (bY + u * (bG - bY))
             ).getRGB();
         } else {
-            double u = t * 2.0;
+            double u = t * 2.0; // [0,1]
             return new Color(
                     (int) (rR + u * (rY - rR)),
                     (int) (gR + u * (gY - gR)),
@@ -191,4 +128,6 @@ public class TimerOverlay implements LayeredDraw.Layer {
             ).getRGB();
         }
     }
+
+
 }

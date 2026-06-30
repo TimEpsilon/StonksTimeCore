@@ -109,6 +109,15 @@
   "config.stonkstimecore.sre.shrinkflationFactor" : "shrinkflationFactor",
   "config.stonkstimecore.sre.mirrorDuration" : "mirrorDuration",
 
+  "config.stonkstimecore.database" : "Database",
+  "config.stonkstimecore.database.enableSqlStats" : "enableSqlStats",
+  "config.stonkstimecore.database.DBHost" : "DBHost",
+  "config.stonkstimecore.database.DBPort" : "DBPort",
+  "config.stonkstimecore.database.DBUser" : "DBUser",
+  "config.stonkstimecore.database.DBName" : "DBName",
+  "config.stonkstimecore.database.DBPassword" : "DBPassword",
+  "config.stonkstimecore.database.bankSaveIntervalSeconds" : "bankSaveIntervalSeconds",
+
   "config.stonkstimecore.applyShader": "applyShader",
   "config.stonkstimecore.seeOutAsTranslucent": "seeOutAsTranslucent",
 

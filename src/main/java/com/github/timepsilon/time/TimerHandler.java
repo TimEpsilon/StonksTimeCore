@@ -124,7 +124,6 @@ public class TimerHandler {
 
         // Lose 10% of player money (leaving a minimum of 10 remaining seconds)
         TimeUtils.loseAndExplodeOnDeath(account, player, event.getSource().getWeaponItem());
-
     }
 
     @SubscribeEvent

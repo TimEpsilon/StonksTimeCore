@@ -1,8 +1,11 @@
 # StonksTimeCore
 
-Mod cœur de **StonksLand V3** pour Minecraft **1.21.1** (NeoForge **21.1.211**). Il implémente une économie basée sur le **temps** : les joueurs convertissent leur monnaie (Create Numismatics) en temps de jeu ; lorsque le temps est épuisé, ils sont éliminés (« out »). Le mod ajoute des machines Create, des événements aléatoires, des sorts Iron's Spellbooks et une couche PostgreSQL pour l'analyse des données économiques.
+Core Mod for **StonksLand V3**, a Minecraft **1.21.1** Neoforge modded SMP. 
 
-> **Note :** mod conçu pour StonksLand V3 — ne pas utiliser seul en production.
+You know what they say, **Time is Money**. This has now never been more true. 
+*StonksTimeCore* implements a time based economy, where every player starts with a small amount of time that they can increase by converting items to money using the **Stonks Temporal Chronoscope**. Once a player time's runs out, they go bankrupt, preventing any further trading.
+
+> **Note :** mod made for StonksLand V3 - not to be used as a standalone.
 
 | | |
 |---|---|
@@ -10,82 +13,50 @@ Mod cœur de **StonksLand V3** pour Minecraft **1.21.1** (NeoForge **21.1.211**)
 | **Version** | `0.0.1` |
 | **Auteur** | TimEpsilon |
 | **Licence** | All Rights Reserved |
+| **Special Thanks** | Aryetys, Zelytra | 
 
-## Fonctionnalités principales
+## Main Functionalities
 
-- **Économie temporelle** — chaque seconde, le compte bancaire du joueur est débité et converti en temps restant ; la santé varie selon les seuils configurables (temps sûr / danger).
-- **SCT (Stonks Conversion Time)** — valeur temporelle associée aux objets via des data maps ; affichée dans les infobulles.
-- **Chronoscope temporel Stonks** — bloc Create (stress élevé) qui enregistre les transactions SCT des joueurs.
-- **Machine à sous** — déclenche des événements Stonks aléatoires (gain/perte d'argent, téléportation, effets Pehkui, etc.).
-- **Événements Stonks (SRE)** — 16 types gérés par `StonksEventManager` (ex. `WIN_MONEY`, `LUCKY_SCT`, `HOT_POTATO`, `MIRROR`…).
-- **Commandes admin** — `/stc` pour gérer timers, statut « out », événements, équivalences et loots.
-- **Intégrations** — Create, Create Numismatics, Iron's Spellbooks, Pehkui, GeckoLib, Randomium, Moonlight, Sophisticated Core.
+- **Time Economy** : Every second, each player's bank account gets deducted. A high balance leads to positive effects, such as a health boost, whereas a low balance reduces your max health. Once a player dies while at 0, they go bankrupt.
+- **SCT (Stonks Currency Translator)** : Each item holds a price which allows a player to sell it for money. Values are mathematically propagated so that every item is equivalent to the sum of its constituants.
+- **Stonks Temporal Chronoscope** : A Create block (requiring a high amount of Stress Units) which allows to convert a set of items into their equivalent price.
+- **Slot Machine** : Each interaction with a Stonks Temporal Chronoscope has a chance to yield a Golden Ticket. You can then these away on a Slot Machine to try winning a prize, or losing more than just money...
+- **Stonks Random Events** : 16 fun events that are randomly sampled by the Slot Machine (or using the admin commands).
+- **Admin Commands** : `/stc`. Used to modify a player's time or their bankrupt status, or to launch a Stonks Random Event. Also used for generating item and recipe files, useful if you want to make your own SCT map.
+- **Dependencies** : Create, Create Numismatics, Iron's Spellbooks, Pehkui, GeckoLib, Randomium, Moonlight, Sophisticated Core.
 
-## Prérequis
+## Prerequisites
 
 - **Java 21** (toolchain Gradle)
 - **Gradle** — le wrapper du projet (`gradlew` / `gradlew.bat`) est inclus
 
-## Compilation
+## Database
 
-```bash
-./gradlew build
-```
+In order to keep a record of every transaction happening on a server, the mod allows for two **PostgreSQL** databases :
 
-Le JAR du mod est produit dans `build/libs/`.
+| Table | Notes                                                                                                                                |
+|---|--------------------------------------------------------------------------------------------------------------------------------------|
+| `banks` | Snapshots of bank accounts : `player` (UUID), `username` (TEXT), `time` (DATE), `money` (INT).                                       |
+| `sct_transaction` | Record of every SCT Transaction : `hour` (BIGINT), `player` (UUID), `username` (TEXT), `item` (TEXT), `amount` (INT), `money` (INT). |
 
-## Exécution en développement
-
-Configurations Gradle définies dans `build.gradle` :
-
-| Tâche | Description |
-|---|---|
-| `./gradlew runClient` | Client Minecraft |
-| `./gradlew runClient2` | Second client (joueur `Dev2`) |
-| `./gradlew runServer` | Serveur dédié (`--nogui`) |
-| `./gradlew runData` | Génération de données |
-| `./gradlew runGameTestServer` | Serveur de tests GameTest |
-
-Des configurations VS Code sont également disponibles dans `.vscode/launch.json`.
-
-Le répertoire de jeu par défaut est `run/`.
-
-## Base de données et analytique
-
-Le mod peut persister des **données analytiques** dans une base **PostgreSQL** (`stonkstime` par défaut) avec deux tables :
-
-| Table | Rôle |
-|---|---|
-| `banks` | Snapshots quotidiens des soldes bancaires (Create Numismatics) : `player` (UUID), `username` (TEXT), `time` (DATE), `money` (INT). |
-| `sct_transaction` | Transactions SCT agrégées par heure : `hour` (BIGINT), `player` (UUID), `username` (TEXT), `item` (TEXT), `amount` (INT), `money` (INT). |
-
-**Par défaut, les écritures SQL de stats sont désactivées** (`enableSqlStats = false`). Le serveur fonctionne sans PostgreSQL. Activez-les uniquement si vous utilisez Grafana ou une autre couche d'analyse.
-
-Architecture :
-
-- `MoneyDatabase` / `BankDao` / `BankEntry` — soldes bancaires
-- `SCTTransactionDatabase` / `SctTransactionDao` / `SctTransactionEntry` — transactions du chronoscope
-- `PostgresHelper` — connexions JDBC PostgreSQL (config serveur)
-- `SqlStatsGate` — interrupteur central `enableSqlStats`
-
-Configuration dans `config/stonkstimecore-server.toml` (section `database`). Documentation détaillée : [`docs/configuration.md`](docs/configuration.md).
+**SQL logging is disabled by default** (`enableSqlStats = false`). Should be enable only if you have a Grafana or a similar data visualizer setup.
 
 ```toml
 [database]
-    enableSqlStats = false          # true pour activer PostgreSQL + cron
+    enableSqlStats = false          # set to true to activate
     host = "localhost"
     port = 5432
     database = "stonkstime"
     user = "stonkstime"
     password = "stonkstime"
-    bankSaveIntervalSeconds = 60    # cron snapshots soldes (secondes réelles)
+    bankSaveIntervalSeconds = 60    # cron snapshots soldes (real time)
 ```
 
-Quand `enableSqlStats = true`, les tables sont créées au démarrage et les données sont flushées à l'arrêt (`NeoForgeEventsManager`). Les soldes sont aussi sauvegardés périodiquement via `BankSaveScheduler` (intervalle configurable).
+When `enableSqlStats = true`, tables are made at startup and data is flushed at shutdown (or periodically for Bank records).
 
 ### Grafana (dashboards)
 
-Un stack Docker (PostgreSQL + Grafana) est fourni dans [`grafana/`](grafana/) pour visualiser soldes, transactions SCT et alertes. Voir [`grafana/README.md`](grafana/README.md) pour le détail.
+A docker stack (PostgreSQL + Grafana) is setup in ['grafana/'](grafana/) in order to visualize bank balances, SCT transactions and alerts. See [`grafana/README.md`](grafana/README.md) for details.
 
 ```bash
 cd grafana
@@ -93,48 +64,14 @@ docker compose up -d                          # PostgreSQL + Grafana
 # http://localhost:3000 (admin/admin)
 ```
 
-Pour réinitialiser les données de démonstration :
+To reset demo data :
 
 ```bash
 docker compose --profile seed run --rm seed
 ```
 
-Le mod et Grafana partagent la même base PostgreSQL sur `localhost:5432`.
-
-## Tests
-
-```bash
-./gradlew test
-```
-
-Le projet inclut un test de charge JUnit 5 :
-
-- `SctTransactionDaoStressTest` — vérifie que 200 upserts PostgreSQL s'exécutent en moins de 5 secondes (Testcontainers, Docker requis).
-
-## Structure du projet
-
-```
-src/main/java/com/github/timepsilon/
-├── Core.java                 # Point d'entrée du mod
-├── block/                    # Blocs (chronoscope, machine à sous)
-├── commands/                 # Commandes /stc
-├── database/                 # Couche PostgreSQL (DAO, entités)
-├── stonksevent/              # Événements Stonks aléatoires
-├── time/                     # Timer, statut « out » des joueurs
-├── ironsspellbooks/          # Sorts personnalisés
-├── config/                   # Configuration serveur/client
-└── utils/                    # TimeUtils, FileManager, Scheduler
-
-src/main/resources/           # Assets, data packs, mixins
-src/test/java/                # Tests unitaires
-libs/                         # Dépendances locales (JAR)
-grafana/                      # Stack Docker PostgreSQL + Grafana + dashboards
-```
-
-## Dépendances requises (runtime)
-
-Create, Randomium, Moonlight, Create Numismatics, GeckoLib, Pehkui et Sophisticated Core sont déclarés comme dépendances obligatoires dans `neoforge.mods.toml`. Des mods additionnels (Iron's Spellbooks, Curios, etc.) sont embarqués via `libs/` ou Maven.
+The mod and grafana share the same PostgreSQL port on `localhost:5432`.
 
 ## Licence
 
-**All Rights Reserved** — voir `mod_license` dans `gradle.properties`.
+**All Rights Reserved** — see `mod_license` in `gradle.properties`.
