@@ -13,13 +13,6 @@ public final class TimeCore {
     private TimeCore() {}
 
     public static String secondsToTime(int seconds) {
-        if (seconds >= 86400) {
-            int days = seconds / 86400;
-            int remaining = seconds % 86400;
-            int h = remaining / 3600;
-            int m = (remaining % 3600) / 60;
-            return String.format("%dJ %d:%02d", days, h, m);
-        }
         int h = seconds / 3600;
         int m = (seconds % 3600) / 60;
         int s = seconds % 60;
