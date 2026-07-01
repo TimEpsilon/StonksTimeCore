@@ -48,7 +48,8 @@ public class SREWinMoney extends AbstractRandomStonksEvent {
         }
 
         player.sendSystemMessage(
-                Component.translatable("sre.stonkstimecore.win_money.amount", TimeUtils.secondsToTime(amount), money)
+                Component.translatable("sre.stonkstimecore.win_money.amount", TimeUtils.secondsToTime(amount), money,
+                                Component.literal("\u9000").withStyle(ChatFormatting.WHITE))
                         .withStyle(ChatFormatting.GREEN)
         );
     }
