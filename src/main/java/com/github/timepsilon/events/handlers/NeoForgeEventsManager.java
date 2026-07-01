@@ -8,6 +8,7 @@ import com.github.timepsilon.database.MoneyDatabase;
 import com.github.timepsilon.database.SCTTransactionDatabase;
 import com.github.timepsilon.database.pending.PendingWritesStore;
 import com.github.timepsilon.datamaps.DataMaps;
+import com.github.timepsilon.datamaps.SCTManager;
 import com.github.timepsilon.datamaps.SCTMap;
 import com.github.timepsilon.utils.TimeUtils;
 import net.minecraft.network.chat.Component;
@@ -31,13 +32,13 @@ public class NeoForgeEventsManager {
     @SubscribeEvent
     public static void onTooltip(ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
-        SCTMap sct = stack.getItemHolder().getData(DataMaps.SCT_MAP);
+        Float sct = SCTManager.SCT_MAPS.get(stack.getItem());
         if (sct != null) {
             event.getToolTip()
                     .add(Component.literal("SCT : ")
-                            .append(Float.toString(sct.SCT()))
+                            .append(Float.toString(sct))
                             .withStyle(Style.EMPTY.withColor(COLOR.getRGB()))
-                            .append(Component.literal(" (" + TimeUtils.SCTToTime(sct.SCT()) + ")").withStyle(Style.EMPTY.withColor(COLOR_TIME.getRGB()))));
+                            .append(Component.literal(" (" + TimeUtils.SCTToTime(sct) + ")").withStyle(Style.EMPTY.withColor(COLOR_TIME.getRGB()))));
         }
     }
 

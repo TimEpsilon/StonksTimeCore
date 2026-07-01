@@ -38,6 +38,7 @@ public class STCConfigServer {
     public final ModConfigSpec.DoubleValue SRE_SHRINKFLATION_FACTOR;
     public final ModConfigSpec.IntValue SRE_MIRROR_DURATION;
     public final ModConfigSpec.DoubleValue SCT_GOLDEN_TICKET_PROBABILITY;
+    public final ModConfigSpec.DoubleValue SCT_GOLDEN_TICKET_ADDITIONAL_PROBABILITY;
 
     public final ModConfigSpec.BooleanValue ENABLE_SQL_STATS;
     public final ModConfigSpec.ConfigValue<String> DB_HOST;
@@ -91,14 +92,18 @@ public class STCConfigServer {
                 .comment("Fraction of money that should be lost on player death.")
                 .translation("config.stonkstimecore.deathLoss")
                 .defineInRange("deathLoss",0.1, 0, 1);
-        SCT_GOLDEN_TICKET_PROBABILITY = builder
-                .comment("Probability for a single item to turn into a golden ticket upon deconstruction.")
-                .translation("config.stonkstimecore.goldenTicketProbability")
-                .defineInRange("goldenTicketProbability", 1/5000f, 0, 1);
 
         builder.pop();
         builder.translation("config.stonkstimecore.sre").push("SRE");
 
+        SCT_GOLDEN_TICKET_PROBABILITY = builder
+                .comment("Probability for a single item to turn into a golden ticket upon deconstruction.")
+                .translation("config.stonkstimecore.goldenTicketProbability")
+                .defineInRange("goldenTicketProbability", 0.0002, 0, 1);
+        SCT_GOLDEN_TICKET_ADDITIONAL_PROBABILITY = builder
+                .comment("Max additional probability for a single item to turn into a golden ticket upon deconstruction, based on the Item's price.")
+                .translation("config.stonkstimecore.goldenTicketAdditionalProbability")
+                .defineInRange("goldenTicketAdditionalProbability", 0.0008, 0, 1);
         SRE_GAIN_AMOUNT = builder
                 .comment("Average amount of time (in seconds) gained for event WinMoney.")
                 .translation("config.stonkstimecore.sre.gainAmount")
@@ -169,7 +174,7 @@ public class STCConfigServer {
                 .defineInRange("growthSpurtFactor",0.5f, 0, 10);
         SRE_SHRINKFLATION_DURATION = builder
                 .comment("Duration (in seconds) during which the entity will be shorter.")
-                .translation("config.stonkstimecore.sre.shrinkflationtDuration")
+                .translation("config.stonkstimecore.sre.shrinkflationDuration")
                 .defineInRange("shrinkflationDuration",120, 1, Integer.MAX_VALUE);
         SRE_SHRINKFLATION_FACTOR = builder
                 .comment("Factor by which to divide the base size of the entity, multiplied by the level, so at 1.25, a 2m tall player will be 1.6m at level 1, 0.8m at level 2, etc.")

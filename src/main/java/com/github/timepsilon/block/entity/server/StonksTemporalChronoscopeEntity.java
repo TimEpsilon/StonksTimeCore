@@ -5,6 +5,7 @@ import com.github.timepsilon.client.gui.inventory.StonksTemporalChronoscopeInven
 import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.database.SCTTransactionDatabase;
 import com.github.timepsilon.datamaps.DataMaps;
+import com.github.timepsilon.datamaps.SCTManager;
 import com.github.timepsilon.datamaps.SCTMap;
 import com.github.timepsilon.items.ModItems;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -34,9 +35,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.p3pp3rf1y.sophisticatedcore.init.ModCoreDataComponents;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static com.github.timepsilon.attributes.ModAttributes.SCT_FACTOR;
 
@@ -182,19 +181,15 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
         float fullAmount = moneyMap.values().stream().reduce(0.0f, Float::sum);
         coinBag.add(Coin.SPUR, (int) fullAmount);
 
-        int totalQuantity = amountMap.values().stream().reduce(0, Integer::sum);
-
         // Generate golden tickets
-        while (totalQuantity > 0) {
-            if (player.getRandom().nextFloat() < STCConfigServer.CONFIG.SCT_GOLDEN_TICKET_PROBABILITY.get()) {
-                inventory.insertItem((int)(Math.random() * inventory.getSlots()), new ItemStack(ModItems.GOLDEN_TICKET.get(), 1), false);
-            }
-            totalQuantity -= 1;
+        int amountGoldenTicket = amountOfGoldenTickets(player, amountMap);
+        while (amountGoldenTicket > 0) {
+            inventory.insertItem((int)(Math.random() * inventory.getSlots()), new ItemStack(ModItems.GOLDEN_TICKET.get(), 1), false);
+            amountGoldenTicket -= 1;
         }
 
         // Log interaction
         SCTTransactionDatabase.getDatabase().sendTransactions((ServerPlayer) player, amountMap, moneyMap);
-
 
         notifyUpdate();
     }
@@ -215,10 +210,31 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
         return true;
     }
 
+    private int amountOfGoldenTickets(Player player, HashMap<Item, Integer> amountMap) {
+        int amount = 0;
+        float SCTMax = 21600; // 6h, any amount above will cap the additional probability
+
+        for (Map.Entry<Item, Integer> entry : amountMap.entrySet()) {
+            float x = SCTManager.SCT_MAPS.getOrDefault(entry.getKey(),0f) / SCTMax;
+            double p = STCConfigServer.CONFIG.SCT_GOLDEN_TICKET_PROBABILITY.get()
+                    + STCConfigServer.CONFIG.SCT_GOLDEN_TICKET_ADDITIONAL_PROBABILITY.get()
+                    * Math.clamp(1-Math.pow(1-x,3), 0, 1); // Cubic ease out
+            int n = entry.getValue();
+
+            while (n > 0) {
+                if (player.getRandom().nextFloat() < p) {
+                    amount += 1;
+                }
+                n -= 1;
+            }
+        }
+        return amount;
+    }
+
     private float destroyAndConvert(ItemStack itemStack) {
-        SCTMap sct = itemStack.getItemHolder().getData(DataMaps.SCT_MAP);
+        Float sct = SCTManager.SCT_MAPS.get(itemStack.getItem());
         if (sct != null) { // Removes the item if it has a SCT value and add it to total
-            float amount = sct.SCT() * itemStack.getCount();
+            float amount = sct * itemStack.getCount();
             itemStack.setCount(0);
             return amount;
         }

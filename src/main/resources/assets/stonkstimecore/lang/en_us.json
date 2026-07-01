@@ -86,6 +86,7 @@
   "config.stonkstimecore.dtForLose1HP": "dtForLose1HP",
   "config.stonkstimecore.deathLoss" : "deathLoss",
   "config.stonkstimecore.goldenTicketProbability" : "goldenTicketProbability",
+  "config.stonkstimecore.goldenTicketAdditionalProbability" : "goldenTicketAdditionalProbability",
 
   "config.stonkstimecore.sre" : "Stonks Random Events",
   "config.stonkstimecore.sre.gainAmount" : "gainAmount",
