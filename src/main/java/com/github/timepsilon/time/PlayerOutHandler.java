@@ -182,6 +182,17 @@ public class PlayerOutHandler {
         }
     }
 
+    @SubscribeEvent
+    public static void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        MinecraftServer level = player.server;
+        PlayerOutData timer = PlayerOutData.getPlayerOutData(level);
+
+        if (timer.isOut(player.getUUID())) {
+            setLowHp(player);
+        }
+    }
+
     public static void setLowHp(ServerPlayer player) {
         AttributeModifier timeHPModifier = new AttributeModifier(TIME_HP, -STCConfigServer.CONFIG.MIN_HP.get(), AttributeModifier.Operation.ADD_VALUE);
         player.getAttribute(Attributes.MAX_HEALTH).addOrReplacePermanentModifier(timeHPModifier);

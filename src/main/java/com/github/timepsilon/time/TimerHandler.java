@@ -22,6 +22,8 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import java.util.UUID;
 
+import static com.github.timepsilon.time.PlayerOutHandler.setLowHp;
+
 @EventBusSubscriber(modid = Core.MODID)
 public class TimerHandler {
 
@@ -47,6 +49,7 @@ public class TimerHandler {
 
         if (timer.isOut(uuid)) {
             sendOverlayPacket(player, 0, 0, true);
+            setLowHp(player);
             return; // Time stops for out people
         }
 
@@ -75,8 +78,6 @@ public class TimerHandler {
 
         // Hurt when no time
         if (account.getBalance() <= 0) player.hurt(player.damageSources().genericKill(), 1);
-
-
     }
 
     /**
