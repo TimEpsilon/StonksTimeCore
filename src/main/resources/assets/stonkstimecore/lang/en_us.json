@@ -10,16 +10,16 @@
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.condition1" : "When Powered by Kinetics ≥ 30 RPM",
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.summary" : "Converts any item into its corresponding _SCT_ amount",
 
-  "sounds.stonkstimecore.time_out" : "Time Out Bell",
+  "sounds.stonkstimecore.time_out" : "Bankrupt Bell",
   "sounds.stonkstimecore.slot_machine.losing" : "Slot Machine Losing",
   "sounds.stonkstimecore.slot_machine.winning" : "Slot Machine Winning",
   "sounds.stonkstimecore.slot_machine.pulling" : "Slot Machine Pulling",
   "sounds.stonkstimecore.slot_machine.spinning" : "Slot Machine Spinning",
 
-  "error.stonkstimecore.banking_while_out" : "Bank is unavailable to out players",
+  "error.stonkstimecore.banking_while_out" : "Bank is unavailable to bankrupt players",
 
   "commands.stonkstimecore.generate_equivalency" : "Item list and Recipe dict have been saved in your world folder",
-  "commands.stonkstimecore.update_out" : "%s's out status has been set to %s",
+  "commands.stonkstimecore.update_out" : "%s's bankrupt status has been set to %s",
   "commands.stonkstimecore.set_time" : "%s's time has been set to %s",
   "commands.stonkstimecore.add_time" : "%ss have been added to %s's time",
   "commands.stonkstimecore.generate_loot" : "Loot Tree has been saved in your world folder",
@@ -31,9 +31,9 @@
   "commands.stonkstimecore.remove_event_fail" : "Failed to remove event. Player might not be online",
 
   "info.stonkstimecore.player_is_out" : "[!] %s has run out of time!",
-  "info.stonkstimecore.self_is_out" : "You are now out of time. You will no longer be able to interact with your bank account.",
+  "info.stonkstimecore.self_is_out" : "You are now bankrupt. You will no longer be able to interact with your bank account.",
   "info.stonkstimecore.time_gear_found" : "A Time Gear has been discovered!",
-  "info.stonkstimecore.money_lost" : "You lost %s\u9000",
+  "info.stonkstimecore.money_lost" : "You lost %s%s",
 
   "sre.stonkstimecore.generic.starting" : "%s has gambled for %s!",
   "sre.stonkstimecore.generic.stopping" : "%s is ending...",
@@ -49,9 +49,9 @@
   "sre.stonkstimecore.spawn_mob.name" : "Spawn Mob",
   "sre.stonkstimecore.win_money.description" : "Won some money! You should gamble more!",
   "sre.stonkstimecore.win_money.name" : "Jackpot",
-  "sre.stonkstimecore.win_money.amount" : "You won %ss / %s\u9000!",
+  "sre.stonkstimecore.win_money.amount" : "You won %ss / %s%s!",
   "sre.stonkstimecore.lose_money.name" : "Bankrupt",
-  "sre.stonkstimecore.lose_money.amount" : "You lost %ss / %s\u9000!",
+  "sre.stonkstimecore.lose_money.amount" : "You lost %ss / %s%s!",
   "sre.stonkstimecore.lose_money.description" : "Lost some money! Better luck next time!",
   "sre.stonkstimecore.lose_money.isout" : "Lost your life! Better luck next time!",
   "sre.stonkstimecore.teleport.description" : "Got teleported away",
@@ -120,7 +120,7 @@
   "config.stonkstimecore.database.bankSaveIntervalSeconds" : "bankSaveIntervalSeconds",
 
   "config.stonkstimecore.applyShader": "applyShader",
-  "config.stonkstimecore.seeOutAsTranslucent": "seeOutAsTranslucent",
+  "config.stonkstimecore.seeOutAsTranslucent": "seeBankruptAsTranslucent",
 
   "attribute.stonkstimecore.time_hp": "Time HP",
   "attribute.stonkstimecore.sct_factor" : "SCT Factor",

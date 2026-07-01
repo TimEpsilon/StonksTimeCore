@@ -45,7 +45,8 @@ public class SRELoseMoney extends AbstractRandomStonksEvent {
             TimerHandler.sendInfoPacket((ServerPlayer) player, "-"+money+"\u9000");
 
             player.sendSystemMessage(
-                    Component.translatable("sre.stonkstimecore.lose_money.amount", TimeUtils.secondsToTime(amount), money)
+                    Component.translatable("sre.stonkstimecore.lose_money.amount", TimeUtils.secondsToTime(amount), money,
+                            Component.literal("\u9000").withStyle(ChatFormatting.WHITE))
                             .withStyle(ChatFormatting.RED)
             );
         }

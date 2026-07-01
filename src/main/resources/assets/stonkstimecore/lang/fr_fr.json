@@ -10,16 +10,16 @@
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.condition1" : "Lorsque alimenté par Rotation ≥ 30 RPM",
   "block.stonkstimecore.stonks_temporal_chronoscope.tooltip.summary" : "Converti des items en leur valeur _SCT_ correspondante",
 
-  "sounds.stonkstimecore.time_out" : "Cloche Temporelle",
+  "sounds.stonkstimecore.time_out" : "Cloche de Banqueroute ",
   "sounds.stonkstimecore.slot_machine.losing" : "Machine à Sous Défaite",
   "sounds.stonkstimecore.slot_machine.winning" : "Machine à Sous Victoire",
   "sounds.stonkstimecore.slot_machine.pulling" : "Machine à Sous Activation",
   "sounds.stonkstimecore.slot_machine.spinning" : "Machine à Sous Allumée",
 
-  "error.stonkstimecore.banking_while_out" : "Banque non disponible aux joueurs éliminés",
+  "error.stonkstimecore.banking_while_out" : "Banque non disponible aux joueurs en banqueroute.",
 
   "commands.stonkstimecore.generate_equivalency" : "Liste d'Items et dictionnaire de Recipe ont été sauvegardé dans le dossier world",
-  "commands.stonkstimecore.update_out" : "L'état d'élimination de %s a été mis à %s",
+  "commands.stonkstimecore.update_out" : "L'état de banqueroute  de %s a été mis à %s",
   "commands.stonkstimecore.set_time" : "Le temps de %s a été mis à %s",
   "commands.stonkstimecore.add_time" : "%ss ont été ajoutées au temps de %s",
   "commands.stonkstimecore.generate_loot" : "Arborescence de Loot a été sauvegardé dans le dossier world",
@@ -31,9 +31,9 @@
   "commands.stonkstimecore.remove_event_fail" : "Échec lors de la suppression de l'événement. Le joueur est peut être hors ligne",
 
   "info.stonkstimecore.player_is_out" : "[!] %s est arrivé à court de temps!",
-  "info.stonkstimecore.self_is_out" : "Tu es désormais à court de temps. Tu ne pourras plus interagir avec tes comptes bancaires.",
+  "info.stonkstimecore.self_is_out" : "Tu es désormais en banqueroute . Tu ne pourras plus interagir avec tes comptes bancaires.",
   "info.stonkstimecore.time_gear_found" : "Un Rouage Temporel a été découvert!",
-  "info.stonkstimecore.money_lost" : "Tu as perdu %s\u9000",
+  "info.stonkstimecore.money_lost" : "Tu as perdu %s%s",
 
   "sre.stonkstimecore.generic.starting" : "%s a parrié pour %s!",
   "sre.stonkstimecore.generic.stopping" : "%s prend fin...",
@@ -49,9 +49,9 @@
   "sre.stonkstimecore.spawn_mob.name" : "Apparition d'Ennemi",
   "sre.stonkstimecore.win_money.description" : "Gain d'argent! Tu devrais parier plus souvent!",
   "sre.stonkstimecore.win_money.name" : "Jackpot",
-  "sre.stonkstimecore.win_money.amount" : "Tu as gagné %ss / %s\u9000!",
+  "sre.stonkstimecore.win_money.amount" : "Tu as gagné %ss / %s%s!",
   "sre.stonkstimecore.lose_money.name" : "Liquidation Judiciaire",
-  "sre.stonkstimecore.lose_money.amount" : "Tu as perdu %ss / %s\u9000!",
+  "sre.stonkstimecore.lose_money.amount" : "Tu as perdu %ss / %s%s!",
   "sre.stonkstimecore.lose_money.description" : "Perte d'argent! Retentes ta chance!",
   "sre.stonkstimecore.lose_money.isout" : "Perte de ta vie! Retentes ta chance!",
   "sre.stonkstimecore.teleport.description" : "Se fait téléporter ailleurs",

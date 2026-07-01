@@ -118,7 +118,9 @@ public class TimeUtils {
         int amount = (int) (account.getBalance()*STCConfigServer.CONFIG.DEATH_LOSS.getAsDouble());
         account.deduct(amount);
 
-        player.sendSystemMessage(Component.translatable("info.stonkstimecore.money_lost",amount).withStyle(ChatFormatting.RED));
+        player.sendSystemMessage(Component.translatable("info.stonkstimecore.money_lost",amount,
+                    Component.literal("\u9000").withStyle(ChatFormatting.WHITE))
+                .withStyle(ChatFormatting.RED));
 
         // Only p% of the full amount will be dropped
         // p depends on the looting level, 25% for level 0 up to 100% for level 3
