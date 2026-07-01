@@ -152,7 +152,7 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
                     if (itemCheck(subItem)) {
                         int tmpAmount = subItem.getCount();
                         Item item = subItem.getItem();
-                        float tmpMoney = destroyAndConvert(subItem) *  factor;
+                        float tmpMoney = destroyAndConvert(subItem) * factor;
 
                         if (tmpMoney == 0 ) continue;
 
@@ -169,7 +169,7 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
                 // Convert to money
                 int tmpAmount = itemStack.getCount();
                 Item item = itemStack.getItem();
-                float tmpMoney = destroyAndConvert(itemStack) *  factor;
+                float tmpMoney = destroyAndConvert(itemStack) * factor;
 
                 if (tmpMoney == 0 ) continue;
 
@@ -233,8 +233,20 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
 
     private float destroyAndConvert(ItemStack itemStack) {
         Float sct = SCTManager.SCT_MAPS.get(itemStack.getItem());
+        int n = itemStack.getCount();
         if (sct != null) { // Removes the item if it has a SCT value and add it to total
-            float amount = sct * itemStack.getCount();
+            float amount = 0;
+            if (sct < 0) {
+                while (n > 0) {
+                    amount += Math.clamp(
+                            (float) SCTManager.SCT_MAPS.values().toArray()[this.getLevel().getRandom().nextInt(SCTManager.SCT_MAPS.size())],
+                            0 , 21600);
+                    n -= 1;
+                }
+            } else {
+                amount = sct * n;
+            }
+
             itemStack.setCount(0);
             return amount;
         }

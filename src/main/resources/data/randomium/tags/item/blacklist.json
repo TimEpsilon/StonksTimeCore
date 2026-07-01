@@ -285,6 +285,10 @@
     {"id": "create:cardboard_package_10x8", "required": false},
     {"id": "create:cardboard_package_10x12", "required": false},
     {"id": "create:cardboard_package_12x12", "required": false},
-    {"id": "create:cardboard_package_12x10", "required": false}
+    {"id": "create:cardboard_package_12x10", "required": false},
+    {"id": "sophisticatedbackpacks:stack_upgrade_omega_tier", "required":  false},
+    {"id": "sophisticatedstorage:stack_upgrade_omega_tier", "required":  false},
+    {"id": "sophisticatedbackpacks:stack_upgrade_tier_4", "required":  false},
+    {"id": "sophisticatedstorage:stack_upgrade_tier_5", "required":  false}
   ]
 }

@@ -11,6 +11,7 @@ import com.github.timepsilon.datamaps.DataMaps;
 import com.github.timepsilon.datamaps.SCTManager;
 import com.github.timepsilon.datamaps.SCTMap;
 import com.github.timepsilon.utils.TimeUtils;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
@@ -34,11 +35,20 @@ public class NeoForgeEventsManager {
         ItemStack stack = event.getItemStack();
         Float sct = SCTManager.SCT_MAPS.get(stack.getItem());
         if (sct != null) {
-            event.getToolTip()
-                    .add(Component.literal("SCT : ")
-                            .append(Float.toString(sct))
-                            .withStyle(Style.EMPTY.withColor(COLOR.getRGB()))
-                            .append(Component.literal(" (" + TimeUtils.SCTToTime(sct) + ")").withStyle(Style.EMPTY.withColor(COLOR_TIME.getRGB()))));
+            if (sct < 0) {
+                event.getToolTip()
+                        .add(Component.literal("SCT : ")
+                                .withStyle(Style.EMPTY.withColor(COLOR.getRGB()))
+                                .append(Component.literal("NaN")
+                                        .withStyle(Style.EMPTY.withColor(COLOR.getRGB()))
+                                        .withStyle(ChatFormatting.OBFUSCATED)));
+            } else {
+                event.getToolTip()
+                        .add(Component.literal("SCT : ")
+                                .append(Float.toString(sct))
+                                .withStyle(Style.EMPTY.withColor(COLOR.getRGB()))
+                                .append(Component.literal(" (" + TimeUtils.SCTToTime(sct) + ")").withStyle(Style.EMPTY.withColor(COLOR_TIME.getRGB()))));
+            }
         }
     }
 
