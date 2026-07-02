@@ -38,7 +38,7 @@ public final class SqliteHelper {
      * {@code -shm} shared-memory file cannot be mmap'd; a plain rollback-journal
      * copy sidesteps that entirely.
      */
-    public static final String GRAFANA_SNAPSHOT_FILE = "stonkstime-grafana.db";
+    public static final String GRAFANA_SNAPSHOT_FILE = "stonkstime-export.db";
 
     /**
      * Fixed-width ISO-8601 UTC formatter ({@code 2025-06-20T08:00:00.000Z}).

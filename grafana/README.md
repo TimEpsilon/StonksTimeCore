@@ -6,12 +6,12 @@ Le mod écrit désormais dans un **fichier SQLite unique** au lieu d'un serveur 
 
 ```
 <monde>/stonkstimecore/stonkstime.db          # base live (mode WAL, écrite par le mod)
-<monde>/stonkstimecore/stonkstime-grafana.db  # copie non-WAL, lue par Grafana
+<monde>/stonkstimecore/stonkstime-export.db  # copie non-WAL, lue par Grafana
 ```
 
 Aucun serveur de base de données à installer. Grafana lit via le plugin [`frser-sqlite-datasource`](https://grafana.com/grafana/plugins/frser-sqlite-datasource/).
 
-> **Pourquoi une copie ?** La base live est en mode **WAL** (lecture+écriture simultanées), dont le fichier de mémoire partagée `-shm` ne peut pas être `mmap` à travers un **bind mount Docker** (Grafana échoue alors avec `SQLITE_IOERR_SHMMAP` / `database is locked`). Le mod exporte donc périodiquement une copie **non-WAL** `stonkstime-grafana.db` que Grafana peut lire sans souci. Cadence réglable via `grafanaSnapshotIntervalSeconds` (défaut 15 s ; `0` pour désactiver). Voir [`docs/configuration.md`](../docs/configuration.md).
+> **Pourquoi une copie ?** La base live est en mode **WAL** (lecture+écriture simultanées), dont le fichier de mémoire partagée `-shm` ne peut pas être `mmap` à travers un **bind mount Docker** (Grafana échoue alors avec `SQLITE_IOERR_SHMMAP` / `database is locked`). Le mod exporte donc périodiquement une copie **non-WAL** `stonkstime-export.db` que Grafana peut lire sans souci. Cadence réglable via `grafanaSnapshotIntervalSeconds` (défaut 15 s ; `0` pour désactiver). Voir [`docs/configuration.md`](../docs/configuration.md).
 
 ## Prérequis
 
@@ -26,13 +26,13 @@ cd grafana
 docker compose up -d
 ```
 
-Le script construit `grafana/stonks-data/stonkstime-grafana.db` (10 jours, 5 joueurs), et `docker compose up -d` démarre Grafana en pointant dessus par défaut.
+Le script construit `grafana/stonks-data/stonkstime-export.db` (10 jours, 5 joueurs), et `docker compose up -d` démarre Grafana en pointant dessus par défaut.
 
 Ouvrir **http://localhost:3000** — identifiants `admin` / `admin`. Le plugin SQLite est installé automatiquement (`GF_INSTALL_PLUGINS`), la source `StonksTime` et le dashboard « StonksTime — Analytics SQLite » sont provisionnés.
 
 ## Brancher Grafana sur un vrai serveur
 
-Pointer Grafana sur le dossier `stonkstimecore/` du monde (qui contient la copie `stonkstime-grafana.db` exportée par le mod), via la variable `STONKS_DB_DIR` :
+Pointer Grafana sur le dossier `stonkstimecore/` du monde (qui contient la copie `stonkstime-export.db` exportée par le mod), via la variable `STONKS_DB_DIR` :
 
 ```powershell
 # Windows PowerShell
@@ -45,7 +45,7 @@ docker compose up -d
 STONKS_DB_DIR=/chemin/vers/serveur/world/stonkstimecore docker compose up -d
 ```
 
-Le dossier est monté sur `/var/lib/grafana/stonks` ; la datasource pointe sur `stonkstime-grafana.db` (la copie non-WAL). Grafana ne fait que des `SELECT` (le plugin ouvre néanmoins le fichier en lecture-écriture, d'où un montage rw). `enableSqlStats` est activé par défaut côté mod (voir [`docs/configuration.md`](../docs/configuration.md)).
+Le dossier est monté sur `/var/lib/stonks` ; la datasource pointe sur `stonkstime-export.db` (la copie non-WAL). Grafana ne fait que des `SELECT` (le plugin ouvre néanmoins le fichier en lecture-écriture, d'où un montage rw). `enableSqlStats` est activé par défaut côté mod (voir [`docs/configuration.md`](../docs/configuration.md)).
 
 > Grafana doit tourner sur la **même machine** que le serveur (SQLite est un fichier local, sans protocole réseau). Astuce : tu peux aussi créer un fichier `grafana/.env` avec `STONKS_DB_DIR="..."` (ignoré par git) au lieu d'exporter la variable à chaque fois.
 >
@@ -78,7 +78,7 @@ grafana/
 
 | Variable | Défaut | Rôle |
 |----------|--------|------|
-| `STONKS_DB_DIR` | `./stonks-data` | Dossier hôte contenant `stonkstime-grafana.db`, monté dans Grafana |
+| `STONKS_DB_DIR` | `./stonks-data` | Dossier hôte contenant `stonkstime-export.db`, monté dans Grafana |
 
 ## Réinitialiser les données de démonstration
 
@@ -142,4 +142,5 @@ docker compose down
 - Troncature horaire en SQLite : `substr(time, 1, 13) || ':00:00.000Z'` (remplace `date_trunc('hour', …)`)
 - Les montants SCT sont convertis avec `money / 1000.0`
 - Les UUID joueurs sont stockés en texte ; `username` sert à l'affichage
-- Grafana lit `stonkstime-grafana.db` (copie non-WAL exportée par le mod via `VACUUM INTO`), pas la base live WAL — voir l'encadré en haut du fichier
+- Grafana lit `stonkstime-export.db` (copie non-WAL exportée par le mod via `VACUUM INTO`), pas la base live WAL — voir l'encadré en haut du fichier
+- Le fichier et le point de montage évitent volontairement le terme `grafana.db` et le dossier `/var/lib/grafana` : le plugin refuse tout chemin contenant un terme de sa `block_list` (défaut `grafana.db`), sinon les requêtes échouent avec `path contains blocked term`

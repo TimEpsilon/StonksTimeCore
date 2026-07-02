@@ -1,11 +1,11 @@
 #!/usr/bin/env pwsh
-# Construit la base SQLite de démonstration lue par Grafana (grafana/stonks-data/stonkstime-grafana.db).
+# Construit la base SQLite de démonstration lue par Grafana (grafana/stonks-data/stonkstime-export.db).
 $ErrorActionPreference = "Stop"
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $GrafanaDir = Split-Path -Parent $ScriptDir
 $DbDir = Join-Path $GrafanaDir "stonks-data"
-$DbFile = Join-Path $DbDir "stonkstime-grafana.db"
+$DbFile = Join-Path $DbDir "stonkstime-export.db"
 
 if (-not (Get-Command sqlite3 -ErrorAction SilentlyContinue)) {
     Write-Host "sqlite3 requis (ex: winget install SQLite.SQLite ou choco install sqlite)."
