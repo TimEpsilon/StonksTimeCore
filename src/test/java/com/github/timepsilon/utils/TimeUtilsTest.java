@@ -41,10 +41,11 @@ class TimeUtilsTest {
     }
 
     @Test
-    void secondsToTimeFormatsOneDayOrMore() {
-        assertEquals("1J 0:00", TimeCore.secondsToTime(86400));
-        assertEquals("1J 4:35", TimeCore.secondsToTime(102900));
-        assertEquals("2J 12:30", TimeCore.secondsToTime(2 * 86400 + 12 * 3600 + 30 * 60));
+    void secondsToTimeFormatsBeyondOneDayAsHours() {
+        // Since "Redid timer rendering", durations >= 24h keep counting hours (no day suffix).
+        assertEquals("24:00:00", TimeCore.secondsToTime(86400));
+        assertEquals("28:35:00", TimeCore.secondsToTime(102900));
+        assertEquals("60:30:00", TimeCore.secondsToTime(2 * 86400 + 12 * 3600 + 30 * 60));
     }
 
     @Test
