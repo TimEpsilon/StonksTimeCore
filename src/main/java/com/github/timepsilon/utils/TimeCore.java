@@ -39,6 +39,10 @@ public final class TimeCore {
         return Instant.now().truncatedTo(ChronoUnit.MILLIS);
     }
 
+    public static Instant getCurrentSecond() {
+        return Instant.now().truncatedTo(ChronoUnit.SECONDS);
+    }
+
     public static Instant truncateToHour(Instant instant) {
         return instant.truncatedTo(ChronoUnit.HOURS);
     }

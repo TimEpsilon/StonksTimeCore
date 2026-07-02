@@ -101,9 +101,8 @@ public class SctTransactionDao {
     /**
      * Returns the total {@code amount} of {@code itemId} sold over the last {@code hours} hours.
      * <p>
-     * Timestamps are stored as hourly buckets, so the window is hour-granular. Returns 0 when there
-     * is no connection, {@code hours <= 0}, or on error. Call from the server thread (shared JDBC
-     * connection, not thread-safe).
+     * Returns 0 when there is no connection, {@code hours <= 0}, or on error. Call from the server
+     * thread (shared JDBC connection, not thread-safe).
      */
     public int sumAmountForItemSince(String itemId, int hours) {
         if (hours <= 0) return 0;
@@ -129,8 +128,8 @@ public class SctTransactionDao {
      * Returns the total {@code amount} sold per item over the last {@code hours} hours, keyed by the
      * stored item id (as produced by {@code Item.toString()}), ordered by amount descending.
      * <p>
-     * Timestamps are stored as hourly buckets, so the window is hour-granular. Returns an empty map
-     * when there is no connection, {@code hours <= 0}, or on error. Call from the server thread.
+     * Returns an empty map when there is no connection, {@code hours <= 0}, or on error. Call from
+     * the server thread.
      */
     public Map<String, Integer> sumAmountByItemSince(int hours) {
         if (hours <= 0) return Map.of();
