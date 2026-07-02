@@ -210,6 +210,7 @@
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
+          "displayName": "${__field.labels.username}",
           "custom": {
             "axisBorderShow": false,
             "axisCenteredZero": false,
