@@ -30,3 +30,4 @@ repo
 /grafana/stonks-data/
 /grafana/postgres_data/
 /grafana/data/
+/grafana/.env

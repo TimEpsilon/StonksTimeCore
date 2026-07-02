@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Construit la base SQLite de démonstration lue par Grafana (grafana/stonks-data/stonkstime.db).
+# Construit la base SQLite de démonstration lue par Grafana (grafana/stonks-data/stonkstime-grafana.db).
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 GRAFANA_DIR="$(dirname "$SCRIPT_DIR")"
 DB_DIR="$GRAFANA_DIR/stonks-data"
-DB_FILE="$DB_DIR/stonkstime.db"
+DB_FILE="$DB_DIR/stonkstime-grafana.db"
 
 if ! command -v sqlite3 >/dev/null 2>&1; then
     echo "sqlite3 requis (ex: apt install sqlite3 / brew install sqlite)."

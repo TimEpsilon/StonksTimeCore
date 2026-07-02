@@ -8,6 +8,8 @@ datasources:
     isDefault: true
     editable: false
     jsonData:
-      # Path *inside the Grafana container* to the mod's SQLite file.
+      # Path *inside the Grafana container* to the mod's non-WAL snapshot copy.
+      # The live stonkstime.db is WAL and cannot be read over a Docker bind mount
+      # (its -shm can't be mmap'd); the mod exports stonkstime-grafana.db for Grafana.
       # docker-compose mounts the world's stonkstimecore/ directory here (see STONKS_DB_DIR).
-      path: /var/lib/grafana/stonks/stonkstime.db
+      path: /var/lib/grafana/stonks/stonkstime-grafana.db

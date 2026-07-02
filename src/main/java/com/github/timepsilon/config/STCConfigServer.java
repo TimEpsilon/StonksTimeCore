@@ -42,6 +42,7 @@ public class STCConfigServer {
 
     public final ModConfigSpec.BooleanValue ENABLE_SQL_STATS;
     public final ModConfigSpec.IntValue BANK_SAVE_INTERVAL_SECONDS;
+    public final ModConfigSpec.IntValue GRAFANA_SNAPSHOT_INTERVAL_SECONDS;
 
     static {
         Pair<STCConfigServer,ModConfigSpec> pair = new ModConfigSpec.Builder().configure(STCConfigServer::new);
@@ -194,6 +195,13 @@ public class STCConfigServer {
                         "Uses a background scheduler, not server ticks. Minimum 1 second.")
                 .translation("config.stonkstimecore.database.bankSaveIntervalSeconds")
                 .defineInRange("bankSaveIntervalSeconds", 1, 1, Integer.MAX_VALUE);
+        GRAFANA_SNAPSHOT_INTERVAL_SECONDS = builder
+                .comment("Cron interval (wall-clock seconds) for writing a non-WAL copy of the database",
+                        "(stonkstime-grafana.db) that Grafana can read. The live DB uses WAL, whose shared",
+                        "memory cannot be mmap'd over Docker bind mounts, so Grafana must read this copy.",
+                        "Set to 0 to disable the snapshot (e.g. if Grafana reads the live file natively).")
+                .translation("config.stonkstimecore.database.grafanaSnapshotIntervalSeconds")
+                .defineInRange("grafanaSnapshotIntervalSeconds", 15, 0, Integer.MAX_VALUE);
 
         builder.pop();
     }

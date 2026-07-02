@@ -24,6 +24,7 @@ Aucun serveur de base de données à installer : le mod fonctionne **à l'identi
 |-----|------|--------|-------------|
 | `enableSqlStats` | bool | `true` | Active les écritures analytiques SQLite (snapshots banque + transactions SCT). Activé par défaut : la base étant embarquée (aucun serveur à installer), les stats fonctionnent en solo comme sur serveur. Passer à `false` pour tout désactiver (aucune écriture, aucun cron, aucune requête de stats). |
 | `bankSaveIntervalSeconds` | int | `1` | Intervalle cron (secondes réelles) entre chaque snapshot des soldes bancaires vers la table `banks`. Minimum `1`. Utilise un thread dédié, indépendant des ticks serveur. |
+| `grafanaSnapshotIntervalSeconds` | int | `15` | Intervalle (secondes réelles) d'export d'une **copie non-WAL** `stonkstime-grafana.db` que Grafana peut lire. La base live est en WAL, dont la mémoire partagée ne peut pas être `mmap` via un bind mount Docker — Grafana doit donc lire cette copie. Mettre `0` pour désactiver (ex. si Grafana lit le fichier live en natif). |
 
 ### Exemple — stats activées (défaut)
 
@@ -31,9 +32,10 @@ Aucun serveur de base de données à installer : le mod fonctionne **à l'identi
 [database]
     enableSqlStats = true
     bankSaveIntervalSeconds = 60
+    grafanaSnapshotIntervalSeconds = 15
 ```
 
-Les données sont écrites dans `<monde>/stonkstimecore/stonkstime.db`. En solo, c'est suffisant. Sur un serveur, pointer Grafana vers ce fichier — voir [`grafana/`](../grafana/README.md).
+Les données sont écrites dans `<monde>/stonkstimecore/stonkstime.db`, et une copie `stonkstime-grafana.db` est exportée pour Grafana. En solo, c'est suffisant. Sur un serveur, pointer Grafana vers la copie — voir [`grafana/`](../grafana/README.md).
 
 ### Exemple — désactiver les stats
 
@@ -50,6 +52,7 @@ Le mod ne crée ni n'écrit aucun fichier de stats.
 |-----------|---------|-----------------|
 | Ouverture du fichier SQLite au démarrage | Ignorée | Établie (`banks`, `sct_transaction`) |
 | `BankSaveScheduler` (cron soldes) | Non démarré | Planifié selon `bankSaveIntervalSeconds` |
+| `GrafanaSnapshotScheduler` (copie Grafana) | Non démarré | Planifié selon `grafanaSnapshotIntervalSeconds` (si > 0) |
 | Écritures SCT (chronoscope) | Ignorées | Upsert dans `sct_transaction` |
 | Sauvegarde soldes (déconnexion / arrêt) | Ignorée | Upsert dans `banks` |
 | `DatabaseRetryHandler` | Inactif | Réessaie les écritures en attente |
@@ -62,5 +65,6 @@ Les données de gameplay (temps, monnaie Create Numismatics, état « out ») ne
 |-----|---------|---------|
 | `enableSqlStats` | `true` | Master switch for all SQLite analytics writes (embedded DB, enabled by default) |
 | `bankSaveIntervalSeconds` | `1` | Wall-clock cron interval for bank balance snapshots |
+| `grafanaSnapshotIntervalSeconds` | `15` | Interval for exporting the non-WAL `stonkstime-grafana.db` copy Grafana reads (`0` disables) |
 
 The analytics database is an embedded SQLite file (`<world>/stonkstimecore/stonkstime.db`) — no external database server is required, and it behaves identically in singleplayer and on a dedicated server.

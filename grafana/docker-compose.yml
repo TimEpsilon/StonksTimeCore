@@ -16,11 +16,11 @@ services:
     volumes:
       - ./provisioning:/etc/grafana/provisioning:ro
       - ./dashboards:/var/lib/grafana/dashboards:ro
-      # Directory holding the mod's SQLite file (stonkstime.db + its -wal/-shm sidecars).
-      # Point STONKS_DB_DIR at your world's `stonkstimecore/` folder. Mounted read-write so
-      # SQLite's WAL shared-memory works; Grafana only ever runs SELECTs.
+      # Directory holding the mod's Grafana snapshot (stonkstime-grafana.db, non-WAL).
+      # Point STONKS_DB_DIR at your world's `stonkstimecore/` folder — the mod writes the
+      # snapshot there every grafanaSnapshotIntervalSeconds. Read-only: Grafana only SELECTs.
       # Defaults to ./stonks-data (used by the demo seed below) when STONKS_DB_DIR is unset.
-      - ${STONKS_DB_DIR:-./stonks-data}:/var/lib/grafana/stonks
+      - ${STONKS_DB_DIR:-./stonks-data}:/var/lib/grafana/stonks:ro
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:3000/api/health || exit 1"]
       interval: 30s

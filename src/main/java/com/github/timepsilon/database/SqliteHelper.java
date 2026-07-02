@@ -5,7 +5,11 @@ import net.minecraft.server.MinecraftServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -29,6 +33,14 @@ public final class SqliteHelper {
     public static final String DATABASE_FILE = "stonkstime.db";
 
     /**
+     * Non-WAL snapshot copy that Grafana reads. Grafana (especially in Docker on
+     * Windows) cannot open the live WAL database over a bind mount because the
+     * {@code -shm} shared-memory file cannot be mmap'd; a plain rollback-journal
+     * copy sidesteps that entirely.
+     */
+    public static final String GRAFANA_SNAPSHOT_FILE = "stonkstime-grafana.db";
+
+    /**
      * Fixed-width ISO-8601 UTC formatter ({@code 2025-06-20T08:00:00.000Z}).
      * <p>
      * Timestamps are stored as TEXT: the fixed width makes lexical ordering equivalent to
@@ -43,6 +55,36 @@ public final class SqliteHelper {
     /** Resolves the analytics database file inside the server's world directory. */
     public static Path databaseFile(MinecraftServer server) {
         return FileManager.makeServerSideDirectory(server).resolve(DATABASE_FILE);
+    }
+
+    /** Resolves the Grafana snapshot file (next to the live database). */
+    public static Path grafanaSnapshotFile(MinecraftServer server) {
+        return FileManager.makeServerSideDirectory(server).resolve(GRAFANA_SNAPSHOT_FILE);
+    }
+
+    /**
+     * Writes a consistent, non-WAL copy of {@code liveDatabase} to {@code snapshot} for Grafana.
+     * <p>
+     * {@code VACUUM INTO} runs inside a read transaction (safe against the live writer) and emits a
+     * fresh rollback-journal database — no {@code -wal}/{@code -shm} sidecars. The copy is written to
+     * a temp file then moved into place so a reader never observes a half-written file.
+     */
+    public static void writeGrafanaSnapshot(Path liveDatabase, Path snapshot) throws SQLException, IOException {
+        Path tmp = snapshot.resolveSibling(snapshot.getFileName() + ".tmp");
+        Files.deleteIfExists(tmp);
+        String jdbcUrl = "jdbc:sqlite:" + liveDatabase.toAbsolutePath();
+        try (Connection connection = DriverManager.getConnection(jdbcUrl);
+             Statement statement = connection.createStatement()) {
+            statement.execute("PRAGMA busy_timeout=5000");
+            // VACUUM INTO takes a SQL string literal, not a bind parameter; escape single quotes.
+            String target = tmp.toAbsolutePath().toString().replace("'", "''");
+            statement.execute("VACUUM INTO '" + target + "'");
+        }
+        try {
+            Files.move(tmp, snapshot, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+        } catch (AtomicMoveNotSupportedException e) {
+            Files.move(tmp, snapshot, StandardCopyOption.REPLACE_EXISTING);
+        }
     }
 
     public static Connection open(Path databaseFile) throws SQLException {
