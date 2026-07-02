@@ -186,9 +186,9 @@ public class STCConfigServer {
                 .comment("Enable analytics writes to the embedded SQLite database (bank snapshots + SCT transactions).",
                         "The database is a single file (stonkstime.db) inside the world save — no external server required,",
                         "so this works the same in singleplayer and on a dedicated server.",
-                        "When false (default), the mod skips all analytics SQL.")
+                        "Enabled by default; set to false to skip all analytics SQL.")
                 .translation("config.stonkstimecore.database.enableSqlStats")
-                .define("enableSqlStats", false);
+                .define("enableSqlStats", true);
         BANK_SAVE_INTERVAL_SECONDS = builder
                 .comment("Cron interval (wall-clock seconds) for periodic bank balance snapshots to SQLite.",
                         "Uses a background scheduler, not server ticks. Minimum 1 second.")

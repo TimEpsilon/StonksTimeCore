@@ -22,19 +22,10 @@ Aucun serveur de base de données à installer : le mod fonctionne **à l'identi
 
 | Clé | Type | Défaut | Description |
 |-----|------|--------|-------------|
-| `enableSqlStats` | bool | `false` | Active les écritures analytiques SQLite (snapshots banque + transactions SCT). Si `false`, aucune écriture, aucun cron, aucune requête de stats. |
+| `enableSqlStats` | bool | `true` | Active les écritures analytiques SQLite (snapshots banque + transactions SCT). Activé par défaut : la base étant embarquée (aucun serveur à installer), les stats fonctionnent en solo comme sur serveur. Passer à `false` pour tout désactiver (aucune écriture, aucun cron, aucune requête de stats). |
 | `bankSaveIntervalSeconds` | int | `1` | Intervalle cron (secondes réelles) entre chaque snapshot des soldes bancaires vers la table `banks`. Minimum `1`. Utilise un thread dédié, indépendant des ticks serveur. |
 
-### Exemple — stats désactivées (défaut)
-
-```toml
-[database]
-    enableSqlStats = false
-```
-
-Le mod ne crée ni n'écrit aucun fichier de stats.
-
-### Exemple — stats activées
+### Exemple — stats activées (défaut)
 
 ```toml
 [database]
@@ -44,10 +35,19 @@ Le mod ne crée ni n'écrit aucun fichier de stats.
 
 Les données sont écrites dans `<monde>/stonkstimecore/stonkstime.db`. En solo, c'est suffisant. Sur un serveur, pointer Grafana vers ce fichier — voir [`grafana/`](../grafana/README.md).
 
+### Exemple — désactiver les stats
+
+```toml
+[database]
+    enableSqlStats = false
+```
+
+Le mod ne crée ni n'écrit aucun fichier de stats.
+
 ## Comportement selon `enableSqlStats`
 
-| Composant | `false` (défaut) | `true` |
-|-----------|------------------|--------|
+| Composant | `false` | `true` (défaut) |
+|-----------|---------|-----------------|
 | Ouverture du fichier SQLite au démarrage | Ignorée | Établie (`banks`, `sct_transaction`) |
 | `BankSaveScheduler` (cron soldes) | Non démarré | Planifié selon `bankSaveIntervalSeconds` |
 | Écritures SCT (chronoscope) | Ignorées | Upsert dans `sct_transaction` |
@@ -60,7 +60,7 @@ Les données de gameplay (temps, monnaie Create Numismatics, état « out ») ne
 
 | Key | Default | Purpose |
 |-----|---------|---------|
-| `enableSqlStats` | `false` | Master switch for all SQLite analytics writes |
+| `enableSqlStats` | `true` | Master switch for all SQLite analytics writes (embedded DB, enabled by default) |
 | `bankSaveIntervalSeconds` | `1` | Wall-clock cron interval for bank balance snapshots |
 
 The analytics database is an embedded SQLite file (`<world>/stonkstimecore/stonkstime.db`) — no external database server is required, and it behaves identically in singleplayer and on a dedicated server.
