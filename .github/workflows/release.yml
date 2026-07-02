@@ -1,0 +1,49 @@
+name: Release
+
+# Déclenché au push d'un tag (ex: v1.2.3 ou 1.2.3).
+# Construit le mod avec la version du tag et publie une release GitHub avec le jar.
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Setup JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Resolve version from tag
+        id: version
+        # Retire un éventuel préfixe "v" : v1.2.3 -> 1.2.3
+        run: echo "value=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Build mod with the tag version
+        run: ./gradlew build -Pmod_version=${{ steps.version.outputs.value }}
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          generate_release_notes: true
+          # Marque en pré-release si la version contient un tiret (v1.2.3-rc1, -beta, ...)
+          prerelease: ${{ contains(steps.version.outputs.value, '-') }}
+          files: build/libs/stonkstimecore-${{ steps.version.outputs.value }}.jar
+          fail_on_unmatched_files: true
