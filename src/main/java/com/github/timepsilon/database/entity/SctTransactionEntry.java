@@ -16,7 +16,7 @@ public record SctTransactionEntry(Instant time, UUID player, String username, St
 
     public static SctTransactionEntry from(ServerPlayer player, Item item, int amount, float money) {
         return new SctTransactionEntry(
-                TimeCore.getCurrentHourStart(),
+                TimeCore.getCurrentSecond(),
                 player.getUUID(),
                 player.getGameProfile().getName(),
                 item.toString(),

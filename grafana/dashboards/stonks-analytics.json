@@ -210,6 +210,7 @@
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" },
+          "displayName": "${__field.labels.username}",
           "custom": {
             "axisBorderShow": false,
             "axisCenteredZero": false,
@@ -515,12 +516,12 @@
           "datasource": { "type": "frser-sqlite-datasource", "uid": "stonkstime" },
           "queryType": "time series",
           "timeColumns": ["time"],
-          "queryText": "SELECT time AS time, COUNT(DISTINCT player) AS \"Joueurs actifs\" FROM banks GROUP BY time ORDER BY time",
-          "rawQueryText": "SELECT time AS time, COUNT(DISTINCT player) AS \"Joueurs actifs\" FROM banks GROUP BY time ORDER BY time",
+          "queryText": "SELECT time AS time, COUNT(DISTINCT player) AS \"Joueurs connectés\" FROM banks GROUP BY time ORDER BY time",
+          "rawQueryText": "SELECT time AS time, COUNT(DISTINCT player) AS \"Joueurs connectés\" FROM banks GROUP BY time ORDER BY time",
           "refId": "A"
         }
       ],
-      "title": "Joueurs actifs par jour",
+      "title": "Joueurs connectés dans le temps",
       "type": "timeseries"
     },
     {

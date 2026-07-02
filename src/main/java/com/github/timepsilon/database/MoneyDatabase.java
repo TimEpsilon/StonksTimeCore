@@ -4,7 +4,7 @@ import com.github.timepsilon.config.SqlStatsGate;
 import com.github.timepsilon.database.dao.BankDao;
 import com.github.timepsilon.database.entity.BalanceHistoryPoint;
 import com.github.timepsilon.database.entity.BankEntry;
-import com.mojang.authlib.GameProfile;
+import com.github.timepsilon.utils.TimeCore;
 import dev.ithundxr.createnumismatics.content.backend.BankAccount;
 import dev.ithundxr.createnumismatics.content.backend.BankSavedData;
 import net.minecraft.server.MinecraftServer;
@@ -16,7 +16,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 public class MoneyDatabase {
@@ -54,21 +53,24 @@ public class MoneyDatabase {
     public void saveBanks() {
         if (!SqlStatsGate.isEnabled() || server == null) return;
 
+        // Only snapshot online players so "connected players over time" is meaningful:
+        // an offline player's balance doesn't change, so there is nothing to record.
+        // One shared timestamp per cycle so every player in this cycle lands on the same `time`.
+        Instant now = TimeCore.getCurrentInstant();
+        Map<UUID, BankAccount> accounts = BankSavedData.load(server).getAccounts();
         List<BankEntry> entries = new ArrayList<>();
-        for (Map.Entry<UUID, BankAccount> entry : BankSavedData.load(server).getAccounts().entrySet()) {
-            UUID playerId = entry.getKey();
-            entries.add(BankEntry.snapshot(playerId, resolveUsername(playerId), entry.getValue().getBalance()));
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            BankAccount account = accounts.get(player.getUUID());
+            if (account == null) continue;
+            entries.add(BankEntry.snapshot(
+                    player.getUUID(),
+                    player.getGameProfile().getName(),
+                    account.getBalance(),
+                    now
+            ));
         }
+        if (entries.isEmpty()) return;
         dao.upsertAll(entries);
-    }
-
-    private String resolveUsername(UUID playerId) {
-        ServerPlayer online = server.getPlayerList().getPlayer(playerId);
-        if (online != null) {
-            return online.getGameProfile().getName();
-        }
-        Optional<GameProfile> profile = server.getProfileCache().get(playerId);
-        return profile.map(GameProfile::getName).orElseGet(() -> playerId.toString());
     }
 
     public static MoneyDatabase getDatabase() {
