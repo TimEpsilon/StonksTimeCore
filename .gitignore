@@ -25,5 +25,8 @@ run-data
 
 repo
 /libs/
-/libs/
-/grafana/
+
+# grafana runtime artifacts — provisioning/dashboards/seed stay tracked
+/grafana/stonks-data/
+/grafana/postgres_data/
+/grafana/data/

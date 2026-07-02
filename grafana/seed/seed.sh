@@ -1,19 +1,21 @@
 #!/usr/bin/env bash
-# Réinitialise les données de test PostgreSQL via Docker Compose
+# Construit la base SQLite de démonstration lue par Grafana (grafana/stonks-data/stonkstime.db).
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 GRAFANA_DIR="$(dirname "$SCRIPT_DIR")"
+DB_DIR="$GRAFANA_DIR/stonks-data"
+DB_FILE="$DB_DIR/stonkstime.db"
 
-cd "$GRAFANA_DIR"
-
-if ! command -v docker >/dev/null 2>&1; then
-    echo "Docker requis pour injecter les données de test."
-    echo "  cd grafana && docker compose up -d postgres"
-    echo "  docker compose --profile seed run --rm seed"
+if ! command -v sqlite3 >/dev/null 2>&1; then
+    echo "sqlite3 requis (ex: apt install sqlite3 / brew install sqlite)."
     exit 1
 fi
 
-docker compose up -d postgres
-docker compose --profile seed run --rm seed
-echo "Données de test injectées dans PostgreSQL (base stonkstime)."
+mkdir -p "$DB_DIR"
+rm -f "$DB_FILE" "$DB_FILE-wal" "$DB_FILE-shm"
+sqlite3 "$DB_FILE" < "$SCRIPT_DIR/schema.sql"
+sqlite3 "$DB_FILE" < "$SCRIPT_DIR/seed.sql"
+
+echo "Base de démo construite : $DB_FILE"
+echo "Lancer Grafana : (cd \"$GRAFANA_DIR\" && docker compose up -d)"

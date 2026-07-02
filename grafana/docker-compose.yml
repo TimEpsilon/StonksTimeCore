@@ -1,30 +1,8 @@
 services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: stonks-postgres
-    restart: unless-stopped
-    ports:
-      - "${POSTGRES_PORT:-5432}:5432"
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-stonkstime}
-      POSTGRES_USER: ${POSTGRES_USER:-stonkstime}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-stonkstime}
-    volumes:
-      - ./postgres_data:/var/lib/postgresql/data
-      - ./init:/docker-entrypoint-initdb.d:ro
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-stonkstime} -d ${POSTGRES_DB:-stonkstime}"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
   grafana:
     image: grafana/grafana:11.4.0
     container_name: stonks-grafana
     restart: unless-stopped
-    depends_on:
-      postgres:
-        condition: service_healthy
     ports:
       - "3000:3000"
     environment:
@@ -33,19 +11,18 @@ services:
       GF_USERS_DEFAULT_THEME: dark
       GF_AUTH_ANONYMOUS_ENABLED: "true"
       GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: "5432"
-      POSTGRES_DB: ${POSTGRES_DB:-stonkstime}
-      POSTGRES_USER: ${POSTGRES_USER:-stonkstime}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-stonkstime}
+      # Auto-install the SQLite datasource plugin on first boot.
+      GF_INSTALL_PLUGINS: frser-sqlite-datasource
     volumes:
       - ./provisioning:/etc/grafana/provisioning:ro
       - ./dashboards:/var/lib/grafana/dashboards:ro
+      # Directory holding the mod's SQLite file (stonkstime.db + its -wal/-shm sidecars).
+      # Point STONKS_DB_DIR at your world's `stonkstimecore/` folder. Mounted read-write so
+      # SQLite's WAL shared-memory works; Grafana only ever runs SELECTs.
+      # Defaults to ./stonks-data (used by the demo seed below) when STONKS_DB_DIR is unset.
+      - ${STONKS_DB_DIR:-./stonks-data}:/var/lib/grafana/stonks
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:3000/api/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
-
-volumes:
-  postgres_data:
