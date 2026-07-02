@@ -52,6 +52,15 @@ public class SCTTransactionDatabase {
         dao.upsertAll(entries);
     }
 
+    /**
+     * Total quantity of {@code item} sold via the chronoscope over the last {@code hours} hours.
+     * Returns 0 when SQL stats are disabled. Call from the server thread.
+     */
+    public int getAmountSoldForItem(Item item, int hours) {
+        if (!SqlStatsGate.isEnabled()) return 0;
+        return dao.sumAmountForItemSince(item.toString(), hours);
+    }
+
     public static SCTTransactionDatabase getDatabase() {
         return DATABASE;
     }

@@ -7,11 +7,16 @@ import com.github.timepsilon.database.entity.SctTransactionEntry;
 import com.github.timepsilon.database.pending.PendingWriteQueue;
 import com.github.timepsilon.database.pending.PendingWritesStore;
 
+import com.github.timepsilon.utils.TimeCore;
+
 import javax.annotation.Nullable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 
@@ -40,6 +45,12 @@ public class SctTransactionDao {
             amount = sct_transaction.amount + excluded.amount,
             money = sct_transaction.money + excluded.money,
             username = excluded.username
+            """;
+
+    private static final String SUM_AMOUNT_SINCE = """
+            SELECT COALESCE(SUM(amount), 0) AS total
+            FROM sct_transaction
+            WHERE item = ? AND time >= ?
             """;
 
     private final PendingWriteQueue<SctTransactionEntry> pending = PendingWritesStore.get().sctTransactions();
@@ -74,6 +85,33 @@ public class SctTransactionDao {
         } catch (Exception e) {
             LOGGER.error("Error creating SCT transaction table.", e);
             disconnect();
+        }
+    }
+
+    /**
+     * Returns the total {@code amount} of {@code itemId} sold over the last {@code hours} hours.
+     * <p>
+     * Timestamps are stored as hourly buckets, so the window is hour-granular. Returns 0 when there
+     * is no connection, {@code hours <= 0}, or on error. Call from the server thread (shared JDBC
+     * connection, not thread-safe).
+     */
+    public int sumAmountForItemSince(String itemId, int hours) {
+        if (hours <= 0) return 0;
+        ensureConnected();
+        if (connection == null) return 0;
+        Instant since = TimeCore.getCurrentInstant().minus(Duration.ofHours(hours));
+        try (PreparedStatement statement = connection.prepareStatement(SUM_AMOUNT_SINCE)) {
+            statement.setString(1, itemId);
+            statement.setString(2, SqliteHelper.toIso(since));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return resultSet.next() ? resultSet.getInt("total") : 0;
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Failed to sum SCT amount for item {}", itemId, e);
+            if (SqliteHelper.isConnectionError(e)) {
+                disconnect();
+            }
+            return 0;
         }
     }
 
