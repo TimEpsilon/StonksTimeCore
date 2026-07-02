@@ -45,7 +45,7 @@ docker compose up -d
 STONKS_DB_DIR=/chemin/vers/serveur/world/stonkstimecore docker compose up -d
 ```
 
-Le dossier est monté en **lecture seule** sur `/var/lib/grafana/stonks` ; la datasource pointe sur `stonkstime-grafana.db` (la copie non-WAL). `enableSqlStats` est activé par défaut côté mod (voir [`docs/configuration.md`](../docs/configuration.md)).
+Le dossier est monté sur `/var/lib/grafana/stonks` ; la datasource pointe sur `stonkstime-grafana.db` (la copie non-WAL). Grafana ne fait que des `SELECT` (le plugin ouvre néanmoins le fichier en lecture-écriture, d'où un montage rw). `enableSqlStats` est activé par défaut côté mod (voir [`docs/configuration.md`](../docs/configuration.md)).
 
 > Grafana doit tourner sur la **même machine** que le serveur (SQLite est un fichier local, sans protocole réseau). Astuce : tu peux aussi créer un fichier `grafana/.env` avec `STONKS_DB_DIR="..."` (ignoré par git) au lieu d'exporter la variable à chaque fois.
 >
@@ -78,7 +78,7 @@ grafana/
 
 | Variable | Défaut | Rôle |
 |----------|--------|------|
-| `STONKS_DB_DIR` | `./stonks-data` | Dossier hôte contenant `stonkstime-grafana.db`, monté (lecture seule) dans Grafana |
+| `STONKS_DB_DIR` | `./stonks-data` | Dossier hôte contenant `stonkstime-grafana.db`, monté dans Grafana |
 
 ## Réinitialiser les données de démonstration
 
