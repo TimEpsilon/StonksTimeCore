@@ -6,60 +6,65 @@ Fichier généré au premier démarrage du serveur :
 config/stonkstimecore-server.toml
 ```
 
-NeoForge recharge ce fichier au redémarrage du serveur. Les sections `timer` et `SRE` couvrent le gameplay ; la section **`database`** contrôle PostgreSQL et le cron de sauvegarde des soldes.
+NeoForge recharge ce fichier au redémarrage du serveur. Les sections `timer` et `SRE` couvrent le gameplay ; la section **`database`** contrôle la base analytique **SQLite embarquée** et le cron de sauvegarde des soldes.
+
+## Base de données embarquée (SQLite)
+
+Les statistiques sont écrites dans un **fichier SQLite unique**, créé automatiquement dans la sauvegarde du monde :
+
+```
+<monde>/stonkstimecore/stonkstime.db
+```
+
+Aucun serveur de base de données à installer : le mod fonctionne **à l'identique en solo et sur un serveur dédié**. Sur un serveur, Grafana peut lire ce même fichier (voir [`grafana/`](../grafana/README.md)). Le fichier contient deux tables : `banks` (snapshots des soldes) et `sct_transaction` (transactions du chronoscope).
 
 ## Section `database`
 
 | Clé | Type | Défaut | Description |
 |-----|------|--------|-------------|
-| `enableSqlStats` | bool | `false` | Active les écritures analytiques PostgreSQL (snapshots banque + transactions SCT). Si `false`, aucune connexion JDBC, aucun cron, aucune requête de stats. |
-| `host` | string | `localhost` | Hôte PostgreSQL (ignoré si `enableSqlStats = false`). |
-| `port` | int | `5432` | Port PostgreSQL. |
-| `database` | string | `stonkstime` | Nom de la base. |
-| `user` | string | `stonkstime` | Utilisateur. |
-| `password` | string | `stonkstime` | Mot de passe. |
+| `enableSqlStats` | bool | `true` | Active les écritures analytiques SQLite (snapshots banque + transactions SCT). Activé par défaut : la base étant embarquée (aucun serveur à installer), les stats fonctionnent en solo comme sur serveur. Passer à `false` pour tout désactiver (aucune écriture, aucun cron, aucune requête de stats). |
 | `bankSaveIntervalSeconds` | int | `1` | Intervalle cron (secondes réelles) entre chaque snapshot des soldes bancaires vers la table `banks`. Minimum `1`. Utilise un thread dédié, indépendant des ticks serveur. |
+| `grafanaSnapshotIntervalSeconds` | int | `15` | Intervalle (secondes réelles) d'export d'une **copie non-WAL** `stonkstime-export.db` que Grafana peut lire. La base live est en WAL, dont la mémoire partagée ne peut pas être `mmap` via un bind mount Docker — Grafana doit donc lire cette copie. Mettre `0` pour désactiver (ex. si Grafana lit le fichier live en natif). |
 
-### Exemple — stats désactivées (défaut)
+### Exemple — stats activées (défaut)
+
+```toml
+[database]
+    enableSqlStats = true
+    bankSaveIntervalSeconds = 60
+    grafanaSnapshotIntervalSeconds = 15
+```
+
+Les données sont écrites dans `<monde>/stonkstimecore/stonkstime.db`, et une copie `stonkstime-export.db` est exportée pour Grafana. En solo, c'est suffisant. Sur un serveur, pointer Grafana vers la copie — voir [`grafana/`](../grafana/README.md).
+
+### Exemple — désactiver les stats
 
 ```toml
 [database]
     enableSqlStats = false
 ```
 
-Aucune dépendance PostgreSQL requise pour faire tourner le serveur.
-
-### Exemple — stats activées avec Grafana
-
-```toml
-[database]
-    enableSqlStats = true
-    host = "localhost"
-    port = 5432
-    database = "stonkstime"
-    user = "stonkstime"
-    password = "stonkstime"
-    bankSaveIntervalSeconds = 60
-```
-
-Aligner ces valeurs avec le stack Docker dans [`grafana/`](../grafana/README.md).
+Le mod ne crée ni n'écrit aucun fichier de stats.
 
 ## Comportement selon `enableSqlStats`
 
-| Composant | `false` (défaut) | `true` |
-|-----------|------------------|--------|
-| Connexion PostgreSQL au démarrage | Ignorée | Établie (`banks`, `sct_transaction`) |
+| Composant | `false` | `true` (défaut) |
+|-----------|---------|-----------------|
+| Ouverture du fichier SQLite au démarrage | Ignorée | Établie (`banks`, `sct_transaction`) |
 | `BankSaveScheduler` (cron soldes) | Non démarré | Planifié selon `bankSaveIntervalSeconds` |
+| `GrafanaSnapshotScheduler` (copie Grafana) | Non démarré | Planifié selon `grafanaSnapshotIntervalSeconds` (si > 0) |
 | Écritures SCT (chronoscope) | Ignorées | Upsert dans `sct_transaction` |
 | Sauvegarde soldes (déconnexion / arrêt) | Ignorée | Upsert dans `banks` |
 | `DatabaseRetryHandler` | Inactif | Réessaie les écritures en attente |
 
-Les données de gameplay (temps, monnaie Create Numismatics, état « out ») ne passent pas par PostgreSQL et ne sont pas affectées par ce réglage.
+Les données de gameplay (temps, monnaie Create Numismatics, état « out ») ne passent pas par cette base et ne sont pas affectées par ce réglage.
 
 ## English summary
 
 | Key | Default | Purpose |
 |-----|---------|---------|
-| `enableSqlStats` | `false` | Master switch for all PostgreSQL analytics writes |
+| `enableSqlStats` | `true` | Master switch for all SQLite analytics writes (embedded DB, enabled by default) |
 | `bankSaveIntervalSeconds` | `1` | Wall-clock cron interval for bank balance snapshots |
-| `host`, `port`, `database`, `user`, `password` | see above | JDBC connection (only used when stats are enabled) |
+| `grafanaSnapshotIntervalSeconds` | `15` | Interval for exporting the non-WAL `stonkstime-export.db` copy Grafana reads (`0` disables) |
+
+The analytics database is an embedded SQLite file (`<world>/stonkstimecore/stonkstime.db`) — no external database server is required, and it behaves identically in singleplayer and on a dedicated server.

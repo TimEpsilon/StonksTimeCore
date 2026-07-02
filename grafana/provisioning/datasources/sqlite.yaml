@@ -1,0 +1,15 @@
+apiVersion: 1
+
+datasources:
+  - name: StonksTime
+    uid: stonkstime
+    type: frser-sqlite-datasource
+    access: proxy
+    isDefault: true
+    editable: false
+    jsonData:
+      # Path *inside the Grafana container* to the mod's non-WAL snapshot copy.
+      # The live stonkstime.db is WAL and cannot be read over a Docker bind mount
+      # (its -shm can't be mmap'd); the mod exports stonkstime-export.db for Grafana.
+      # docker-compose mounts the world's stonkstimecore/ directory here (see STONKS_DB_DIR).
+      path: /var/lib/stonks/stonkstime-export.db

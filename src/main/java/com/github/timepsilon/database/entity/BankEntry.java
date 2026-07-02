@@ -1,12 +1,11 @@
 package com.github.timepsilon.database.entity;
 
+import com.github.timepsilon.database.SqliteHelper;
 import com.github.timepsilon.utils.TimeCore;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.UUID;
 
 public record BankEntry(UUID player, String username, Instant time, int money) {
@@ -18,9 +17,9 @@ public record BankEntry(UUID player, String username, Instant time, int money) {
     }
 
     public void bindTo(PreparedStatement statement) throws SQLException {
-        statement.setObject(1, player);
+        statement.setString(1, player.toString());
         statement.setString(2, username);
-        statement.setObject(3, OffsetDateTime.ofInstant(time, ZoneOffset.UTC));
+        statement.setString(3, SqliteHelper.toIso(time));
         statement.setInt(4, money);
     }
 }

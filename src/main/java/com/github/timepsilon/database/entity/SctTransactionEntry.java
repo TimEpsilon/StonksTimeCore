@@ -1,5 +1,6 @@
 package com.github.timepsilon.database.entity;
 
+import com.github.timepsilon.database.SqliteHelper;
 import com.github.timepsilon.utils.TimeCore;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
@@ -7,8 +8,6 @@ import net.minecraft.world.item.Item;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.UUID;
 
 public record SctTransactionEntry(Instant time, UUID player, String username, String itemId, int amount, int storedMoney) {
@@ -27,8 +26,8 @@ public record SctTransactionEntry(Instant time, UUID player, String username, St
     }
 
     public void bindTo(PreparedStatement statement) throws SQLException {
-        statement.setObject(1, OffsetDateTime.ofInstant(time, ZoneOffset.UTC));
-        statement.setObject(2, player);
+        statement.setString(1, SqliteHelper.toIso(time));
+        statement.setString(2, player.toString());
         statement.setString(3, username);
         statement.setString(4, itemId);
         statement.setInt(5, amount);

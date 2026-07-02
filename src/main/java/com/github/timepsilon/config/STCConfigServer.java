@@ -41,12 +41,8 @@ public class STCConfigServer {
     public final ModConfigSpec.DoubleValue SCT_GOLDEN_TICKET_ADDITIONAL_PROBABILITY;
 
     public final ModConfigSpec.BooleanValue ENABLE_SQL_STATS;
-    public final ModConfigSpec.ConfigValue<String> DB_HOST;
-    public final ModConfigSpec.IntValue DB_PORT;
-    public final ModConfigSpec.ConfigValue<String> DB_NAME;
-    public final ModConfigSpec.ConfigValue<String> DB_USER;
-    public final ModConfigSpec.ConfigValue<String> DB_PASSWORD;
     public final ModConfigSpec.IntValue BANK_SAVE_INTERVAL_SECONDS;
+    public final ModConfigSpec.IntValue GRAFANA_SNAPSHOT_INTERVAL_SECONDS;
 
     static {
         Pair<STCConfigServer,ModConfigSpec> pair = new ModConfigSpec.Builder().configure(STCConfigServer::new);
@@ -188,35 +184,24 @@ public class STCConfigServer {
         builder.pop();
         builder.translation("config.stonkstimecore.database").push("Database");
         ENABLE_SQL_STATS = builder
-                .comment("Enable PostgreSQL analytics writes (bank snapshots + SCT transactions).",
-                        "When false (default), the mod does not connect to PostgreSQL and skips all stats SQL.")
+                .comment("Enable analytics writes to the embedded SQLite database (bank snapshots + SCT transactions).",
+                        "The database is a single file (stonkstime.db) inside the world save — no external server required,",
+                        "so this works the same in singleplayer and on a dedicated server.",
+                        "Enabled by default; set to false to skip all analytics SQL.")
                 .translation("config.stonkstimecore.database.enableSqlStats")
-                .define("enableSqlStats", false);
-        DB_HOST = builder
-                .comment("PostgreSQL host (used only when enableSqlStats is true).")
-                .translation("config.stonkstimecore.database.DBHost")
-                .define("host", "localhost");
-        DB_PORT = builder
-                .comment("PostgreSQL port.")
-                .translation("config.stonkstimecore.database.DBPort")
-                .defineInRange("port", 5432, 1, 65535);
-        DB_NAME = builder
-                .comment("PostgreSQL database name.")
-                .translation("config.stonkstimecore.database.DBName")
-                .define("database", "stonkstime");
-        DB_USER = builder
-                .comment("PostgreSQL user.")
-                .translation("config.stonkstimecore.database.DBUser")
-                .define("user", "stonkstime");
-        DB_PASSWORD = builder
-                .comment("PostgreSQL password.")
-                .translation("config.stonkstimecore.database.DBPassword")
-                .define("password", "stonkstime");
+                .define("enableSqlStats", true);
         BANK_SAVE_INTERVAL_SECONDS = builder
-                .comment("Cron interval (wall-clock seconds) for periodic bank balance snapshots to PostgreSQL.",
+                .comment("Cron interval (wall-clock seconds) for periodic bank balance snapshots to SQLite.",
                         "Uses a background scheduler, not server ticks. Minimum 1 second.")
                 .translation("config.stonkstimecore.database.bankSaveIntervalSeconds")
                 .defineInRange("bankSaveIntervalSeconds", 1, 1, Integer.MAX_VALUE);
+        GRAFANA_SNAPSHOT_INTERVAL_SECONDS = builder
+                .comment("Cron interval (wall-clock seconds) for writing a non-WAL copy of the database",
+                        "(stonkstime-export.db) that Grafana can read. The live DB uses WAL, whose shared",
+                        "memory cannot be mmap'd over Docker bind mounts, so Grafana must read this copy.",
+                        "Set to 0 to disable the snapshot (e.g. if Grafana reads the live file natively).")
+                .translation("config.stonkstimecore.database.grafanaSnapshotIntervalSeconds")
+                .defineInRange("grafanaSnapshotIntervalSeconds", 15, 0, Integer.MAX_VALUE);
 
         builder.pop();
     }

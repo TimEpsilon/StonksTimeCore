@@ -1,7 +1,8 @@
--- Réinitialise et injecte les données de test (PostgreSQL)
--- Usage: docker compose --profile seed run --rm seed
+-- Réinitialise et injecte les données de démo (SQLite)
+-- Usage: ./seed/seed.sh  (ou seed.ps1) — construit ../stonks-data/stonkstime.db
 
-TRUNCATE banks, sct_transaction;
+DELETE FROM banks;
+DELETE FROM sct_transaction;
 
 INSERT INTO banks (player, username, time, money) VALUES
 ('550e8400-e29b-41d4-a716-446655440001', 'Alice', '2025-06-20T00:00:00.000Z', 12000),

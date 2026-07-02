@@ -1,5 +1,6 @@
 package com.github.timepsilon.database.entity;
 
+import com.github.timepsilon.database.SqliteHelper;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationHandler;
@@ -8,8 +9,6 @@ import java.lang.reflect.Proxy;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -29,9 +28,9 @@ class BankEntryTest {
 
         assertDoesNotThrow(() -> entry.bindTo(recording.asPreparedStatement()));
 
-        assertEquals(PLAYER, recording.objects.get(1));
+        assertEquals(PLAYER.toString(), recording.strings.get(1));
         assertEquals("Alice", recording.strings.get(2));
-        assertEquals(OffsetDateTime.ofInstant(TIME, ZoneOffset.UTC), recording.objects.get(3));
+        assertEquals(SqliteHelper.toIso(TIME), recording.strings.get(3));
         assertEquals(42_000, recording.ints.get(4));
     }
 

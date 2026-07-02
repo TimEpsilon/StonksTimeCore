@@ -208,18 +208,17 @@ dependencies {
     // Local
     implementation fileTree(dir: 'libs', include: '*.jar')
 
-    // PostgreSQL
-    implementation "org.postgresql:postgresql:42.7.4"
-    additionalRuntimeClasspath "org.postgresql:postgresql:42.7.4"
-    jarJar "org.postgresql:postgresql:42.7.4"
+    // SQLite (embedded — no external database server required, works in singleplayer)
+    implementation "org.xerial:sqlite-jdbc:3.47.1.0"
+    additionalRuntimeClasspath "org.xerial:sqlite-jdbc:3.47.1.0"
+    jarJar "org.xerial:sqlite-jdbc:3.47.1.0"
 
     testImplementation platform('org.junit:junit-bom:5.11.4')
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation 'org.testcontainers:testcontainers:1.20.4'
-    testImplementation 'org.testcontainers:postgresql:1.20.4'
-    testImplementation 'org.testcontainers:junit-jupiter:1.20.4'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    testRuntimeOnly "org.postgresql:postgresql:42.7.4"
+    testRuntimeOnly "org.xerial:sqlite-jdbc:3.47.1.0"
+    // SLF4J API is provided by Minecraft/NeoForge at runtime, but not on the plain test classpath.
+    testRuntimeOnly 'org.slf4j:slf4j-api:2.0.16'
 }
 
 tasks.named('test', Test).configure {

@@ -4,6 +4,7 @@ import com.github.timepsilon.Core;
 import com.github.timepsilon.commands.STCCommand;
 import com.github.timepsilon.config.SqlStatsGate;
 import com.github.timepsilon.database.BankSaveScheduler;
+import com.github.timepsilon.database.GrafanaSnapshotScheduler;
 import com.github.timepsilon.database.MoneyDatabase;
 import com.github.timepsilon.database.SCTTransactionDatabase;
 import com.github.timepsilon.database.pending.PendingWritesStore;
@@ -68,6 +69,7 @@ public class NeoForgeEventsManager {
         SCTTransactionDatabase.getDatabase().load(event.getServer());
         MoneyDatabase.getDatabase().load(event.getServer());
         BankSaveScheduler.start(event.getServer());
+        GrafanaSnapshotScheduler.start(event.getServer());
     }
 
     @SubscribeEvent
@@ -76,6 +78,7 @@ public class NeoForgeEventsManager {
             PendingWritesStore.get().clearServer();
             return;
         }
+        GrafanaSnapshotScheduler.stop();
         BankSaveScheduler.stop();
         MoneyDatabase.getDatabase().saveBanks();
 

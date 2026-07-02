@@ -1,89 +1,89 @@
-# Grafana — Analytics PostgreSQL StonksTimeCore3
+# Grafana — Analytics SQLite StonksTimeCore3
 
-Tableaux de bord Grafana pour analyser la base PostgreSQL du mod StonksTimeCore3 (`stonkstime` : tables `banks` et `sct_transaction`).
+Tableaux de bord Grafana pour analyser la base **SQLite** du mod StonksTimeCore3 (tables `banks` et `sct_transaction`).
+
+Le mod écrit désormais dans un **fichier SQLite unique** au lieu d'un serveur PostgreSQL :
+
+```
+<monde>/stonkstimecore/stonkstime.db          # base live (mode WAL, écrite par le mod)
+<monde>/stonkstimecore/stonkstime-export.db  # copie non-WAL, lue par Grafana
+```
+
+Aucun serveur de base de données à installer. Grafana lit via le plugin [`frser-sqlite-datasource`](https://grafana.com/grafana/plugins/frser-sqlite-datasource/).
+
+> **Pourquoi une copie ?** La base live est en mode **WAL** (lecture+écriture simultanées), dont le fichier de mémoire partagée `-shm` ne peut pas être `mmap` à travers un **bind mount Docker** (Grafana échoue alors avec `SQLITE_IOERR_SHMMAP` / `database is locked`). Le mod exporte donc périodiquement une copie **non-WAL** `stonkstime-export.db` que Grafana peut lire sans souci. Cadence réglable via `grafanaSnapshotIntervalSeconds` (défaut 15 s ; `0` pour désactiver). Voir [`docs/configuration.md`](../docs/configuration.md).
 
 ## Prérequis
 
 - [Docker](https://docs.docker.com/get-docker/) et Docker Compose
+- Pour construire la base de démonstration : le CLI `sqlite3`
 
-## Démarrage rapide
+## Démarrage rapide (données de démonstration)
 
 ```powershell
 cd grafana
+./seed/seed.ps1        # Windows   (ou ./seed/seed.sh sous Linux/macOS)
 docker compose up -d
 ```
 
-Ouvrir **http://localhost:3000** — identifiants par défaut : `admin` / `admin`.
+Le script construit `grafana/stonks-data/stonkstime-export.db` (10 jours, 5 joueurs), et `docker compose up -d` démarre Grafana en pointant dessus par défaut.
 
-Au premier démarrage, PostgreSQL crée automatiquement le schéma et charge les **données de démonstration** (10 jours, 5 joueurs). Grafana se connecte à la source `StonksTime` provisionnée automatiquement.
+Ouvrir **http://localhost:3000** — identifiants `admin` / `admin`. Le plugin SQLite est installé automatiquement (`GF_INSTALL_PLUGINS`), la source `StonksTime` et le dashboard « StonksTime — Analytics SQLite » sont provisionnés.
 
-Le dossier **StonksTime** contient le dashboard « StonksTime — Analytics PostgreSQL ».
+## Brancher Grafana sur un vrai serveur
+
+Pointer Grafana sur le dossier `stonkstimecore/` du monde (qui contient la copie `stonkstime-export.db` exportée par le mod), via la variable `STONKS_DB_DIR` :
+
+```powershell
+# Windows PowerShell
+$env:STONKS_DB_DIR = "C:\chemin\vers\serveur\world\stonkstimecore"
+docker compose up -d
+```
+
+```bash
+# Linux/macOS
+STONKS_DB_DIR=/chemin/vers/serveur/world/stonkstimecore docker compose up -d
+```
+
+Le dossier est monté sur `/var/lib/stonks` ; la datasource pointe sur `stonkstime-export.db` (la copie non-WAL). Grafana ne fait que des `SELECT` (le plugin ouvre néanmoins le fichier en lecture-écriture, d'où un montage rw). `enableSqlStats` est activé par défaut côté mod (voir [`docs/configuration.md`](../docs/configuration.md)).
+
+> Grafana doit tourner sur la **même machine** que le serveur (SQLite est un fichier local, sans protocole réseau). Astuce : tu peux aussi créer un fichier `grafana/.env` avec `STONKS_DB_DIR="..."` (ignoré par git) au lieu d'exporter la variable à chaque fois.
+>
+> Si tu préfères que Grafana lise le fichier **live** directement (Grafana natif hors Docker, où le `mmap` du WAL fonctionne), mets `grafanaSnapshotIntervalSeconds = 0` et pointe la datasource sur `stonkstime.db`.
 
 ## Structure des fichiers
 
 ```
 grafana/
-├── docker-compose.yml              # PostgreSQL + Grafana
-├── init/
-│   ├── 01-schema.sql               # Schéma (exécuté au premier démarrage PG)
-│   ├── 02-migration-username.sql   # Migration colonne username (bases existantes)
-│   └── 03-seed.sql                 # Données de démo initiales
+├── docker-compose.yml              # Grafana seul (plugin SQLite auto-installé)
 ├── provisioning/
-│   ├── datasources/postgres.yaml   # Source PostgreSQL native
+│   ├── datasources/sqlite.yaml     # Source frser-sqlite-datasource
 │   ├── dashboards/default.yaml     # Chargement auto des dashboards
 │   └── alerting/stonks-alerts.yaml # Alerte solde anormal (> 3× moyenne)
 ├── dashboards/
 │   └── stonks-analytics.json       # Dashboard principal
-└── seed/
-    ├── seed.sql                    # Réinitialisation des données de test
-    ├── seed.ps1                    # Script Windows
-    └── seed.sh                     # Script Linux/macOS
+├── seed/
+│   ├── schema.sql                  # Schéma SQLite (miroir des tables du mod)
+│   ├── seed.sql                    # Données de démo
+│   ├── seed.ps1                    # Build de la base de démo (Windows)
+│   └── seed.sh                     # Build de la base de démo (Linux/macOS)
+└── stonks-data/                    # (généré) base de démo, ignoré par git
 ```
 
-## Services Docker
+## Service Docker
 
 | Service   | Port | Rôle |
 |-----------|------|------|
-| `postgres` | 5432 | Base `stonkstime` (tables `banks`, `sct_transaction`) |
-| `grafana`  | 3000 | Dashboards et alertes |
+| `grafana` | 3000 | Dashboards et alertes (plugin SQLite) |
 
-Variables d'environnement optionnelles (`.env` ou shell) :
+| Variable | Défaut | Rôle |
+|----------|--------|------|
+| `STONKS_DB_DIR` | `./stonks-data` | Dossier hôte contenant `stonkstime-export.db`, monté dans Grafana |
 
-| Variable | Défaut |
-|----------|--------|
-| `POSTGRES_DB` | `stonkstime` |
-| `POSTGRES_USER` | `stonkstime` |
-| `POSTGRES_PASSWORD` | `stonkstime` |
-| `POSTGRES_PORT` | `5432` |
-
-## Connexion du mod Minecraft
-
-Configurer la section `database` dans le fichier serveur NeoForge (`config/stonkstimecore-server.toml`). Voir aussi [`docs/configuration.md`](../docs/configuration.md).
-
-```toml
-[database]
-    enableSqlStats = true           # false par défaut — pas de PostgreSQL sans ce flag
-    host = "localhost"
-    port = 5432
-    database = "stonkstime"
-    user = "stonkstime"
-    password = "stonkstime"
-    bankSaveIntervalSeconds = 60
-```
-
-Le mod écrit dans PostgreSQL uniquement si `enableSqlStats = true` (démarrage, cron soldes, transactions SCT, arrêt serveur).
-
-## Réinitialiser les données de test
+## Réinitialiser les données de démonstration
 
 ```powershell
-cd grafana
-docker compose --profile seed run --rm seed
-```
-
-Ou via les scripts :
-
-```powershell
-.\seed\seed.ps1   # Windows
+./seed/seed.ps1   # Windows
 ./seed/seed.sh    # Linux/macOS
 ```
 
@@ -91,23 +91,25 @@ Les données couvrent **10 jours** (20–29 juin 2025), **5 joueurs** (Alice, Bo
 
 ## Schéma
 
+Les horodatages sont stockés en **texte ISO-8601 UTC largeur fixe** (`2025-06-20T08:00:00.000Z`) : l'ordre lexical correspond à l'ordre chronologique, et le plugin SQLite les interprète nativement comme du temps (`timeColumns`).
+
 ### Table `banks`
 
 | Colonne  | Type   | Description              |
 |---------|--------|--------------------------|
-| player  | UUID   | UUID joueur (clé)        |
+| player  | TEXT   | UUID joueur (clé)        |
 | username| TEXT   | Nom d'affichage joueur   |
-| time    | DATE   | Jour serveur             |
+| time    | TEXT   | Horodatage ISO-8601 UTC  |
 | money   | INT    | Solde bancaire           |
 
 ### Table `sct_transaction`
 
 | Colonne  | Type   | Description                              |
 |---------|--------|------------------------------------------|
-| hour    | BIGINT | Bucket horaire (`epoch_ms / 3_600_000`)  |
-| player  | UUID   | UUID joueur (clé)                        |
+| time    | TEXT   | Horodatage ISO-8601 UTC (clé)            |
+| player  | TEXT   | UUID joueur (clé)                        |
 | username| TEXT   | Nom d'affichage joueur                   |
-| item    | TEXT   | ID item (`minecraft:diamond`, etc.)      |
+| item    | TEXT   | ID item (`minecraft:diamond`, etc.) (clé)|
 | amount  | INT    | Quantité vendue                          |
 | money   | INT    | Valeur × 1000 (diviser par 1000 en SQL)  |
 
@@ -133,16 +135,12 @@ Règle provisionnée **« Joueur avec solde anormal »** : déclenchée si le so
 docker compose down
 ```
 
-Pour supprimer aussi les données PostgreSQL :
-
-```powershell
-docker compose down -v
-```
-
 ## Notes techniques
 
-- Source de données : plugin PostgreSQL natif de Grafana (pas de plugin tiers)
-- Les noms joueurs sont affichés via la colonne `username` (l'UUID reste la clé primaire)
+- Source de données : plugin [`frser-sqlite-datasource`](https://grafana.com/grafana/plugins/frser-sqlite-datasource/) (installé au démarrage via `GF_INSTALL_PLUGINS`)
+- Requêtes : champ `queryText` + `timeColumns` (au lieu de `rawSql` PostgreSQL)
+- Troncature horaire en SQLite : `substr(time, 1, 13) || ':00:00.000Z'` (remplace `date_trunc('hour', …)`)
 - Les montants SCT sont convertis avec `money / 1000.0`
-- Les dates `banks.time` : `(time::timestamp AT TIME ZONE 'UTC')`
-- Les buckets horaires SCT : `to_timestamp(hour * 3600) AT TIME ZONE 'UTC'`
+- Les UUID joueurs sont stockés en texte ; `username` sert à l'affichage
+- Grafana lit `stonkstime-export.db` (copie non-WAL exportée par le mod via `VACUUM INTO`), pas la base live WAL — voir l'encadré en haut du fichier
+- Le fichier et le point de montage évitent volontairement le terme `grafana.db` et le dossier `/var/lib/grafana` : le plugin refuse tout chemin contenant un terme de sa `block_list` (défaut `grafana.db`), sinon les requêtes échouent avec `path contains blocked term`

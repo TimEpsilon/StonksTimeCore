@@ -16,7 +16,9 @@ groups:
               to: 0
             datasourceUid: stonkstime
             model:
-              rawSql: |
+              queryType: table
+              timeColumns: []
+              rawQueryText: &wealthyPlayerSql |
                 WITH latest AS (
                   SELECT player, money
                   FROM banks
@@ -30,11 +32,11 @@ groups:
                 )
                 SELECT max_money * 1.0 / NULLIF(avg_money, 0) AS ratio
                 FROM stats
-              format: table
+              queryText: *wealthyPlayerSql
               intervalMs: 1000
               maxDataPoints: 43200
               datasource:
-                type: grafana-postgresql-datasource
+                type: frser-sqlite-datasource
                 uid: stonkstime
           - refId: B
             datasourceUid: __expr__
