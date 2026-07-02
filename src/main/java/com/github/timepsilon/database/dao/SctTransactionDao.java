@@ -2,7 +2,7 @@ package com.github.timepsilon.database.dao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.github.timepsilon.database.PostgresHelper;
+import com.github.timepsilon.database.SqliteHelper;
 import com.github.timepsilon.database.entity.SctTransactionEntry;
 import com.github.timepsilon.database.pending.PendingWriteQueue;
 import com.github.timepsilon.database.pending.PendingWritesStore;
@@ -21,35 +21,14 @@ public class SctTransactionDao {
 
     private static final String CREATE_TABLE = """
             CREATE TABLE IF NOT EXISTS sct_transaction (
-                time TIMESTAMPTZ(3) NOT NULL,
-                player UUID NOT NULL,
+                time TEXT NOT NULL,
+                player TEXT NOT NULL,
                 username TEXT NOT NULL,
                 item TEXT NOT NULL,
                 amount INTEGER NOT NULL,
                 money INTEGER NOT NULL,
                 PRIMARY KEY (time, player, item)
             )
-            """;
-
-    private static final String MIGRATE_USERNAME = """
-            ALTER TABLE sct_transaction ADD COLUMN IF NOT EXISTS username TEXT NOT NULL DEFAULT 'unknown'
-            """;
-
-    private static final String MIGRATE_TIMESTAMP = """
-            DO $$
-            BEGIN
-                IF EXISTS (
-                    SELECT 1 FROM information_schema.columns
-                    WHERE table_schema = current_schema()
-                      AND table_name = 'sct_transaction'
-                      AND column_name = 'hour'
-                ) THEN
-                    ALTER TABLE sct_transaction RENAME COLUMN hour TO time;
-                    ALTER TABLE sct_transaction
-                        ALTER COLUMN time TYPE TIMESTAMPTZ(3)
-                        USING to_timestamp(time * 3600) AT TIME ZONE 'UTC';
-                END IF;
-            END $$
             """;
 
     private static final String UPSERT = """
@@ -67,7 +46,7 @@ public class SctTransactionDao {
 
     private @Nullable Connection connection;
     private @Nullable PreparedStatement upsertStatement;
-    private @Nullable BankDao.ConnectionSupplier connectionSupplier = PostgresHelper::open;
+    private @Nullable BankDao.ConnectionSupplier connectionSupplier;
 
     public void connect() {
         connect(connectionSupplier);
@@ -78,7 +57,7 @@ public class SctTransactionDao {
         try {
             if (connection != null && !connection.isClosed()) return;
             connection = supplier.get();
-            LOGGER.debug("Connected to PostgreSQL (table={}).", SctTransactionEntry.TABLE_NAME);
+            LOGGER.debug("Connected to SQLite (table={}).", SctTransactionEntry.TABLE_NAME);
             createTable();
             tryFlushPending();
         } catch (SQLException e) {
@@ -91,8 +70,6 @@ public class SctTransactionDao {
         if (connection == null) return;
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(CREATE_TABLE);
-            stmt.execute(MIGRATE_USERNAME);
-            stmt.execute(MIGRATE_TIMESTAMP);
             upsertStatement = connection.prepareStatement(UPSERT);
         } catch (Exception e) {
             LOGGER.error("Error creating SCT transaction table.", e);
@@ -194,9 +171,9 @@ public class SctTransactionDao {
             return true;
         } catch (SQLException e) {
             LOGGER.error("Failed to send transactions to database!", e);
-            if (PostgresHelper.isConnectionError(e)) {
+            if (SqliteHelper.isConnectionError(e)) {
                 LOGGER.warn(
-                        "PostgreSQL connection lost (table={}), will retry pending writes.",
+                        "SQLite connection lost (table={}), will retry pending writes.",
                         SctTransactionEntry.TABLE_NAME
                 );
             }
@@ -214,7 +191,7 @@ public class SctTransactionDao {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
                 connection = null;
-                LOGGER.debug("Disconnected from PostgreSQL (table={}).", SctTransactionEntry.TABLE_NAME);
+                LOGGER.debug("Disconnected from SQLite (table={}).", SctTransactionEntry.TABLE_NAME);
             }
         } catch (SQLException e) {
             LOGGER.error("Error closing SCT transaction database!", e);

@@ -1,7 +1,7 @@
 package com.github.timepsilon.database.dao;
 
 import com.github.timepsilon.Core;
-import com.github.timepsilon.database.PostgresHelper;
+import com.github.timepsilon.database.SqliteHelper;
 import com.github.timepsilon.database.entity.BalanceHistoryPoint;
 import com.github.timepsilon.database.entity.BankEntry;
 import com.github.timepsilon.database.pending.PendingWriteQueue;
@@ -13,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,33 +22,12 @@ public class BankDao {
 
     private static final String CREATE_TABLE = """
             CREATE TABLE IF NOT EXISTS banks (
-                player UUID NOT NULL,
+                player TEXT NOT NULL,
                 username TEXT NOT NULL,
-                time TIMESTAMPTZ(3) NOT NULL,
+                time TEXT NOT NULL,
                 money INTEGER NOT NULL,
                 PRIMARY KEY (player, time)
             )
-            """;
-
-    private static final String MIGRATE_USERNAME = """
-            ALTER TABLE banks ADD COLUMN IF NOT EXISTS username TEXT NOT NULL DEFAULT 'unknown'
-            """;
-
-    private static final String MIGRATE_TIMESTAMP = """
-            DO $$
-            BEGIN
-                IF EXISTS (
-                    SELECT 1 FROM information_schema.columns
-                    WHERE table_schema = current_schema()
-                      AND table_name = 'banks'
-                      AND column_name = 'time'
-                      AND data_type = 'date'
-                ) THEN
-                    ALTER TABLE banks
-                        ALTER COLUMN time TYPE TIMESTAMPTZ(3)
-                        USING (time::timestamp AT TIME ZONE 'UTC');
-                END IF;
-            END $$
             """;
 
     private static final String UPSERT = """
@@ -74,7 +52,7 @@ public class BankDao {
 
     private @Nullable Connection connection;
     private @Nullable PreparedStatement upsertStatement;
-    private @Nullable ConnectionSupplier connectionSupplier = PostgresHelper::open;
+    private @Nullable ConnectionSupplier connectionSupplier;
 
     public void connect() {
         connect(connectionSupplier);
@@ -85,7 +63,7 @@ public class BankDao {
         try {
             if (connection != null && !connection.isClosed()) return;
             connection = supplier.get();
-            Core.LOGGER.debug("Connected to PostgreSQL (table={}).", BankEntry.TABLE_NAME);
+            Core.LOGGER.debug("Connected to SQLite (table={}).", BankEntry.TABLE_NAME);
             createTable();
             tryFlushPending();
         } catch (SQLException e) {
@@ -98,8 +76,6 @@ public class BankDao {
         if (connection == null) return;
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(CREATE_TABLE);
-            stmt.execute(MIGRATE_USERNAME);
-            stmt.execute(MIGRATE_TIMESTAMP);
             upsertStatement = connection.prepareStatement(UPSERT);
         } catch (Exception e) {
             Core.LOGGER.error("Error creating bank accounts table", e);
@@ -137,14 +113,14 @@ public class BankDao {
             return List.of();
         }
         try (PreparedStatement statement = connection.prepareStatement(FETCH_HISTORY)) {
-            statement.setTimestamp(1, Timestamp.from(since));
+            statement.setString(1, SqliteHelper.toIso(since));
             statement.setInt(2, limit);
             try (ResultSet resultSet = statement.executeQuery()) {
                 List<BalanceHistoryPoint> points = new ArrayList<>();
                 while (resultSet.next()) {
                     points.add(new BalanceHistoryPoint(
                             resultSet.getString("username"),
-                            resultSet.getTimestamp("time").toInstant(),
+                            Instant.parse(resultSet.getString("time")),
                             resultSet.getInt("money")
                     ));
                 }
@@ -152,7 +128,7 @@ public class BankDao {
             }
         } catch (SQLException e) {
             Core.LOGGER.error("Failed to fetch bank balance history", e);
-            if (PostgresHelper.isConnectionError(e)) {
+            if (SqliteHelper.isConnectionError(e)) {
                 disconnect();
             }
             return List.of();
@@ -231,8 +207,8 @@ public class BankDao {
             return true;
         } catch (SQLException e) {
             Core.LOGGER.error("Couldn't update banks database: ", e);
-            if (PostgresHelper.isConnectionError(e)) {
-                Core.LOGGER.warn("PostgreSQL connection lost (table={}), will retry pending writes.", BankEntry.TABLE_NAME);
+            if (SqliteHelper.isConnectionError(e)) {
+                Core.LOGGER.warn("SQLite connection lost (table={}), will retry pending writes.", BankEntry.TABLE_NAME);
             }
             disconnect();
             return false;
@@ -248,7 +224,7 @@ public class BankDao {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
                 connection = null;
-                Core.LOGGER.debug("Disconnected from PostgreSQL (table={}).", BankEntry.TABLE_NAME);
+                Core.LOGGER.debug("Disconnected from SQLite (table={}).", BankEntry.TABLE_NAME);
             }
         } catch (SQLException e) {
             Core.LOGGER.error("Error closing bank accounts database!", e);

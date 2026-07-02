@@ -11,6 +11,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 import javax.annotation.Nullable;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,8 @@ public class MoneyDatabase {
     public void load(MinecraftServer server) {
         if (!SqlStatsGate.isEnabled()) return;
         this.server = server;
-        dao.connect();
+        Path databaseFile = SqliteHelper.databaseFile(server);
+        dao.connect(() -> SqliteHelper.open(databaseFile));
         dao.tryFlushPending();
     }
 
