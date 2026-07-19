@@ -1,6 +1,9 @@
 package com.github.timepsilon.datamaps;
 
 import com.github.timepsilon.Core;
+import com.github.timepsilon.config.STCConfigServer;
+import com.github.timepsilon.database.SCTTransactionDatabase;
+import com.github.timepsilon.utils.SCTMathUtils;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
@@ -10,6 +13,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @EventBusSubscriber(modid = Core.MODID)
 public class SCTManager {
@@ -28,8 +32,21 @@ public class SCTManager {
         return map;
     }
 
+    private static void updateSCTMap() {
+        Map<String, Integer> sold = SCTTransactionDatabase.getDatabase()
+                .getAmountsSoldByItem(STCConfigServer.CONFIG.SCT_REDUCTION_TIME.getAsInt());
+
+        for (Item item : SCT_MAPS.keySet()) {
+            if (sold.containsKey(item.toString())) {
+                float newValue = SCTMathUtils.currentPrice(SCT_MAPS.get(item), sold.get(item.toString()));
+                SCT_MAPS.put(item, newValue);
+            }
+        }
+    }
+
     @SubscribeEvent
     public static void onDataReload(OnDatapackSyncEvent event) {
         SCT_MAPS = getSCTHashMap(event.getPlayerList().getServer().registryAccess());
+        updateSCTMap();
     }
 }

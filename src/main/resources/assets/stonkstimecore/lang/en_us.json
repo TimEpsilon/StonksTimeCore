@@ -87,6 +87,9 @@
   "config.stonkstimecore.deathLoss" : "deathLoss",
   "config.stonkstimecore.goldenTicketProbability" : "goldenTicketProbability",
   "config.stonkstimecore.goldenTicketAdditionalProbability" : "goldenTicketAdditionalProbability",
+  "config.stonkstimecore.SCTReductionLimitProportion" : "SCTReductionLimitProportion",
+  "config.stonkstimecore.SCTReductionCharacteristicAmount" : "SCTReductionCharacteristicAmount",
+  "config.stonkstimecore.SCTReductionTime" : "SCTReductionTime",
 
   "config.stonkstimecore.sre" : "Stonks Random Events",
   "config.stonkstimecore.sre.gainAmount" : "gainAmount",

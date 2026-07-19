@@ -16,6 +16,10 @@ public class STCConfigServer {
     public final ModConfigSpec.IntValue DT_FOR_LOSE_1HP;
     public final ModConfigSpec.IntValue MAX_HP;
     public final ModConfigSpec.IntValue MIN_HP;
+    public final ModConfigSpec.IntValue SCT_REDUCTION_CHARACTERISTIC_AMOUNT;
+    public final ModConfigSpec.DoubleValue SCT_REDUCTION_LIMIT_PROPORTION;
+    public final ModConfigSpec.IntValue SCT_REDUCTION_TIME;
+
     public final ModConfigSpec.DoubleValue DEATH_LOSS;
     public final ModConfigSpec.DoubleValue SRE_GAIN_AMOUNT;
     public final ModConfigSpec.DoubleValue SRE_GAIN_ERROR;
@@ -88,6 +92,18 @@ public class STCConfigServer {
                 .comment("Fraction of money that should be lost on player death.")
                 .translation("config.stonkstimecore.deathLoss")
                 .defineInRange("deathLoss",0.1, 0, 1);
+        SCT_REDUCTION_CHARACTERISTIC_AMOUNT = builder
+                .comment("For an item with a default SCT of 1, how many items should be sold before losing 50% of the price compared to the minimum?")
+                .translation("config.stonkstimecore.SCTReductionCharacteristicAmount")
+                .defineInRange("SCTReductionCharacteristicAmount", 2000, 1, Integer.MAX_VALUE);
+        SCT_REDUCTION_LIMIT_PROPORTION = builder
+                .comment("For an item with price P, how low can its value fall, as a fraction of P. A value of 0.1 means that the item will not fall lower than 10% of P.")
+                .translation("config.stonkstimecore.SCTReductionLimitProportion")
+                .defineInRange("SCTReductionLimitProportion", 0.1f, 0, 1);
+        SCT_REDUCTION_TIME = builder
+                .comment("How many hours should a transaction count towards decreasing an item's price?")
+                .translation("config.stonkstimecore.SCTReductionTime")
+                .defineInRange("SCTReductionTime", 72, 1, 720);
 
         builder.pop();
         builder.translation("config.stonkstimecore.sre").push("SRE");
