@@ -46,7 +46,7 @@ public class NeoForgeEventsManager {
             } else {
                 event.getToolTip()
                         .add(Component.literal("SCT : ")
-                                .append(Float.toString(sct))
+                                .append(Float.toString(Math.round(sct*1000)/1000f))
                                 .withStyle(Style.EMPTY.withColor(COLOR.getRGB()))
                                 .append(Component.literal(" (" + TimeUtils.SCTToTime(sct) + ")").withStyle(Style.EMPTY.withColor(COLOR_TIME.getRGB()))));
             }
