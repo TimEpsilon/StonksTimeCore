@@ -12,13 +12,16 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 @EventBusSubscriber(modid = Core.MODID)
 public class SCTManager {
 
-    public static HashMap<Item, Float> SCT_MAPS = new HashMap<>();
+    public static HashMap<Item, Float> SCT_MAP = new HashMap<>();
+    public static HashMap<Item, Float> TRUE_SCT_MAP = new HashMap<>();
+    public static HashMap<Item, Integer> AMOUNT_MAP = new HashMap<>();
 
     private static HashMap<Item,Float> getSCTHashMap(RegistryAccess registry) {
         HashMap<Item,Float> map = new HashMap<>();
@@ -32,21 +35,36 @@ public class SCTManager {
         return map;
     }
 
-    private static void updateSCTMap() {
+    public static void updateSCTMap() {
         Map<String, Integer> sold = SCTTransactionDatabase.getDatabase()
                 .getAmountsSoldByItem(STCConfigServer.CONFIG.SCT_REDUCTION_TIME.getAsInt());
 
-        for (Item item : SCT_MAPS.keySet()) {
+        for (Item item : SCT_MAP.keySet()) {
             if (sold.containsKey(item.toString())) {
-                float newValue = SCTMathUtils.currentPrice(SCT_MAPS.get(item), sold.get(item.toString()));
-                SCT_MAPS.put(item, newValue);
+                float newValue = SCTMathUtils.currentPrice(SCT_MAP.get(item), sold.get(item.toString()));
+                SCT_MAP.put(item, newValue);
+                AMOUNT_MAP.put(item, sold.get(item.toString()));
+            }
+        }
+    }
+
+    public static void updateSCTMap(Collection<Item> items) {
+        Map<String, Integer> sold = SCTTransactionDatabase.getDatabase()
+                .getAmountsSoldForItems(items.stream().map(Item::toString).toList(), STCConfigServer.CONFIG.SCT_REDUCTION_TIME.getAsInt());
+
+        for (Item item : items) {
+            if (sold.containsKey(item.toString()) && SCT_MAP.containsKey(item)) {
+                float newValue = SCTMathUtils.currentPrice(SCT_MAP.get(item), sold.get(item.toString()));
+                SCT_MAP.put(item, newValue);
+                AMOUNT_MAP.put(item, sold.get(item.toString()));
             }
         }
     }
 
     @SubscribeEvent
     public static void onDataReload(OnDatapackSyncEvent event) {
-        SCT_MAPS = getSCTHashMap(event.getPlayerList().getServer().registryAccess());
+        SCT_MAP = getSCTHashMap(event.getPlayerList().getServer().registryAccess());
+        TRUE_SCT_MAP = new HashMap<>(SCT_MAP);
         updateSCTMap();
     }
 }

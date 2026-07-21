@@ -4,10 +4,9 @@ import com.github.timepsilon.client.gui.StonksTemporalChronoscopeMenu;
 import com.github.timepsilon.client.gui.inventory.StonksTemporalChronoscopeInventory;
 import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.database.SCTTransactionDatabase;
-import com.github.timepsilon.datamaps.DataMaps;
 import com.github.timepsilon.datamaps.SCTManager;
-import com.github.timepsilon.datamaps.SCTMap;
 import com.github.timepsilon.items.ModItems;
+import com.github.timepsilon.utils.SCTMathUtils;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.sound.SoundScapes;
@@ -28,7 +27,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -36,6 +34,7 @@ import net.p3pp3rf1y.sophisticatedcore.init.ModCoreDataComponents;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.github.timepsilon.attributes.ModAttributes.SCT_FACTOR;
 
@@ -134,24 +133,35 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
             return;
         }
 
-        List<ItemStack> itemStacks = inventory.getItemStacks();
+        List<ItemStack> itemStacks = inventory.getItemStacks().stream().filter(itemStack -> !itemStack.isEmpty()).toList();
 
+        // reloads only these items
+        SCTManager.updateSCTMap(itemStacks.stream().map(ItemStack::getItem).collect(Collectors.toList()));
+
+        // Factor for SCT Conversion
         AttributeInstance SCTAttribute = player.getAttribute(SCT_FACTOR);
         float factor = (SCTAttribute == null) ? 1 : (float) SCTAttribute.getValue();
         HashMap<Item, Integer> amountMap = new HashMap<>();
         HashMap<Item, Float> moneyMap = new HashMap<>();
 
         for (ItemStack itemStack : itemStacks) {
-            if  (itemStack.getItem() == Items.AIR) continue;
 
             // Handles vanilla containers
             if (itemStack.getComponents().has(DataComponents.CONTAINER)) {
                 boolean isEmpty = true;
-                for (ItemStack subItem : itemStack.getComponents().get(DataComponents.CONTAINER).nonEmptyItems()) {
 
+                Collection<ItemStack> subItems = itemStack.getComponents().get(DataComponents.CONTAINER)
+                        .stream().filter(istack -> !istack.isEmpty())
+                        .toList();
+
+                // reloads subitems
+                SCTManager.updateSCTMap(subItems.stream().map(ItemStack::getItem).collect(Collectors.toList()));
+
+                for (ItemStack subItem : subItems) {
                     if (itemCheck(subItem)) {
-                        int tmpAmount = subItem.getCount();
+                        // Convert to money
                         Item item = subItem.getItem();
+                        int tmpAmount = subItem.getCount();
                         float tmpMoney = destroyAndConvert(subItem) * factor;
 
                         if (tmpMoney == 0 ) continue;
@@ -167,9 +177,10 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
 
             if (itemCheck(itemStack)) {
                 // Convert to money
-                int tmpAmount = itemStack.getCount();
                 Item item = itemStack.getItem();
+                int tmpAmount = itemStack.getCount();
                 float tmpMoney = destroyAndConvert(itemStack) * factor;
+                // TODO : SCT_MAP value is not the right one on execution
 
                 if (tmpMoney == 0 ) continue;
 
@@ -215,7 +226,7 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
         float SCTMax = 21600; // 6h, any amount above will cap the additional probability
 
         for (Map.Entry<Item, Integer> entry : amountMap.entrySet()) {
-            float x = SCTManager.SCT_MAPS.getOrDefault(entry.getKey(),0f) / SCTMax;
+            float x = SCTManager.SCT_MAP.getOrDefault(entry.getKey(),0f) / SCTMax;
             double p = STCConfigServer.CONFIG.SCT_GOLDEN_TICKET_PROBABILITY.get()
                     + STCConfigServer.CONFIG.SCT_GOLDEN_TICKET_ADDITIONAL_PROBABILITY.get()
                     * Math.clamp(1-Math.pow(1-x,3), 0, 1); // Cubic ease out
@@ -232,25 +243,41 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
     }
 
     private float destroyAndConvert(ItemStack itemStack) {
-        Float sct = SCTManager.SCT_MAPS.get(itemStack.getItem());
+        Float sct = SCTManager.TRUE_SCT_MAP.get(itemStack.getItem());
         int n = itemStack.getCount();
         if (sct != null) { // Removes the item if it has a SCT value and add it to total
-            float amount = 0;
-            if (sct < 0) {
-                while (n > 0) {
-                    amount += Math.clamp(
-                            (float) SCTManager.SCT_MAPS.values().toArray()[this.getLevel().getRandom().nextInt(SCTManager.SCT_MAPS.size())],
-                            0 , 21600);
-                    n -= 1;
-                }
+            float amount;
+            if (sct > 0) {
+                amount = computeReducingAmount(itemStack.getItem(), n);
+                // Updating price
+                SCTManager.SCT_MAP.put(itemStack.getItem(),
+                        SCTMathUtils.currentPrice(
+                                SCTManager.TRUE_SCT_MAP.get(itemStack.getItem()),
+                                SCTManager.AMOUNT_MAP.get(itemStack.getItem()) + n));
             } else {
-                amount = sct * n;
+                amount = computeRandomAmount(n);
             }
-
             itemStack.setCount(0);
             return amount;
         }
         return 0;
+    }
+
+    private float computeRandomAmount(int n) {
+        float amount = 0;
+        while (n > 0) {
+            amount += Math.clamp(
+                    (float) SCTManager.SCT_MAP.values().toArray()[this.getLevel().getRandom().nextInt(SCTManager.SCT_MAP.size())],
+                    0 , 21600);
+            n -= 1;
+        }
+        return amount;
+    }
+
+    private float computeReducingAmount(Item item, int n) {
+        int currentN = SCTManager.AMOUNT_MAP.getOrDefault(item,0);
+        float realPrice = SCTManager.TRUE_SCT_MAP.get(item);
+        return SCTMathUtils.effectivePrice(realPrice, currentN, currentN+n);
     }
 
 

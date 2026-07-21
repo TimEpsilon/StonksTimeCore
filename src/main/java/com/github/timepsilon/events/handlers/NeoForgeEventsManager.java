@@ -8,9 +8,7 @@ import com.github.timepsilon.database.GrafanaSnapshotScheduler;
 import com.github.timepsilon.database.MoneyDatabase;
 import com.github.timepsilon.database.SCTTransactionDatabase;
 import com.github.timepsilon.database.pending.PendingWritesStore;
-import com.github.timepsilon.datamaps.DataMaps;
 import com.github.timepsilon.datamaps.SCTManager;
-import com.github.timepsilon.datamaps.SCTMap;
 import com.github.timepsilon.utils.TimeUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -34,7 +32,7 @@ public class NeoForgeEventsManager {
     @SubscribeEvent
     public static void onTooltip(ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
-        Float sct = SCTManager.SCT_MAPS.get(stack.getItem());
+        Float sct = SCTManager.SCT_MAP.get(stack.getItem());
         if (sct != null) {
             if (sct < 0) {
                 event.getToolTip()

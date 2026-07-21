@@ -35,6 +35,7 @@ public class SCTMathUtils {
                 / (1 - r) ));
     }
 
+    @Deprecated
     public static float summingEffectivePrice(float P, int n0, int n1) {
         float S = 0;
         for (int i = n0; i < n1; i++) {

@@ -63,6 +63,13 @@ public class SctTransactionDao {
             ORDER BY total DESC
             """;
 
+    private static final String SUM_AMOUNT_FOR_ITEMS_SINCE = """
+            SELECT item, COALESCE(SUM(amount), 0) AS total
+            FROM sct_transaction
+            WHERE time >= ? AND item IN (%s)
+            GROUP BY item
+            """;
+
     private final PendingWriteQueue<SctTransactionEntry> pending = PendingWritesStore.get().sctTransactions();
 
     private @Nullable Connection connection;
@@ -121,6 +128,49 @@ public class SctTransactionDao {
                 disconnect();
             }
             return 0;
+        }
+    }
+
+    /**
+     * Returns the total {@code amount} sold for each of the given {@code itemIds} over the last
+     * {@code hours} hours, keyed by the stored item id. Every requested item id is present in the
+     * result map, defaulting to 0 if it had no sales (or on error/no connection).
+     * <p>
+     * Returns a map of all-zero values when there is no connection or {@code hours <= 0}. Call from
+     * the server thread.
+     */
+    public Map<String, Integer> sumAmountForItemsSince(Collection<String> itemIds, int hours) {
+        Map<String, Integer> totals = new LinkedHashMap<>();
+        for (String itemId : itemIds) {
+            totals.put(itemId, 0);
+        }
+        if (itemIds.isEmpty() || hours <= 0) return totals;
+
+        ensureConnected();
+        if (connection == null) return totals;
+
+        Instant since = TimeCore.getCurrentInstant().minus(Duration.ofHours(hours));
+        String placeholders = String.join(",", java.util.Collections.nCopies(itemIds.size(), "?"));
+        String sql = SUM_AMOUNT_FOR_ITEMS_SINCE.formatted(placeholders);
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, SqliteHelper.toIso(since));
+            int index = 2;
+            for (String itemId : itemIds) {
+                statement.setString(index++, itemId);
+            }
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    totals.put(resultSet.getString("item"), resultSet.getInt("total"));
+                }
+            }
+            return totals;
+        } catch (SQLException e) {
+            LOGGER.error("Failed to sum SCT amounts for items", e);
+            if (SqliteHelper.isConnectionError(e)) {
+                disconnect();
+            }
+            return totals;
         }
     }
 

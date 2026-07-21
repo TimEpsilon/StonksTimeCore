@@ -9,6 +9,7 @@ import net.minecraft.world.item.Item;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -59,6 +60,11 @@ public class SCTTransactionDatabase {
     public int getAmountSoldForItem(Item item, int hours) {
         if (!SqlStatsGate.isEnabled()) return 0;
         return dao.sumAmountForItemSince(item.toString(), hours);
+    }
+
+    public Map<String, Integer> getAmountsSoldForItems(Collection<String> items, int hours) {
+        if (!SqlStatsGate.isEnabled()) return Map.of();
+        return dao.sumAmountForItemsSince(items, hours);
     }
 
     /**
