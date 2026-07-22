@@ -20,7 +20,6 @@ import java.util.Map;
 public class SCTManager {
 
     public static HashMap<Item, Float> SCT_MAP = new HashMap<>();
-    public static HashMap<Item, Float> TRUE_SCT_MAP = new HashMap<>();
     public static HashMap<Item, Integer> AMOUNT_MAP = new HashMap<>();
 
     private static HashMap<Item,Float> getSCTHashMap(RegistryAccess registry) {
@@ -64,7 +63,6 @@ public class SCTManager {
     @SubscribeEvent
     public static void onDataReload(OnDatapackSyncEvent event) {
         SCT_MAP = getSCTHashMap(event.getPlayerList().getServer().registryAccess());
-        TRUE_SCT_MAP = new HashMap<>(SCT_MAP);
         updateSCTMap();
     }
 }

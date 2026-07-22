@@ -4,7 +4,9 @@ import com.github.timepsilon.client.gui.StonksTemporalChronoscopeMenu;
 import com.github.timepsilon.client.gui.inventory.StonksTemporalChronoscopeInventory;
 import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.database.SCTTransactionDatabase;
+import com.github.timepsilon.datamaps.DataMaps;
 import com.github.timepsilon.datamaps.SCTManager;
+import com.github.timepsilon.datamaps.SCTMap;
 import com.github.timepsilon.items.ModItems;
 import com.github.timepsilon.utils.SCTMathUtils;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -30,6 +32,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
 import net.p3pp3rf1y.sophisticatedcore.init.ModCoreDataComponents;
 import org.jetbrains.annotations.Nullable;
 
@@ -129,20 +132,32 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
     }
 
     public void computeSCTAmount(Player player) {
-        if (!isActive()) {
-            return;
-        }
+        if (!isActive()) return;
 
+        // Init
         List<ItemStack> itemStacks = inventory.getItemStacks().stream().filter(itemStack -> !itemStack.isEmpty()).toList();
-
-        // reloads only these items
-        SCTManager.updateSCTMap(itemStacks.stream().map(ItemStack::getItem).collect(Collectors.toList()));
+        HashMap<Item, Integer> amountMap = new HashMap<>();
+        HashMap<Item, Float> moneyMap = new HashMap<>();
 
         // Factor for SCT Conversion
         AttributeInstance SCTAttribute = player.getAttribute(SCT_FACTOR);
         float factor = (SCTAttribute == null) ? 1 : (float) SCTAttribute.getValue();
-        HashMap<Item, Integer> amountMap = new HashMap<>();
-        HashMap<Item, Float> moneyMap = new HashMap<>();
+
+        // Convert to SCT values
+        handleItemsToMoney(itemStacks, factor, moneyMap, amountMap);
+
+        // Generate golden tickets
+        awardGoldenTicket(amountMap);
+
+        // Log interaction
+        SCTTransactionDatabase.getDatabase().sendTransactions((ServerPlayer) player, amountMap, moneyMap);
+
+        notifyUpdate();
+    }
+
+    private void handleItemsToMoney(Collection<ItemStack> itemStacks, float factor, HashMap<Item, Float> moneyMap, HashMap<Item, Integer> amountMap) {
+        // reloads only these items
+        SCTManager.updateSCTMap(itemStacks.stream().map(ItemStack::getItem).collect(Collectors.toList()));
 
         for (ItemStack itemStack : itemStacks) {
 
@@ -151,58 +166,37 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
                 boolean isEmpty = true;
 
                 Collection<ItemStack> subItems = itemStack.getComponents().get(DataComponents.CONTAINER)
-                        .stream().filter(istack -> !istack.isEmpty())
-                        .toList();
+                        .stream().filter(istack -> !istack.isEmpty()).toList();
 
                 // reloads subitems
                 SCTManager.updateSCTMap(subItems.stream().map(ItemStack::getItem).collect(Collectors.toList()));
 
                 for (ItemStack subItem : subItems) {
-                    if (itemCheck(subItem)) {
-                        // Convert to money
-                        Item item = subItem.getItem();
-                        int tmpAmount = subItem.getCount();
-                        float tmpMoney = destroyAndConvert(subItem) * factor;
-
-                        if (tmpMoney == 0 ) continue;
-
-                        amountMap.compute(item, (k,v) -> v == null ? tmpAmount : v + tmpAmount);
-                        moneyMap.compute(item, (k,v) -> v == null ? tmpMoney : v + tmpMoney);
+                    if (itemCheck(itemStack)) {
+                        accumulateConversion(subItem, factor, moneyMap, amountMap);
+                        isEmpty = false;
                     }
-
-                    isEmpty = false;
                 }
                 if (!isEmpty) continue;
             }
 
-            if (itemCheck(itemStack)) {
-                // Convert to money
-                Item item = itemStack.getItem();
-                int tmpAmount = itemStack.getCount();
-                float tmpMoney = destroyAndConvert(itemStack) * factor;
-                // TODO : SCT_MAP value is not the right one on execution
-
-                if (tmpMoney == 0 ) continue;
-
-                amountMap.compute(item, (k,v) -> v == null ? tmpAmount : v + tmpAmount);
-                moneyMap.compute(item, (k,v) -> v == null ? tmpMoney : v + tmpMoney);
-            }
-
+            if (itemCheck(itemStack)) accumulateConversion(itemStack, factor, moneyMap, amountMap);
         }
+
         float fullAmount = moneyMap.values().stream().reduce(0.0f, Float::sum);
         coinBag.add(Coin.SPUR, (int) fullAmount);
+    }
 
-        // Generate golden tickets
-        int amountGoldenTicket = amountOfGoldenTickets(player, amountMap);
-        while (amountGoldenTicket > 0) {
-            inventory.insertItem((int)(Math.random() * inventory.getSlots()), new ItemStack(ModItems.GOLDEN_TICKET.get(), 1), false);
-            amountGoldenTicket -= 1;
-        }
+    private void accumulateConversion(ItemStack itemStack, float factor, Map<Item, Float> moneyMap, Map<Item, Integer> amountMap) {
+        // Convert to money
+        Item item = itemStack.getItem();
+        int tmpAmount = itemStack.getCount();
+        float tmpMoney = destroyAndConvert(itemStack) * factor;
 
-        // Log interaction
-        SCTTransactionDatabase.getDatabase().sendTransactions((ServerPlayer) player, amountMap, moneyMap);
+        if (tmpMoney == 0) return;
 
-        notifyUpdate();
+        amountMap.merge(item, tmpAmount, Integer::sum);
+        moneyMap.merge(item, tmpMoney, Float::sum);
     }
 
     private boolean itemCheck(ItemStack itemStack) {
@@ -221,7 +215,15 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
         return true;
     }
 
-    private int amountOfGoldenTickets(Player player, HashMap<Item, Integer> amountMap) {
+    private void awardGoldenTicket(HashMap<Item, Integer> amountMap) {
+        int amountGoldenTicket = amountOfGoldenTickets(amountMap);
+        while (amountGoldenTicket > 0) {
+            inventory.insertItem((int)(level.getRandom().nextFloat() * inventory.getSlots()), new ItemStack(ModItems.GOLDEN_TICKET.get(), 1), false);
+            amountGoldenTicket -= 1;
+        }
+    }
+
+    private int amountOfGoldenTickets(HashMap<Item, Integer> amountMap) {
         int amount = 0;
         float SCTMax = 21600; // 6h, any amount above will cap the additional probability
 
@@ -233,7 +235,7 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
             int n = entry.getValue();
 
             while (n > 0) {
-                if (player.getRandom().nextFloat() < p) {
+                if (level.getRandom().nextFloat() < p) {
                     amount += 1;
                 }
                 n -= 1;
@@ -243,16 +245,16 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
     }
 
     private float destroyAndConvert(ItemStack itemStack) {
-        Float sct = SCTManager.TRUE_SCT_MAP.get(itemStack.getItem());
+        SCTMap sct = itemStack.getItemHolder().getData(DataMaps.SCT_MAP);
         int n = itemStack.getCount();
         if (sct != null) { // Removes the item if it has a SCT value and add it to total
             float amount;
-            if (sct > 0) {
-                amount = computeReducingAmount(itemStack.getItem(), n);
+            if (sct.SCT() > 0) {
+                amount = computeReducingAmount(itemStack.getItem(), sct.SCT(), n);
                 // Updating price
                 SCTManager.SCT_MAP.put(itemStack.getItem(),
                         SCTMathUtils.currentPrice(
-                                SCTManager.TRUE_SCT_MAP.get(itemStack.getItem()),
+                                sct.SCT(),
                                 SCTManager.AMOUNT_MAP.get(itemStack.getItem()) + n));
             } else {
                 amount = computeRandomAmount(n);
@@ -265,18 +267,18 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
 
     private float computeRandomAmount(int n) {
         float amount = 0;
+        List<Float> sctValues = SCTManager.SCT_MAP.values().stream().toList();
         while (n > 0) {
             amount += Math.clamp(
-                    (float) SCTManager.SCT_MAP.values().toArray()[this.getLevel().getRandom().nextInt(SCTManager.SCT_MAP.size())],
+                    sctValues.get(level.getRandom().nextInt(sctValues.size())),
                     0 , 21600);
             n -= 1;
         }
         return amount;
     }
 
-    private float computeReducingAmount(Item item, int n) {
+    private float computeReducingAmount(Item item, float realPrice, int n) {
         int currentN = SCTManager.AMOUNT_MAP.getOrDefault(item,0);
-        float realPrice = SCTManager.TRUE_SCT_MAP.get(item);
         return SCTMathUtils.effectivePrice(realPrice, currentN, currentN+n);
     }
 
