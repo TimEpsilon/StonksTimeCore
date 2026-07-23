@@ -30,7 +30,8 @@ public final class PendingWritesStore {
                     incoming.username(),
                     existing.itemId(),
                     existing.amount() + incoming.amount(),
-                    existing.storedMoney() + incoming.storedMoney()
+                    existing.storedMoney() + incoming.storedMoney(),
+                    incoming.price()
             )
     );
 

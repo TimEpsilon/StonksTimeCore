@@ -34,19 +34,21 @@ public class SctTransactionDao {
                 item TEXT NOT NULL,
                 amount INTEGER NOT NULL,
                 money INTEGER NOT NULL,
+                price INTEGER NOT NULL,
                 PRIMARY KEY (time, player, item)
             )
             """;
 
     private static final String UPSERT = """
             INSERT INTO sct_transaction
-            (time, player, username, item, amount, money)
-            VALUES (?, ?, ?, ?, ?, ?)
+            (time, player, username, item, amount, money, price)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT (time, player, item)
             DO UPDATE SET
             amount = sct_transaction.amount + excluded.amount,
             money = sct_transaction.money + excluded.money,
-            username = excluded.username
+            username = excluded.username,
+            price = excluded.price
             """;
 
     private static final String SUM_AMOUNT_SINCE = """

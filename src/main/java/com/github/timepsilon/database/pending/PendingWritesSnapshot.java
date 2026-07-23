@@ -43,6 +43,7 @@ public final class PendingWritesSnapshot {
             String itemId,
             int amount,
             int storedMoney,
+            int price,
             Long hour
     ) {
         static SctTransactionEntryDto from(SctTransactionEntry entry) {
@@ -53,6 +54,7 @@ public final class PendingWritesSnapshot {
                     entry.itemId(),
                     entry.amount(),
                     entry.storedMoney(),
+                    entry.price(),
                     null
             );
         }
@@ -64,7 +66,8 @@ public final class PendingWritesSnapshot {
                     username,
                     itemId,
                     amount,
-                    storedMoney
+                    storedMoney,
+                    price
             );
         }
 

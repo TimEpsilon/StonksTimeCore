@@ -138,24 +138,25 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
         List<ItemStack> itemStacks = inventory.getItemStacks().stream().filter(itemStack -> !itemStack.isEmpty()).toList();
         HashMap<Item, Integer> amountMap = new HashMap<>();
         HashMap<Item, Float> moneyMap = new HashMap<>();
+        HashMap<Item, Float> priceMap = new HashMap<>();
 
         // Factor for SCT Conversion
         AttributeInstance SCTAttribute = player.getAttribute(SCT_FACTOR);
         float factor = (SCTAttribute == null) ? 1 : (float) SCTAttribute.getValue();
 
         // Convert to SCT values
-        handleItemsToMoney(itemStacks, factor, moneyMap, amountMap);
+        handleItemsToMoney(itemStacks, factor, moneyMap, amountMap, priceMap);
 
         // Generate golden tickets
         awardGoldenTicket(amountMap);
 
         // Log interaction
-        SCTTransactionDatabase.getDatabase().sendTransactions((ServerPlayer) player, amountMap, moneyMap);
+        SCTTransactionDatabase.getDatabase().sendTransactions((ServerPlayer) player, amountMap, moneyMap, priceMap);
 
         notifyUpdate();
     }
 
-    private void handleItemsToMoney(Collection<ItemStack> itemStacks, float factor, HashMap<Item, Float> moneyMap, HashMap<Item, Integer> amountMap) {
+    private void handleItemsToMoney(Collection<ItemStack> itemStacks, float factor, HashMap<Item, Float> moneyMap, HashMap<Item, Integer> amountMap, HashMap<Item, Float> priceMap) {
         // reloads only these items
         SCTManager.updateSCTMap(itemStacks.stream().map(ItemStack::getItem).collect(Collectors.toList()));
 
@@ -173,21 +174,22 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
 
                 for (ItemStack subItem : subItems) {
                     if (itemCheck(itemStack)) {
-                        accumulateConversion(subItem, factor, moneyMap, amountMap);
+                        accumulateConversion(subItem, factor, moneyMap, amountMap, priceMap);
+                        priceMap.put(itemStack.getItem(), SCTManager.SCT_MAP.get(itemStack.getItem()));
                         isEmpty = false;
                     }
                 }
                 if (!isEmpty) continue;
             }
 
-            if (itemCheck(itemStack)) accumulateConversion(itemStack, factor, moneyMap, amountMap);
+            if (itemCheck(itemStack)) accumulateConversion(itemStack, factor, moneyMap, amountMap, priceMap);
         }
 
         float fullAmount = moneyMap.values().stream().reduce(0.0f, Float::sum);
         coinBag.add(Coin.SPUR, (int) fullAmount);
     }
 
-    private void accumulateConversion(ItemStack itemStack, float factor, Map<Item, Float> moneyMap, Map<Item, Integer> amountMap) {
+    private void accumulateConversion(ItemStack itemStack, float factor, Map<Item, Float> moneyMap, Map<Item, Integer> amountMap, HashMap<Item, Float> priceMap) {
         // Convert to money
         Item item = itemStack.getItem();
         int tmpAmount = itemStack.getCount();
@@ -197,6 +199,7 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
 
         amountMap.merge(item, tmpAmount, Integer::sum);
         moneyMap.merge(item, tmpMoney, Float::sum);
+        priceMap.put(item, SCTManager.SCT_MAP.get(item));
     }
 
     private boolean itemCheck(ItemStack itemStack) {
@@ -251,11 +254,14 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
             float amount;
             if (sct.SCT() > 0) {
                 amount = computeReducingAmount(itemStack.getItem(), sct.SCT(), n);
+                // Updating amount
+                SCTManager.AMOUNT_MAP.merge(itemStack.getItem(), n, Integer::sum);
                 // Updating price
                 SCTManager.SCT_MAP.put(itemStack.getItem(),
                         SCTMathUtils.currentPrice(
                                 sct.SCT(),
-                                SCTManager.AMOUNT_MAP.get(itemStack.getItem()) + n));
+                                SCTManager.AMOUNT_MAP.get(itemStack.getItem())));
+
             } else {
                 amount = computeRandomAmount(n);
             }

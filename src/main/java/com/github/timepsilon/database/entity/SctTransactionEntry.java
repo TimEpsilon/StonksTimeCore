@@ -10,18 +10,19 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.util.UUID;
 
-public record SctTransactionEntry(Instant time, UUID player, String username, String itemId, int amount, int storedMoney) {
+public record SctTransactionEntry(Instant time, UUID player, String username, String itemId, int amount, int storedMoney, int price) {
 
     public static final String TABLE_NAME = "sct_transaction";
 
-    public static SctTransactionEntry from(ServerPlayer player, Item item, int amount, float money) {
+    public static SctTransactionEntry from(ServerPlayer player, Item item, int amount, float money, float price) {
         return new SctTransactionEntry(
                 TimeCore.getCurrentSecond(),
                 player.getUUID(),
                 player.getGameProfile().getName(),
                 item.toString(),
                 amount,
-                (int) (money * 1000)
+                (int) (money * 1000),
+                (int) (price * 1000)
         );
     }
 
@@ -32,9 +33,12 @@ public record SctTransactionEntry(Instant time, UUID player, String username, St
         statement.setString(4, itemId);
         statement.setInt(5, amount);
         statement.setInt(6, storedMoney);
+        statement.setInt(7, price);
     }
 
     public float moneyAsFloat() {
         return storedMoney / 1000.0f;
     }
+
+    public float priceAsFloat() {return price / 1000.0f;}
 }

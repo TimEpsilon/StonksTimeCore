@@ -38,7 +38,7 @@ public class SCTTransactionDatabase {
         dao.tryFlushPending();
     }
 
-    public void sendTransactions(ServerPlayer player, Map<Item, Integer> amountMap, Map<Item, Float> moneyMap) {
+    public void sendTransactions(ServerPlayer player, Map<Item, Integer> amountMap, Map<Item, Float> moneyMap, Map<Item, Float> priceMap) {
         if (!SqlStatsGate.isEnabled()) return;
         List<SctTransactionEntry> entries = new ArrayList<>();
         for (Map.Entry<Item, Integer> entry : amountMap.entrySet()) {
@@ -47,7 +47,8 @@ public class SCTTransactionDatabase {
                     player,
                     item,
                     entry.getValue(),
-                    moneyMap.getOrDefault(item, 0.0f)
+                    moneyMap.getOrDefault(item, 0.0f),
+                    priceMap.getOrDefault(item, 0.0f)
             ));
         }
         dao.upsertAll(entries);
