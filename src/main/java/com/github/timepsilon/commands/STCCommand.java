@@ -26,7 +26,7 @@ public class STCCommand {
      * /stc (equiv|timer|out|events) ...
      * <ul>
      *     <li>... equiv generate</li>
-     *     <li>... timer &lt;player&gt; (get|set|add)</li>
+     *     <li>... timer &lt;player&gt; (get|set|add|stop)</li>
      *     <li>... out &lt;player&gt; (get|set)</li>
      *     <li>... list | add &lt;player&gt; &lt;EventType&gt; | remove &lt;player&gt; &lt;EventType&gt; </li>
      * </ul>
@@ -52,7 +52,10 @@ public class STCCommand {
                                                     .executes(TimerLogic::setTime)))
                                         .then(Commands.literal("add")
                                                 .then(Commands.argument("value", IntegerArgumentType.integer())
-                                                    .executes(TimerLogic::addTime)))))
+                                                    .executes(TimerLogic::addTime)))
+                                        .then(Commands.literal("running")
+                                                .then(Commands.argument("boolean", BoolArgumentType.bool())
+                                                    .executes(TimerLogic::toggleTimer)))))
                         .then(Commands.literal("out")
                                 .then(Commands.argument("player", GameProfileArgument.gameProfile())
                                         .then(Commands.literal("get")

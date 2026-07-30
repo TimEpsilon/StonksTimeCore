@@ -29,6 +29,7 @@
   "commands.stonkstimecore.remove_event" : "Removed event %s for player %s",
   "commands.stonkstimecore.add_event_fail" : "Failed to add event. Player might not be online",
   "commands.stonkstimecore.remove_event_fail" : "Failed to remove event. Player might not be online",
+  "commands.stonkstimecore.toggle_timer" : "Timers have been set to %s",
 
   "info.stonkstimecore.player_is_out" : "[!] %s has run out of time!",
   "info.stonkstimecore.self_is_out" : "You are now bankrupt. You will no longer be able to interact with your bank account.",

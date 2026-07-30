@@ -1,6 +1,7 @@
 package com.github.timepsilon.time;
 
 import com.github.timepsilon.Core;
+import com.github.timepsilon.commands.timer.TimerLogic;
 import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.config.SqlStatsGate;
 import com.github.timepsilon.database.MoneyDatabase;
@@ -41,6 +42,7 @@ public class TimerHandler {
     public static void onPlayerTick(PlayerTickEvent.Post event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (!(player.serverLevel().getGameTime() % 20 == 0)) return;
+        if (!TimerLogic.shouldTimerRun) return;
 
         UUID uuid = player.getUUID();
         MinecraftServer level = player.server;

@@ -4,6 +4,7 @@ import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.time.TimerHandler;
 import com.github.timepsilon.utils.TimeUtils;
 import com.mojang.authlib.GameProfile;
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -19,6 +20,8 @@ import java.util.Collection;
 import static com.github.timepsilon.commands.isout.OutLogic.tryGettingPlayer;
 
 public class TimerLogic {
+
+    public static boolean shouldTimerRun = true;
 
     public static int getTime(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         Collection<GameProfile> players = GameProfileArgument.getGameProfiles(ctx, "player");
@@ -60,5 +63,14 @@ public class TimerLogic {
             ctx.getSource().sendSuccess(() -> Component.translatable("commands.stonkstimecore.add_time",seconds,player.getName()), false);
         }
         return seconds;
+    }
+
+    public static int toggleTimer(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        boolean toggle = BoolArgumentType.getBool(ctx, "boolean");
+        shouldTimerRun = toggle;
+
+        ctx.getSource().sendSuccess(() -> Component.translatable("commands.stonkstimecore.toggle_timer", String.valueOf(toggle)), true);
+
+        return toggle ? 1 : 0;
     }
 }
