@@ -44,16 +44,17 @@ class PendingWriteQueueTest {
                         incoming.username(),
                         existing.itemId(),
                         existing.amount() + incoming.amount(),
-                        existing.storedMoney() + incoming.storedMoney()
+                        existing.storedMoney() + incoming.storedMoney(),
+                        incoming.price()
                 )
         );
 
         Instant hourStart = Instant.parse("2026-06-29T12:00:00.000Z");
         queue.enqueueAll(List.of(new SctTransactionEntry(
-                hourStart, PLAYER, "Alice", "minecraft:gold", 2, 1000
+                hourStart, PLAYER, "Alice", "minecraft:gold", 2, 1000, 10
         )));
         queue.enqueueAll(List.of(new SctTransactionEntry(
-                hourStart, PLAYER, "Alice", "minecraft:gold", 3, 500
+                hourStart, PLAYER, "Alice", "minecraft:gold", 3, 500, 10
         )));
 
         assertEquals(1, queue.size());

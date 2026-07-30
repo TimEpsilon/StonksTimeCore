@@ -43,10 +43,10 @@ class PendingWritesStoreTest {
         Instant laterInHour = Instant.parse("2026-06-29T12:45:00.000Z");
 
         store.sctTransactions().enqueueAll(List.of(new SctTransactionEntry(
-                hourStart, PLAYER, "Alice", "minecraft:gold", 2, 1000
+                hourStart, PLAYER, "Alice", "minecraft:gold", 2, 1000, 10
         )));
         store.sctTransactions().enqueueAll(List.of(new SctTransactionEntry(
-                laterInHour, PLAYER, "AliceUpdated", "minecraft:gold", 3, 500
+                laterInHour, PLAYER, "AliceUpdated", "minecraft:gold", 3, 500, 10
         )));
 
         assertEquals(1, store.sctTransactions().size());
@@ -62,8 +62,8 @@ class PendingWritesStoreTest {
         Instant hourStart = Instant.parse("2026-06-29T12:00:00.000Z");
 
         store.sctTransactions().enqueueAll(List.of(
-                new SctTransactionEntry(hourStart, PLAYER, "Alice", "minecraft:gold", 1, 100),
-                new SctTransactionEntry(hourStart, PLAYER, "Alice", "minecraft:iron", 2, 200)
+                new SctTransactionEntry(hourStart, PLAYER, "Alice", "minecraft:gold", 1, 100, 10),
+                new SctTransactionEntry(hourStart, PLAYER, "Alice", "minecraft:iron", 2, 200, 10)
         ));
 
         assertEquals(2, store.sctTransactions().size());

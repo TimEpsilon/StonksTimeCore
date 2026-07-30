@@ -32,10 +32,10 @@ class SctTransactionDaoQueryTest {
         String iron = "minecraft:iron_ingot";
 
         dao.upsertAll(List.of(
-                new SctTransactionEntry(now.minus(Duration.ofHours(1)), player, "Alice", diamond, 5, 0),
-                new SctTransactionEntry(now.minus(Duration.ofHours(2)), player, "Alice", diamond, 4, 0),
-                new SctTransactionEntry(now.minus(Duration.ofHours(10)), player, "Alice", diamond, 3, 0),
-                new SctTransactionEntry(now.minus(Duration.ofHours(1)), player, "Alice", iron, 7, 0)
+                new SctTransactionEntry(now.minus(Duration.ofHours(1)), player, "Alice", diamond, 5, 0, 10),
+                new SctTransactionEntry(now.minus(Duration.ofHours(2)), player, "Alice", diamond, 4, 0, 10),
+                new SctTransactionEntry(now.minus(Duration.ofHours(10)), player, "Alice", diamond, 3, 0, 10),
+                new SctTransactionEntry(now.minus(Duration.ofHours(1)), player, "Alice", iron, 7, 0, 10)
         ));
 
         // last 3h: the -1h and -2h diamond rows (5 + 4), not the -10h one
@@ -63,10 +63,10 @@ class SctTransactionDaoQueryTest {
         String iron = "minecraft:iron_ingot";
 
         dao.upsertAll(List.of(
-                new SctTransactionEntry(now.minus(Duration.ofHours(1)), player, "Alice", diamond, 5, 0),
-                new SctTransactionEntry(now.minus(Duration.ofHours(2)), player, "Alice", diamond, 4, 0),
-                new SctTransactionEntry(now.minus(Duration.ofHours(10)), player, "Alice", diamond, 100, 0),
-                new SctTransactionEntry(now.minus(Duration.ofHours(1)), player, "Alice", iron, 7, 0)
+                new SctTransactionEntry(now.minus(Duration.ofHours(1)), player, "Alice", diamond, 5, 0, 10),
+                new SctTransactionEntry(now.minus(Duration.ofHours(2)), player, "Alice", diamond, 4, 0, 10),
+                new SctTransactionEntry(now.minus(Duration.ofHours(10)), player, "Alice", diamond, 100, 0, 10),
+                new SctTransactionEntry(now.minus(Duration.ofHours(1)), player, "Alice", iron, 7, 0, 10)
         ));
 
         Map<String, Integer> last3h = dao.sumAmountByItemSince(3);

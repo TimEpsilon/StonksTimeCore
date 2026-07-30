@@ -45,7 +45,8 @@ class SctTransactionDaoStressTest {
                     "StressPlayer",
                     "minecraft:stress_item_" + i,
                     1,
-                    100 + i
+                    100 + i,
+                    10
             );
             dao.upsertAll(List.of(entry));
         }

@@ -23,7 +23,7 @@ class SctTransactionEntryTest {
 
     @Test
     void bindToDoesNotThrowAndSetsParameters() throws SQLException {
-        SctTransactionEntry entry = new SctTransactionEntry(TIME, PLAYER, "Alice", "minecraft:diamond", 5, 1_500);
+        SctTransactionEntry entry = new SctTransactionEntry(TIME, PLAYER, "Alice", "minecraft:diamond", 5, 1_500, 10);
         RecordingStatement recording = new RecordingStatement();
 
         assertDoesNotThrow(() -> entry.bindTo(recording.asPreparedStatement()));
