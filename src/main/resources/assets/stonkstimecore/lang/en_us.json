@@ -1,5 +1,6 @@
 {
   "item.stonkstimecore.time_gear" : "Time Gear",
+  "item.stonkstimecore.time_gear.tooltip.summary" : "A concentrated fragment of time. Serves as a building base for most time-based devices. Found in 1/2500 loot chests.",
   "item.stonkstimecore.golden_ticket" : "Golden Ticket",
   "item.stonkstimecore.golden_ticket.tooltip.summary" : "Can be used on a _Slot Machine_ to get some goodies... or not.",
 

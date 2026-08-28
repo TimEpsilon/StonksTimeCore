@@ -1,5 +1,6 @@
 {
   "item.stonkstimecore.time_gear" : "Rouage Temporel",
+  "item.stonkstimecore.time_gear.tooltip.summary" : "Un fragment de temps concentré. Sert de base à la plupart des machines temporelles. Trouvable dans 1/2500 coffres de loot.",
   "item.stonkstimecore.golden_ticket" : "Ticket d'Or",
   "item.stonkstimecore.golden_ticket.tooltip.summary" : "Peut être utilisé avec une _Machine à Sous_ pour gagner des cadeaux... ou pas",
 
