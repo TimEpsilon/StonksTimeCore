@@ -73,7 +73,7 @@ public class LoseMoney extends AbstractSpell {
 
                 int amount = (int) Math.min(getSpellPower(spellLevel, entity)*60*STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt(), targetAccount.getBalance());
 
-                targetAccount.deduct(amount);
+                targetAccount.deduct(amount,true);
                 TimerHandler.sendInfoPacket(targetEntity, "-"+amount+"\u9000");
 
                 receiverAccount.deposit(amount);

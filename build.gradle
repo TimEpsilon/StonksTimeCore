@@ -185,7 +185,9 @@ dependencies {
     implementation 'curse.maven:moonlight-499980:7017282'
 
     // Numismatic
-    implementation "dev.ithundxr.createnumismatics:CreateNumismatics-neoforge-1.21.1:1.0.19+neoforge-mc1.21.1-build.641"
+    implementation("dev.ithundxr.createnumismatics:CreateNumismatics-neoforge-1.21.1:1.1.0+neoforge-mc1.21.1") {
+        transitive = false
+    }
 
     // Geckolib
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"

@@ -116,7 +116,7 @@ public class TimeUtils {
     public static void loseAndExplodeOnDeath(BankAccount account, Player player, ItemStack killerWeapon) {
         // Lose x% of total amount
         int amount = (int) (account.getBalance()*STCConfigServer.CONFIG.DEATH_LOSS.getAsDouble());
-        account.deduct(amount);
+        account.deduct(amount,true);
 
         player.sendSystemMessage(Component.translatable("info.stonkstimecore.money_lost",amount,
                     Component.literal("\u9000").withStyle(ChatFormatting.WHITE))

@@ -10,6 +10,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import dev.ithundxr.createnumismatics.Numismatics;
 import dev.ithundxr.createnumismatics.content.backend.BankAccount;
+import dev.ithundxr.createnumismatics.content.backend.ReasonHolder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.GameProfileArgument;
 import net.minecraft.network.chat.Component;
@@ -57,7 +58,7 @@ public class TimerLogic {
                 account.deposit(seconds* STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt());
                 TimerHandler.sendInfoPacket(sPlayer, "+"+(seconds*STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt())+"\u9000");
             } else {
-                account.deduct(-seconds* STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt());
+                account.deduct(-seconds* STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt(), true);
                 TimerHandler.sendInfoPacket(sPlayer, (seconds*STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt())+"\u9000");
             }
             ctx.getSource().sendSuccess(() -> Component.translatable("commands.stonkstimecore.add_time",seconds,player.getName()), false);

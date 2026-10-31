@@ -56,7 +56,7 @@ public class SRETimeless extends AbstractRandomStonksEvent {
         maxAmountToLose = Math.min(maxAmountToLose, account.getBalance());
 
         // Lose at most 60s per lost hp
-        account.deduct(maxAmountToLose);
+        account.deduct(maxAmountToLose,true);
 
         int lootingLevel = 0;
         // looting level controls percentage of that money that gets dropped

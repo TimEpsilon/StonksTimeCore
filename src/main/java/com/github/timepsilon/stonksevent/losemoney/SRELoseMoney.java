@@ -41,7 +41,7 @@ public class SRELoseMoney extends AbstractRandomStonksEvent {
             );
         } else {
             int money = amount * STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt();
-            account.deduct(money);
+            account.deduct(money,true);
             TimerHandler.sendInfoPacket((ServerPlayer) player, "-"+money+"\u9000");
 
             player.sendSystemMessage(
