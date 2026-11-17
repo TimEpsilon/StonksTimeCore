@@ -55,17 +55,12 @@ public class PotionMagicProjectile extends AbstractMagicProjectile {
     @Override
     public void trailParticles() {
         Vec3 trailTime = getDeltaMovement();
-        double d0 = this.getX() - trailTime.x;
-        double d1 = this.getY() - trailTime.y;
-        double d2 = this.getZ() - trailTime.z;
         var count = Mth.clamp((int) (trailTime.lengthSqr() * 2), 1, 6);
         for (int i = 0; i < count; i++) {
-            Vec3 random = Utils.getRandomVec3(getBbHeight() * .2f);
-            var f = i / ((float) count);
-            var x = Mth.lerp(f, d0, this.getX() + trailTime.x);
-            var y = Mth.lerp(f, d1, this.getY() + trailTime.y);
-            var z = Mth.lerp(f, d2, this.getZ() + trailTime.z);
-            this.level().addParticle(ModParticles.TIME_PARTICLES.get(), true,x - random.x, y + getBbHeight() * .5f - random.y, z - random.z, 0,0,0);
+            Vec3 potionDrip = this.position().subtract(getDeltaMovement().scale(2));
+            this.level().addParticle(
+                    ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, FastColor.ARGB32.opaque(getColor())),
+                    potionDrip.x, potionDrip.y, potionDrip.z, 0, 0, 0);
         }
 
         Vec3 potionDrip = this.position().subtract(getDeltaMovement().scale(2));
