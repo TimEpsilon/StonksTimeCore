@@ -69,6 +69,34 @@ base {
     archivesName = mod_id
 }
 
+def buildNumberFile = layout.projectDirectory.file('build_number.txt').asFile
+
+tasks.register('incrementBuildNumber') {
+    outputs.upToDateWhen { false }   // always run when requested
+    doLast {
+        int n = buildNumberFile.exists() ? buildNumberFile.text.trim().toInteger() : 0
+        buildNumberFile.text = (n + 1).toString()
+    }
+}
+
+tasks.named('jar') {
+    dependsOn 'incrementBuildNumber'
+
+    // Evaluated lazily, after incrementBuildNumber has run
+    archiveVersion = provider {
+        def n = buildNumberFile.exists() ? buildNumberFile.text.trim() : '0'
+        "${project.version}-build${n}".toString()
+    }
+
+    // Remove previous jars of this mod before the new one is written
+    doFirst {
+        delete fileTree(destinationDirectory) {
+            include "${archiveBaseName.get()}-*.jar"
+            exclude '*-sources.jar', '*-javadoc.jar'
+        }
+    }
+}
+
 // Mojang ships Java 21 to end users starting in 1.20.5, so mods should target Java 21.
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
