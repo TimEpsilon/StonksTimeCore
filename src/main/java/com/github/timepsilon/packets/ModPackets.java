@@ -23,7 +23,8 @@ public enum ModPackets implements BasePacketPayload.PacketTypeProvider {
     IS_OUT(IsOutPacket.class, IsOutPacket.STREAM_CODEC),
     PLAYERS_OUT_SET(PlayersAreOutPacket.class, PlayersAreOutPacket.STREAM_CODEC),
     SLOW_DOWN_SRE(SlowDownSREPacket.class, SlowDownSREPacket.STREAM_CODEC),
-    SPEED_UP_SRE(SpeedUpSREPacket.class, SpeedUpSREPacket.STREAM_CODEC)
+    SPEED_UP_SRE(SpeedUpSREPacket.class, SpeedUpSREPacket.STREAM_CODEC),
+    SCT_SYNC(SCTSyncPacket.class, SCTSyncPacket.STREAM_CODEC)
     ;
 
 

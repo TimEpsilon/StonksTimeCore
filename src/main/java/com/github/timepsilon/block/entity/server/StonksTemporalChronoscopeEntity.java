@@ -187,6 +187,9 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
 
         float fullAmount = moneyMap.values().stream().reduce(0.0f, Float::sum);
         coinBag.add(Coin.SPUR, (int) fullAmount);
+
+        // Reload another time to update new prices
+        SCTManager.updateSCTMap(itemStacks.stream().map(ItemStack::getItem).collect(Collectors.toList()));
     }
 
     private void accumulateConversion(ItemStack itemStack, float factor, Map<Item, Float> moneyMap, Map<Item, Integer> amountMap, HashMap<Item, Float> priceMap) {

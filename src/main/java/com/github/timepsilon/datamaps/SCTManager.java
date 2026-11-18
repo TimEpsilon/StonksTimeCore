@@ -3,10 +3,13 @@ package com.github.timepsilon.datamaps;
 import com.github.timepsilon.Core;
 import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.database.SCTTransactionDatabase;
+import com.github.timepsilon.packets.server.SCTSyncPacket;
 import com.github.timepsilon.utils.SCTMathUtils;
+import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -45,6 +48,8 @@ public class SCTManager {
                 AMOUNT_MAP.put(item, sold.get(item.toString()));
             }
         }
+
+        syncToAll();
     }
 
     public static void updateSCTMap(Collection<Item> items) {
@@ -58,11 +63,24 @@ public class SCTManager {
                 AMOUNT_MAP.put(item, sold.get(item.toString()));
             }
         }
+
+        syncToAll();
+    }
+
+    public static void syncToPlayer(ServerPlayer player) {
+        Core.LOGGER.debug("Sent data to player");
+        CatnipServices.NETWORK.sendToClient(player, SCTSyncPacket.fromCurrentMap());
+    }
+
+    public static void syncToAll() {
+        Core.LOGGER.debug("Sent data to all");
+        CatnipServices.NETWORK.sendToAllClients(SCTSyncPacket.fromCurrentMap());
     }
 
     @SubscribeEvent
     public static void onDataReload(OnDatapackSyncEvent event) {
         SCT_MAP = getSCTHashMap(event.getPlayerList().getServer().registryAccess());
         updateSCTMap();
+        event.getRelevantPlayers().forEach(SCTManager::syncToPlayer);
     }
 }
