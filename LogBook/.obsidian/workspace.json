@@ -32,9 +32,33 @@
               "icon": "lucide-image",
               "title": "300px-Gold_Pile_Single_Icon"
             }
+          },
+          {
+            "id": "2eb24fd228606c2e",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.14.4"
+              },
+              "icon": "lucide-book-up",
+              "title": "Notes de version 1.14.4"
+            }
+          },
+          {
+            "id": "fd28bf99177b2af9",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.15.1"
+              },
+              "icon": "lucide-book-up",
+              "title": "Notes de version 1.15.1"
+            }
           }
         ],
-        "currentTab": 1
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -54,7 +78,9 @@
               "type": "file-explorer",
               "state": {
                 "sortOrder": "alphabetical",
-                "autoReveal": false
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
               },
               "icon": "lucide-folder-closed",
               "title": "Explorateur de fichiers"
@@ -155,13 +181,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "StonksTimeCore/Coins/M-Doubloon/300px-Gold_Pile_Single_Icon.png",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Plan de 300px-Gold_Pile_Single_Icon"
+              "title": "Plan"
             }
           }
         ],
@@ -173,9 +198,9 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "canvas:Créer un nouveau canvas": false,
       "switcher:Ouvrir le sélecteur rapide": false,
       "graph:Ouvrir la vue graphique": false,
-      "canvas:Créer une nouvelle toile": false,
       "daily-notes:Ouvrir la note quotidienne": false,
       "templates:Insérer le modèle": false,
       "command-palette:Ouvrir la palette de commandes": false,
@@ -183,7 +208,7 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "18c64614cb57dd94",
+  "active": "fd28bf99177b2af9",
   "lastOpenFiles": [
     "StonksTimeCore/SCT.md",
     "StonksTimeCore/Coins/M-Drachm/Iron_Ingot_JE3_BE2.webp",

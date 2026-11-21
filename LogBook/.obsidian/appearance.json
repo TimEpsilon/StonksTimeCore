@@ -3,5 +3,6 @@
   "enabledCssSnippets": [
     "latex"
   ],
-  "cssTheme": "AnuPpuccin"
+  "cssTheme": "AnuPpuccin",
+  "showRibbon": true
 }

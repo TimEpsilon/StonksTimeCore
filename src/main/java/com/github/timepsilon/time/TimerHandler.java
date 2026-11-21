@@ -65,7 +65,7 @@ public class TimerHandler {
         sendOverlayPacket(player, seconds, account.getBalance(), timer.isOut(uuid));
 
         // HP logic
-        if (!(STCConfigServer.CONFIG.DANGER_TIME.getAsInt() < seconds && seconds < STCConfigServer.CONFIG.SAFE_TIME.getAsInt())) {
+        if (STCConfigServer.CONFIG.DANGER_TIME.getAsInt() > seconds || seconds > STCConfigServer.CONFIG.SAFE_TIME.getAsInt()) {
             int hp = TimeUtils.howMuchHP(seconds);
             if (!player.getAttribute(Attributes.MAX_HEALTH).hasModifier(TIME_HP)) {
                 AttributeModifier timeHPModifier = new AttributeModifier(TIME_HP, 0, AttributeModifier.Operation.ADD_VALUE);
@@ -76,6 +76,8 @@ public class TimerHandler {
                 AttributeModifier timeHPModifier = new AttributeModifier(TIME_HP, hp, AttributeModifier.Operation.ADD_VALUE);
                 player.getAttribute(Attributes.MAX_HEALTH).addOrReplacePermanentModifier(timeHPModifier);
             }
+        } else if (player.getAttribute(Attributes.MAX_HEALTH).hasModifier(TIME_HP)) {
+            player.getAttribute(Attributes.MAX_HEALTH).removeModifier(TIME_HP);
         }
 
         // Hurt when no time
