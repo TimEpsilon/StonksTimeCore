@@ -171,8 +171,10 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
         }
 
         float fullAmount = moneyMap.values().stream().reduce(0.0f, Float::sum);
-        account.deposit((int) fullAmount);
-        TimerHandler.sendInfoPacket((ServerPlayer) player, "+"+(fullAmount)+"\u9000");
+        if (fullAmount > 0) {
+            account.deposit((int) fullAmount);
+            TimerHandler.sendInfoPacket((ServerPlayer) player, "+"+((int)fullAmount)+"\u9000");
+        }
 
         // Reload another time to update new prices
         SCTManager.updateSCTMap(itemStacks.stream().map(ItemStack::getItem).collect(Collectors.toList()));

@@ -10,17 +10,26 @@ import com.github.timepsilon.packets.server.TimerSyncPacket;
 import com.github.timepsilon.utils.TimeUtils;
 import dev.ithundxr.createnumismatics.Numismatics;
 import dev.ithundxr.createnumismatics.content.backend.BankAccount;
+import dev.ithundxr.createnumismatics.content.backend.Coin;
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import static com.github.timepsilon.time.PlayerOutHandler.setLowHp;
@@ -29,6 +38,14 @@ import static com.github.timepsilon.time.PlayerOutHandler.setLowHp;
 public class TimerHandler {
 
     public static final ResourceLocation TIME_HP = ResourceLocation.fromNamespaceAndPath(Core.MODID, "time_hp");
+    private static List<Item> coinList;
+
+    private static List<Item> getCoinList() {
+        if (coinList == null) {
+            coinList = Arrays.stream(Coin.values()).map(coin -> coin.asStack().getItem()).toList();
+        }
+        return coinList;
+    }
 
     /**
      * Executed every second (if player not out):
@@ -137,6 +154,33 @@ public class TimerHandler {
         if (SqlStatsGate.isEnabled()) {
             MoneyDatabase.getDatabase().saveBanks();
         }
+    }
+
+    @SubscribeEvent
+    public static void onMoneyPickup(ItemEntityPickupEvent.Pre event) {
+        if (!(event.getPlayer() instanceof ServerPlayer player)) return;
+
+        ItemEntity itemEntity = event.getItemEntity();
+        if (itemEntity.hasPickUpDelay()) return; // prevents calling the event multiple times before pickup
+        ItemStack itemStack = itemEntity.getItem();
+
+        Coin matched = null;
+        for (Coin coin : Coin.values()) {
+            if (coin.asStack().getItem().equals(itemStack.getItem())) {
+                matched = coin;
+                break;
+            }
+        }
+        if (matched == null) return;
+
+        BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getUUID(), BankAccount.Type.PLAYER);
+        int amount = itemStack.getCount();
+        int total = matched.value * amount;
+
+        itemEntity.discard();
+        event.setCanPickup(TriState.FALSE);
+        account.deposit(total);
+        TimerHandler.sendInfoPacket(player, "+"+(total)+"\u9000");
     }
 
     public static void sendOverlayPacket(ServerPlayer player, int time, int money,  boolean isOut) {
