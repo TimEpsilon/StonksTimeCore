@@ -22,10 +22,8 @@ public class StonksTemporalChronoscopeMenu extends MenuBase<StonksTemporalChrono
 
     public static final int BLOCK_INV_START_ID = 0; //0
     public static final int BLOCK_INV_END_ID = BLOCK_INV_START_ID + 27 - 1; // included, 26
-    public static final int MONEY_START_ID = BLOCK_INV_END_ID + 1; // 27
-    public static final int MONEY_END_ID = MONEY_START_ID + 6 - 1; // 32
-    public static final int PLAYER_INV_START_ID = MONEY_END_ID + 1; // 33
-    public static final int PLAYER_INV_END_ID = PLAYER_INV_START_ID + 36 - 1; // 68
+    public static final int PLAYER_INV_START_ID = BLOCK_INV_END_ID + 1; // 27
+    public static final int PLAYER_INV_END_ID = PLAYER_INV_START_ID + 36 - 1; // 62
 
 
     public StonksTemporalChronoscopeMenu(MenuType<?> type, int id, Inventory inv, RegistryFriendlyByteBuf extraData) {
@@ -67,13 +65,6 @@ public class StonksTemporalChronoscopeMenu extends MenuBase<StonksTemporalChrono
             x += 18;
         }
 
-        x = 34;
-        y = 87;
-        for(Coin coin : Coin.values()) {
-            this.addSlot(new SlotOutputMergingCoinBag(contentHolder.coinBag, coin, x, y));
-            x += 18;
-        }
-
         addPlayerSlots(20, 130);
     }
 
@@ -99,12 +90,6 @@ public class StonksTemporalChronoscopeMenu extends MenuBase<StonksTemporalChrono
             // In player inventory -> To block inventory
             success = moveItemStackTo(slotStack, BLOCK_INV_START_ID, BLOCK_INV_END_ID+1, false);
 
-        } else if ((MONEY_START_ID <= i && i <= MONEY_END_ID)) {
-            // In bank -> Player inventory
-            ItemStack coinStack = CoinItem.clearDisplayedCount(slotStack); // Removes the tooltip displaying the full amount of money
-            int count = coinStack.getCount();
-            success = moveItemStackTo(coinStack, PLAYER_INV_START_ID, PLAYER_INV_END_ID+1, false);
-            if (success) {slot.remove(count);}
         }
 
         if (slotStack.isEmpty()) {

@@ -8,10 +8,13 @@ import com.github.timepsilon.datamaps.DataMaps;
 import com.github.timepsilon.datamaps.SCTManager;
 import com.github.timepsilon.datamaps.SCTMap;
 import com.github.timepsilon.items.ModItems;
+import com.github.timepsilon.time.TimerHandler;
 import com.github.timepsilon.utils.SCTMathUtils;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.sound.SoundScapes;
+import dev.ithundxr.createnumismatics.Numismatics;
+import dev.ithundxr.createnumismatics.content.backend.BankAccount;
 import dev.ithundxr.createnumismatics.content.backend.Coin;
 import dev.ithundxr.createnumismatics.content.coins.MergingCoinBag;
 import net.minecraft.core.BlockPos;
@@ -44,7 +47,6 @@ import static com.github.timepsilon.attributes.ModAttributes.SCT_FACTOR;
 public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implements MenuProvider {
 
     public StonksTemporalChronoscopeInventory inventory;
-    public MergingCoinBag coinBag;
 
     public static final int MIN_SPEED = 30;
     private static final List<Item> COIN_LIST = Arrays.stream(Coin.values()).map(coin -> coin.asStack().getItem()).toList();
@@ -52,7 +54,6 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
     public StonksTemporalChronoscopeEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
         inventory = new StonksTemporalChronoscopeInventory(this);
-        coinBag = new MergingCoinBag();
     }
 
     @Override
@@ -87,10 +88,6 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
     @Override
     protected void write(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
 
-        if (!coinBag.isEmpty()) {
-            tag.put("CoinBag", coinBag.save(new CompoundTag()));
-        }
-
         if (!clientPacket) {
             tag.put("Inventory", inventory.serializeNBT(registries));
         }
@@ -101,11 +98,6 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
     @Override
     protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
         super.read(tag, registries, clientPacket);
-
-        coinBag.clear();
-        if (tag.contains("CoinBag")) {
-            coinBag.load(tag.getCompound("CoinBag"));
-        }
 
         if (!clientPacket) {
             inventory.deserializeNBT(registries, tag.getCompound("Inventory"));
@@ -120,15 +112,6 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
 
     public void dropContents(Level level, BlockPos pos) {
         ItemHelper.dropContents(level, pos, inventory);
-        for (int i = Coin.values().length - 1; i >= 0; i--) {
-            Coin coin = Coin.values()[i];
-            ItemStack item = coinBag.asStack(coin);
-            int amount = item.getCount();
-            coinBag.subtract(coin, amount);
-            if (amount > 0) {
-                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), item);
-            }
-        }
     }
 
     public void computeSCTAmount(Player player) {
@@ -145,7 +128,7 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
         float factor = (SCTAttribute == null) ? 1 : (float) SCTAttribute.getValue();
 
         // Convert to SCT values
-        handleItemsToMoney(itemStacks, factor, moneyMap, amountMap, priceMap);
+        handleItemsToMoney(itemStacks, player, factor, moneyMap, amountMap, priceMap);
 
         // Generate golden tickets
         awardGoldenTicket(amountMap);
@@ -156,9 +139,11 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
         notifyUpdate();
     }
 
-    private void handleItemsToMoney(Collection<ItemStack> itemStacks, float factor, HashMap<Item, Float> moneyMap, HashMap<Item, Integer> amountMap, HashMap<Item, Float> priceMap) {
+    private void handleItemsToMoney(Collection<ItemStack> itemStacks, Player player, float factor, HashMap<Item, Float> moneyMap, HashMap<Item, Integer> amountMap, HashMap<Item, Float> priceMap) {
         // reloads only these items
         SCTManager.updateSCTMap(itemStacks.stream().map(ItemStack::getItem).collect(Collectors.toList()));
+
+        BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getUUID(), BankAccount.Type.PLAYER);
 
         for (ItemStack itemStack : itemStacks) {
 
@@ -186,7 +171,8 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
         }
 
         float fullAmount = moneyMap.values().stream().reduce(0.0f, Float::sum);
-        coinBag.add(Coin.SPUR, (int) fullAmount);
+        account.deposit((int) fullAmount);
+        TimerHandler.sendInfoPacket((ServerPlayer) player, "+"+(fullAmount)+"\u9000");
 
         // Reload another time to update new prices
         SCTManager.updateSCTMap(itemStacks.stream().map(ItemStack::getItem).collect(Collectors.toList()));

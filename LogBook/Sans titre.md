@@ -1,0 +1,3 @@
+- Jetons au spawn
+- Time gear buggé
+- 
