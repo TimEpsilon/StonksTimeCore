@@ -5,6 +5,7 @@ import com.github.timepsilon.commands.equivalency.GenerateEquivalency;
 import com.github.timepsilon.commands.events.EventsLogic;
 import com.github.timepsilon.commands.isout.OutLogic;
 import com.github.timepsilon.commands.loot.IterateLoots;
+import com.github.timepsilon.commands.timegear.TimeGearLogic;
 import com.github.timepsilon.commands.timer.TimerLogic;
 import com.github.timepsilon.stonksevent.StonksEventType;
 import com.mojang.brigadier.CommandDispatcher;
@@ -15,6 +16,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.GameProfileArgument;
+import net.minecraft.commands.arguments.UuidArgument;
 
 public class STCCommand {
 
@@ -85,8 +87,13 @@ public class STCCommand {
                                                             }
                                                             return builder.buildFuture();
                                                         })
-                                                        .executes(EventsLogic::removeEvent))))
-                        );
+                                                        .executes(EventsLogic::removeEvent)))))
+                        .then(Commands.literal("timegear")
+                                .then(Commands.argument("gear", UuidArgument.uuid())
+                                        .suggests(TimeGearLogic::suggestLookedAtGear)
+                                        .then(Commands.argument("player", UuidArgument.uuid())
+                                                .suggests(TimeGearLogic::suggestBankPlayers)
+                                                .executes(TimeGearLogic::setOwner))));
 
 
         dispatcher.register(literalargumentbuilder);
