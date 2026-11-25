@@ -4,6 +4,7 @@ import com.github.timepsilon.config.STCConfigServer;
 import com.github.timepsilon.items.ModItems;
 import com.github.timepsilon.time.PlayerOutData;
 import com.github.timepsilon.utils.TimeUtils;
+import com.mojang.authlib.GameProfile;
 import dev.ithundxr.createnumismatics.Numismatics;
 import dev.ithundxr.createnumismatics.content.backend.BankAccount;
 import net.minecraft.ChatFormatting;
@@ -46,10 +47,12 @@ public class TimeGearEntity extends Entity implements GeoEntity {
     // This ensures sync between client and server
     protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID;
     protected static final EntityDataAccessor<Byte> DATA_STATE;
+    protected static final EntityDataAccessor<String> DATA_OWNER_NAME;
 
     static {
         DATA_OWNERUUID_ID = SynchedEntityData.defineId(TimeGearEntity.class, EntityDataSerializers.OPTIONAL_UUID);
         DATA_STATE = SynchedEntityData.defineId(TimeGearEntity.class, EntityDataSerializers.BYTE);
+        DATA_OWNER_NAME = SynchedEntityData.defineId(TimeGearEntity.class, EntityDataSerializers.STRING);
     }
 
     public TimeGearEntity(EntityType<?> entityType, Level level) {
@@ -66,6 +69,7 @@ public class TimeGearEntity extends Entity implements GeoEntity {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(DATA_OWNERUUID_ID, Optional.empty());
         builder.define(DATA_STATE, (byte) State.OFFLINE.ordinal());
+        builder.define(DATA_OWNER_NAME, "");
     }
 
     @Override
@@ -89,7 +93,7 @@ public class TimeGearEntity extends Entity implements GeoEntity {
     public void tick() {
         if (!this.level().isClientSide()) setState(computeState());
 
-        if (!this.getState().shouldSpin()) return;
+        if (this.getOwnerName() == null && this.tickCount % 20 == 0) refreshOwnerName();
 
         if (this.bank != null) {
             int seconds = this.bank.getBalance() / STCConfigServer.CONFIG.TIME_TO_MONEY.getAsInt();
@@ -144,6 +148,7 @@ public class TimeGearEntity extends Entity implements GeoEntity {
 
         // Update the bank
         this.bank = Numismatics.BANK.getOrCreateAccount(uuid, BankAccount.Type.PLAYER);
+        this.refreshOwnerName();
     }
 
     public void setPlayer(Player player) {
@@ -157,11 +162,19 @@ public class TimeGearEntity extends Entity implements GeoEntity {
 
     @Nullable
     public String getOwnerName() {
-        if (this.getPlayerUUID() == null) return null;
-        if (UsernameCache.containsUUID(this.getPlayerUUID())) {
-            return UsernameCache.getLastKnownUsername(this.getPlayerUUID());
+        String name = this.entityData.get(DATA_OWNER_NAME);
+        return name.isEmpty() ? null : name;
+    }
+
+    private void refreshOwnerName() {
+        UUID uuid = this.getPlayerUUID();
+        if (uuid == null || this.level().isClientSide()) return;
+
+        String name = UsernameCache.getLastKnownUsername(uuid);
+        if (name == null && this.getServer() != null && this.getServer().getProfileCache() != null) {
+            name = this.getServer().getProfileCache().get(uuid).map(GameProfile::getName).orElse(null);
         }
-        return null;
+        this.entityData.set(DATA_OWNER_NAME, name != null ? name : "");
     }
 
     @Override

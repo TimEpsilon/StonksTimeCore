@@ -32,6 +32,8 @@ import net.neoforged.neoforge.common.util.TriState;
 import org.joml.Matrix4f;
 import software.bernie.geckolib.loading.math.MolangQueries;
 
+import java.util.UUID;
+
 @EventBusSubscriber(value = Dist.CLIENT, modid = Core.MODID)
 public class ClientEventsManager {
 
@@ -70,7 +72,10 @@ public class ClientEventsManager {
             event.setCanRender(TriState.FALSE);
 
             String owner = entity.getOwnerName();
-            if (owner == null) return;
+            if (owner == null) {
+                UUID id = entity.getPlayerUUID();
+                owner = id != null ? id.toString().substring(0, 8) : "NaN";
+            }
 
             renderAboveEntity(event, Component.literal(owner), 10);
             renderAboveEntity(event, entity.getDisplayName(), 2);
