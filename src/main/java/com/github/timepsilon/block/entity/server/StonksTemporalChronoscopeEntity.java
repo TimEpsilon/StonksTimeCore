@@ -32,6 +32,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -147,24 +148,9 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
 
         for (ItemStack itemStack : itemStacks) {
 
-            // Handles vanilla containers
-            if (itemStack.getComponents().has(DataComponents.CONTAINER)) {
-                boolean isEmpty = true;
-
-                Collection<ItemStack> subItems = itemStack.getComponents().get(DataComponents.CONTAINER)
-                        .stream().filter(istack -> !istack.isEmpty()).toList();
-
-                // reloads subitems
-                SCTManager.updateSCTMap(subItems.stream().map(ItemStack::getItem).collect(Collectors.toList()));
-
-                for (ItemStack subItem : subItems) {
-                    if (itemCheck(itemStack)) {
-                        accumulateConversion(subItem, factor, moneyMap, amountMap, priceMap);
-                        priceMap.put(itemStack.getItem(), SCTManager.SCT_MAP.get(itemStack.getItem()));
-                        isEmpty = false;
-                    }
-                }
-                if (!isEmpty) continue;
+            // Handles vanilla containers (shulker boxes, ...)
+            if (itemStack.has(DataComponents.CONTAINER) && itemCheck(itemStack)) {
+                if (handleContainer(itemStack, factor, moneyMap, amountMap, priceMap)) continue;
             }
 
             if (itemCheck(itemStack)) accumulateConversion(itemStack, factor, moneyMap, amountMap, priceMap);
@@ -178,6 +164,46 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
 
         // Reload another time to update new prices
         SCTManager.updateSCTMap(itemStacks.stream().map(ItemStack::getItem).collect(Collectors.toList()));
+    }
+
+    /**
+     * Converts the content of a container item (e.g. a shulker box) and writes the remaining
+     * items back into its {@link DataComponents#CONTAINER} component.
+     * <p>
+     * {@link ItemContainerContents#stream()} returns <b>copies</b> of the stored stacks, so
+     * destroying them has no effect on the real container: the component must be rebuilt,
+     * otherwise the same content can be sold again and again.
+     *
+     * @return true if the container is not empty: it is then kept and given back to the player with
+     * whatever could not be converted. False if it is empty, in which case the container itself is sold.
+     */
+    private boolean handleContainer(ItemStack container, float factor, HashMap<Item, Float> moneyMap, HashMap<Item, Integer> amountMap, HashMap<Item, Float> priceMap) {
+        ItemContainerContents contents = container.get(DataComponents.CONTAINER);
+        if (contents == null) return false;
+
+        // Copies, slot order preserved (empty slots included)
+        List<ItemStack> subItems = contents.stream().toList();
+
+        // reloads subitems
+        SCTManager.updateSCTMap(subItems.stream().filter(s -> !s.isEmpty()).map(ItemStack::getItem).collect(Collectors.toList()));
+
+        boolean converted = false;
+        for (ItemStack subItem : subItems) {
+            if (subItem.isEmpty()) continue;
+            // Checks are done on the sub item itself (coins, golden tickets, named items, backpacks...)
+            if (!itemCheck(subItem)) continue;
+
+            accumulateConversion(subItem, factor, moneyMap, amountMap, priceMap);
+            if (subItem.isEmpty()) converted = true; // destroyAndConvert sets the count to 0
+        }
+
+        if (converted) {
+            // Write back what is left, removing the converted items from the real container
+            container.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(subItems));
+            priceMap.put(container.getItem(), SCTManager.SCT_MAP.get(container.getItem()));
+        }
+        // Never sell a non-empty container: its content would be destroyed without being paid
+        return subItems.stream().anyMatch(s -> !s.isEmpty()) || converted;
     }
 
     private void accumulateConversion(ItemStack itemStack, float factor, Map<Item, Float> moneyMap, Map<Item, Integer> amountMap, HashMap<Item, Float> priceMap) {
