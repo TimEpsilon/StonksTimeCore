@@ -41,30 +41,25 @@ public class SCTManager {
         Map<String, Integer> sold = SCTTransactionDatabase.getDatabase()
                 .getAmountsSoldByItem(STCConfigServer.CONFIG.SCT_REDUCTION_TIME.getAsInt());
 
-        for (Item item : SCT_MAP.keySet()) {
-            if (sold.containsKey(item.toString())) {
-                float newValue = SCTMathUtils.currentPrice(SCT_MAP.get(item), sold.get(item.toString()));
-                SCT_MAP.put(item, newValue);
-                AMOUNT_MAP.put(item, sold.get(item.toString()));
-            }
-        }
-
-        syncToAll();
+        refreshPrices(SCT_MAP.keySet(), sold);
     }
 
     public static void updateSCTMap(Collection<Item> items) {
         Map<String, Integer> sold = SCTTransactionDatabase.getDatabase()
                 .getAmountsSoldForItems(items.stream().map(Item::toString).toList(), STCConfigServer.CONFIG.SCT_REDUCTION_TIME.getAsInt());
 
-        for (Item item : items) {
-            if (sold.containsKey(item.toString()) && SCT_MAP.containsKey(item)) {
-                float newValue = SCTMathUtils.currentPrice(SCT_MAP.get(item), sold.get(item.toString()));
-                SCT_MAP.put(item, newValue);
-                AMOUNT_MAP.put(item, sold.get(item.toString()));
-            }
-        }
+        refreshPrices(items, sold);
+    }
 
+    private static void refreshPrices(Collection<Item> items, Map<String, Integer> sold) {
+        SCTPriceRefresher.refresh(items, sold, SCTManager::getBaseSCT, SCTMathUtils::currentPrice, SCT_MAP, AMOUNT_MAP);
         syncToAll();
+    }
+
+    /** The SCT value defined by the data map, before any price reduction. */
+    private static Float getBaseSCT(Item item) {
+        SCTMap sct = item.builtInRegistryHolder().getData(DataMaps.SCT_MAP);
+        return sct == null ? null : sct.SCT();
     }
 
     public static void syncToPlayer(ServerPlayer player) {
