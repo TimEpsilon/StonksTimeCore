@@ -23,7 +23,7 @@ public class ModBlocks {
             .initialProperties(SharedProperties::softMetal)
             .properties(p -> p.mapColor(MapColor.TERRACOTTA_YELLOW))
             .transform(pickaxeOnly())
-            .onRegister(block -> BlockStressValues.IMPACTS.register(block, () -> 9284d)) // 9284 su/rpm * 30 rpm = 278 520 su (max su : 278 528)
+            .onRegister(block -> BlockStressValues.IMPACTS.register(block, () -> 930d)) // 930 su/rpm * 30 rpm = 27 900 su (max su : 278 528)
             .item()
             .tab(NumismaticsCreativeModeTabs.getBaseTabKey())
             .transform(customItemModel())

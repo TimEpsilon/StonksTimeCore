@@ -11193,6 +11193,9 @@
         "eclipse_arcana:atomic_spell_book": {
             "SCT": 249.472
         },
+        "eclipse_arcana:atomic_upgrade_orb": {
+            "SCT": 917.0
+        },
         "eclipse_arcana:card_ring": {
             "SCT": 100.868
         },
@@ -11201,6 +11204,9 @@
         },
         "eclipse_arcana:card_spell_book": {
             "SCT": 259.472
+        },
+        "eclipse_arcana:card_upgrade_orb": {
+            "SCT": 1077.0
         },
         "eclipse_arcana:cardmaster_boots": {
             "SCT": 251.0
@@ -11223,6 +11229,9 @@
         "eclipse_arcana:chrono_spell_book": {
             "SCT": 515.272
         },
+        "eclipse_arcana:chrono_upgrade_orb": {
+            "SCT": 5169.8
+        },
         "eclipse_arcana:chronomancer_boots": {
             "SCT": 1274.2
         },
@@ -11237,6 +11246,9 @@
         },
         "eclipse_arcana:clockhand_rapier": {
             "SCT": 1701.8
+        },
+        "eclipse_arcana:combo_shard": {
+            "SCT": 840.0
         },
         "eclipse_arcana:containment_boots": {
             "SCT": 211.0
@@ -11265,6 +11277,9 @@
         "eclipse_arcana:crystal_spell_book": {
             "SCT": 370.044
         },
+        "eclipse_arcana:crystal_upgrade_orb": {
+            "SCT": 2846.152
+        },
         "eclipse_arcana:dealers_edge": {
             "SCT": 422.8
         },
@@ -11276,6 +11291,9 @@
         },
         "eclipse_arcana:dream_spell_book": {
             "SCT": 352.872
+        },
+        "eclipse_arcana:dream_upgrade_orb": {
+            "SCT": 2571.4
         },
         "eclipse_arcana:dreamdust": {
             "SCT": 27.2
@@ -11312,6 +11330,9 @@
         },
         "eclipse_arcana:lunar_spell_book": {
             "SCT": 379.072
+        },
+        "eclipse_arcana:lunar_upgrade_orb": {
+            "SCT": 2990.6
         },
         "eclipse_arcana:moonseer_boots": {
             "SCT": 729.4
@@ -11376,6 +11397,9 @@
         "eclipse_arcana:soul_spell_book": {
             "SCT": 573.272
         },
+        "eclipse_arcana:soul_upgrade_orb": {
+            "SCT": 6097.8
+        },
         "eclipse_arcana:soul_vessel": {
             "SCT": 273.35
         },
@@ -11393,6 +11417,9 @@
         },
         "eclipse_arcana:soulreaper": {
             "SCT": 1992.2
+        },
+        "eclipse_arcana:spell_power_orb": {
+            "SCT": 676.072
         },
         "eclipse_arcana:temporal_sand": {
             "SCT": 67.8
@@ -11430,6 +11457,9 @@
         "eclipse_arcana:void_spell_book": {
             "SCT": 413.216
         },
+        "eclipse_arcana:void_upgrade_orb": {
+            "SCT": 3536.904
+        },
         "eclipse_arcana:voidwalker_boots": {
             "SCT": 865.976
         },
@@ -11450,6 +11480,9 @@
         },
         "eclipse_arcana:water_spell_book": {
             "SCT": 306.072
+        },
+        "eclipse_arcana:water_upgrade_orb": {
+            "SCT": 1822.6
         },
         "exposure:aged_photograph": {
             "SCT": 6.597
@@ -12301,28 +12334,40 @@
             "SCT": 2730.0
         },
         "hazennstuff:fireblossom_battlemage_boots": {
-            "SCT": 1746.316
+            "SCT": 2246.316
         },
         "hazennstuff:fireblossom_battlemage_chestplate": {
-            "SCT": 1746.316
+            "SCT": 2646.316
         },
         "hazennstuff:fireblossom_battlemage_helmet": {
-            "SCT": 1746.316
+            "SCT": 2326.316
         },
         "hazennstuff:fireblossom_battlemage_leggings": {
-            "SCT": 1746.316
+            "SCT": 2526.316
+        },
+        "hazennstuff:fireblossom_gown_boots": {
+            "SCT": 500.0
+        },
+        "hazennstuff:fireblossom_gown_chestplate": {
+            "SCT": 900.0
+        },
+        "hazennstuff:fireblossom_gown_helmet": {
+            "SCT": 580.0
+        },
+        "hazennstuff:fireblossom_gown_leggings": {
+            "SCT": 780.0
         },
         "hazennstuff:fireblossom_knight_boots": {
-            "SCT": 273.048
+            "SCT": 773.048
         },
         "hazennstuff:fireblossom_knight_chestplate": {
-            "SCT": 273.048
+            "SCT": 1173.048
         },
         "hazennstuff:fireblossom_knight_helmet": {
-            "SCT": 273.048
+            "SCT": 853.048
         },
         "hazennstuff:fireblossom_knight_leggings": {
-            "SCT": 273.048
+            "SCT": 1053.048
         },
         "hazennstuff:fireblossom_rapier": {
             "SCT": 3495.2
