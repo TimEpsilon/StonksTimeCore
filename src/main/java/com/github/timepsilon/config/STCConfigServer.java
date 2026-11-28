@@ -95,7 +95,7 @@ public class STCConfigServer {
         SCT_REDUCTION_CHARACTERISTIC_AMOUNT = builder
                 .comment("For an item with a default SCT of 1, how many items should be sold before losing 50% of the price compared to the minimum?")
                 .translation("config.stonkstimecore.SCTReductionCharacteristicAmount")
-                .defineInRange("SCTReductionCharacteristicAmount", 2000, 1, Integer.MAX_VALUE);
+                .defineInRange("SCTReductionCharacteristicAmount", 8000, 1, Integer.MAX_VALUE);
         SCT_REDUCTION_LIMIT_PROPORTION = builder
                 .comment("For an item with price P, how low can its value fall, as a fraction of P. A value of 0.1 means that the item will not fall lower than 10% of P.")
                 .translation("config.stonkstimecore.SCTReductionLimitProportion")
