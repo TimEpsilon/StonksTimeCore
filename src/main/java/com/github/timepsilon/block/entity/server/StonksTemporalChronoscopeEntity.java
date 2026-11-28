@@ -41,7 +41,7 @@ import net.p3pp3rf1y.sophisticatedcore.init.ModCoreDataComponents;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.github.timepsilon.attributes.ModAttributes.SCT_FACTOR;
 
@@ -128,6 +128,13 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
         AttributeInstance SCTAttribute = player.getAttribute(SCT_FACTOR);
         float factor = (SCTAttribute == null) ? 1 : (float) SCTAttribute.getValue();
 
+        // Collected before the conversion: emptied stacks no longer know their item
+        List<Item> involvedItems = involvedItems(itemStacks);
+
+        // Reloads only these items. Done once, before the sale: reloading during the sale would
+        // forget the amounts already sold, as they are not in the database yet
+        SCTManager.updateSCTMap(involvedItems);
+
         // Convert to SCT values
         handleItemsToMoney(itemStacks, player, factor, moneyMap, amountMap, priceMap);
 
@@ -137,13 +144,24 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
         // Log interaction
         SCTTransactionDatabase.getDatabase().sendTransactions((ServerPlayer) player, amountMap, moneyMap, priceMap);
 
+        // Reload another time to update new prices, now that the sale is recorded
+        SCTManager.updateSCTMap(involvedItems);
+
         notifyUpdate();
     }
 
-    private void handleItemsToMoney(Collection<ItemStack> itemStacks, Player player, float factor, HashMap<Item, Float> moneyMap, HashMap<Item, Integer> amountMap, HashMap<Item, Float> priceMap) {
-        // reloads only these items
-        SCTManager.updateSCTMap(itemStacks.stream().map(ItemStack::getItem).collect(Collectors.toList()));
+    /** The items of the stacks, along with the items stored inside them. */
+    private List<Item> involvedItems(Collection<ItemStack> itemStacks) {
+        return itemStacks.stream()
+                .flatMap(stack -> Stream.concat(
+                        Stream.of(stack),
+                        stack.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).nonEmptyStream()))
+                .map(ItemStack::getItem)
+                .distinct()
+                .toList();
+    }
 
+    private void handleItemsToMoney(Collection<ItemStack> itemStacks, Player player, float factor, HashMap<Item, Float> moneyMap, HashMap<Item, Integer> amountMap, HashMap<Item, Float> priceMap) {
         BankAccount account = Numismatics.BANK.getOrCreateAccount(player.getUUID(), BankAccount.Type.PLAYER);
 
         for (ItemStack itemStack : itemStacks) {
@@ -161,9 +179,6 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
             account.deposit((int) fullAmount);
             TimerHandler.sendInfoPacket((ServerPlayer) player, "+"+((int)fullAmount)+"\u9000");
         }
-
-        // Reload another time to update new prices
-        SCTManager.updateSCTMap(itemStacks.stream().map(ItemStack::getItem).collect(Collectors.toList()));
     }
 
     /**
@@ -183,9 +198,6 @@ public class StonksTemporalChronoscopeEntity extends KineticBlockEntity implemen
 
         // Copies, slot order preserved (empty slots included)
         List<ItemStack> subItems = contents.stream().toList();
-
-        // reloads subitems
-        SCTManager.updateSCTMap(subItems.stream().filter(s -> !s.isEmpty()).map(ItemStack::getItem).collect(Collectors.toList()));
 
         boolean converted = false;
         for (ItemStack subItem : subItems) {
